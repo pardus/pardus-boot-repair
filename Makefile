@@ -1,4 +1,9 @@
+DESTDIR=/
+PREFIX=/usr
 build:
-	echo "edit me"
+	: Please run make install
 install:
-	echo "edit me"
+	mkdir -p $(DESTDIR)/bin/ || true
+	mkdir -p $(DESTDIR)/usr/share/applications || true
+	install pardus-boot-repair $(DESTDIR)/bin/
+	install repair.desktop $(DESTDIR)/$(PREFIX)/share/applications
