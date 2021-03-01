@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Pardus boot repair
+GenericName=Pardus boot repair
+Comment=Pardus boot repair tool
+Exec=pkexec pardus-boot-repair
+Icon=repair
+Terminal=true
+Type=Application
+Categories=System;

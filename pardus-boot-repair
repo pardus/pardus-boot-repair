@@ -1,0 +1,72 @@
+#!/bin/bash
+export LANG=C
+rootfs=""
+efifs=""
+special_disk="$1"
+echo -e "\033[31;1mDetecting rootfs:\033[;0m"
+export live_media=$(lsblk -J | grep "/lib/live/" | grep -v loop| sed "s/.*name\":\"//g" | sed "s/\".*//g" | sed "s/[0-9]//g")
+echo -e "\033[31;1mLive media:\033[;;0m/dev/${live_media}"
+for part in $(ls /sys/class/block | grep "[0-9]$"| grep -v "${live_media}" |grep -v loop | grep -v sr)
+do
+    set +e
+    umount -lf /dev/$part &>/dev/null || true
+    echo -e "\033[31;1mLooking for:\033[;0m/dev/$part"
+    tmpdir=$(mktemp -d)
+    fsck -yf /dev/$part || true
+
+    if timeout 10 mount -o defaults,ro /dev/$part "$tmpdir" &>/dev/null
+    then
+        if [ -f "$tmpdir/etc/default/grub" ]
+        then
+            export distro=$(cat $tmpdir/etc/os-release | grep "^NAME" | sed "s/.*=//g")
+            export rootfs=$part
+            echo -e "        Found rootfs: /dev/$rootfs (${distro})"
+        fi
+        if find "$tmpdir/EFI/" -name "grubx64.efi" &>/dev/null ; then
+            export efivar="$(ls $tmpdir/EFI/)"
+            export efifs=$part
+            echo -e "        Found efi: /dev/$efifs (${efivar[@]})"
+        fi
+        if [ -f "$tmpdir/Windows/System32/ntoskrnl.exe" ] ; then
+            echo -e "        Found Windows: /dev/$disk"
+        fi
+    fi
+    umount -lf -R $tmpdir &>/dev/null
+    set -e
+done
+
+
+if [ "$rootfs" == "" ] ; then
+    echo "Error: Failed to detect rootfs."
+    read -n 1
+    exit 1
+fi
+echo -e "\033[31;1mReinstalling grub:\033[;0m"
+rmdir $tmpdir || true
+mount /dev/$rootfs /mnt
+if [ -d "/sys/firmware/efi" ] ; then
+        mkdir -p /mnt/boot/efi
+        mount /dev/$efifs /mnt/boot/efi
+fi
+for i in dev sys proc
+do
+    mount --bind /$i /mnt/$i
+done
+chroot /mnt grub-install /dev/$(echo $rootfs | sed "s/[0-9]//g")
+sync
+for kernel in $(ls /mnt/lib/modules)
+do
+    echo -e "\033[31;1mDepmod: \033[;0m$kernel"
+    chroot /mnt depmod -a $kernel
+done
+echo -e "\033[31;1mGenerating initramfs:\033[;0m"
+chroot /mnt update-initramfs -u -k all
+echo -e "\033[31;1mGenerating grub.cfg:\033[;0m"
+chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+if [ -d "/sys/firmware/efi" ] ; then
+    umount /mnt/boot/efi
+fi
+umount -lf -R /mnt
+echo -e "\033[32;1mPRESS ANY KEY TO EXIT\033[;0m"
+read -n 1
+exit 0
