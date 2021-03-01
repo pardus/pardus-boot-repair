@@ -1,5 +1,4 @@
-DESTDIR=/
 build:
-	: Please run make install
+	echo "edit me"
 install:
-	install pardus-boot-repair $(DESTDIR)/bin/
+	echo "edit me"

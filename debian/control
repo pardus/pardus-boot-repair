@@ -1,0 +1,13 @@
+Source: pardus-boot-repair
+Section: utils
+Priority: optional
+Maintainer: Ali Riza KESKIN <ali.riza.keskin@pardus.org.tr>
+Build-Depends: make
+Standards-Version: 4.3.0
+Homepage: https://pardus.org.tr
+
+Package: pardus-boot-repair
+Architecture: all
+Depends: ${misc:Depends}, libc6, live-boot
+Description: Pardus boot repair
+ Pardus boot repair tool
