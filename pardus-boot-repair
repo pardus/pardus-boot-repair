@@ -71,7 +71,11 @@ do
     fi
 done
 echo -e "\033[31;1mGenerating initramfs:\033[;0m"
-chroot /mnt update-initramfs -u -k all
+if chroot /mnt which update-initramfs &>/dev/null ; then
+    chroot /mnt update-initramfs -u -k all
+else
+    echo "\033[33;1minitramfs-tools not found\033[;0m"
+fi
 echo -e "\033[31;1mGenerating grub.cfg:\033[;0m"
 chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 if [ -d "/sys/firmware/efi" ] && [ ! "$efifs" == "" ] ; then
