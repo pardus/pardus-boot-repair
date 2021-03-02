@@ -58,7 +58,7 @@ set -e
 fetch_deb(){
     mkdir -p /mnt/debs/ || true
     for pkg in $@ ; do
-        f="$(find /run/live/medium/pool/ -type f  -iname ${pkg}_*.deb)"
+        f="$(find /*/live/medium/pool/ -type f  -iname ${pkg}_*.deb)"
         if [ "" !=  "$f" ] ; then
             cp -pvf "$f" /mnt/debs/
         fi
