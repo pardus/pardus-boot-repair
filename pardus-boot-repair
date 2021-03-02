@@ -44,7 +44,7 @@ fi
 echo -e "\033[31;1mReinstalling grub:\033[;0m"
 rmdir $tmpdir || true
 mount /dev/$rootfs /mnt
-if [ -d "/sys/firmware/efi" ] ; then
+if [ -d "/sys/firmware/efi" ] && [ ! "$efifs" == "" ]; then
         mkdir -p /mnt/boot/efi
         mount /dev/$efifs /mnt/boot/efi
 fi
