@@ -5,6 +5,7 @@ efifs=""
 special_disk="$1"
 echo -e "\033[31;1mDetecting rootfs:\033[;0m"
 export live_media=$(lsblk -J | grep "/.../live/" | grep -v loop| sed "s/.*name\":\"//g" | sed "s/\".*//g" | sed "s/[0-9]//g")
+[ "${live_media}"  == "" ] && live_media=null
 echo -e "\033[31;1mLive media:\033[;;0m/dev/${live_media}"
 for part in $(ls /sys/class/block | grep "[0-9]$"| grep -v "${live_media}" | grep -v fd | grep -v ram | grep -v loop | grep -v sr)
 do
@@ -58,7 +59,7 @@ set -e
 fetch_deb(){
     mkdir -p /mnt/debs/ || true
     for pkg in $@ ; do
-        f="$(find /*/live/medium/pool/ -type f  -iname ${pkg}_*.deb)"
+        f="$(find /*/live/medium/pool/ -type f  -iname ${pkg}_*.deb 2>/dev/null)"
         if [ "" !=  "$f" ] ; then
             cp -pvf "$f" /mnt/debs/
         fi
@@ -66,7 +67,7 @@ fetch_deb(){
     chroot /mnt sh -c "dpkg -i /debs/*"
     rm -rf /mnt/debs
 }
-
+set +e
 fetch_deb "efibootmgr" "grub-common" "grub-efi-amd64" "grub-efi-amd64-bin" \
     "grub-efi-amd64-signed" "grub2-common" "libefiboot1" "libefivar1" \
     "mokutil" "os-prober" "shim-helpers-amd64-signed" "shim-signed" \
