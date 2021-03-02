@@ -52,7 +52,11 @@ for i in dev sys proc
 do
     mount --bind /$i /mnt/$i
 done
-chroot /mnt grub-install /dev/$(echo $rootfs | sed "s/[0-9]//g")
+if [ -d "/sys/firmware/efi" ] && [ ! "$efifs" == "" ]; then
+    chroot /mnt grub-install --target=x86_64-efi /dev/$(echo $rootfs | sed "s/[0-9]//g")
+else
+    chroot /mnt grub-install --target=i386-pc /dev/$(echo $rootfs | sed "s/[0-9]//g")
+fi
 sync
 for kernel in $(ls /mnt/lib/modules)
 do
@@ -70,3 +74,4 @@ umount -lf -R /mnt
 echo -e "\033[32;1mPRESS ANY KEY TO EXIT\033[;0m"
 read -n 1
 exit 0
+
