@@ -88,7 +88,7 @@ echo -e "\033[31;1mGenerating initramfs:\033[;0m"
 chroot /mnt update-initramfs -u -k all
 echo -e "\033[31;1mGenerating grub.cfg:\033[;0m"
 chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
-if [ -d "/sys/firmware/efi" ] ; then
+if [ -d "/sys/firmware/efi" ] && [ ! "$efifs" == "" ] ; then
     umount /mnt/boot/efi
 fi
 umount -lf -R /mnt
