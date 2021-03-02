@@ -6,7 +6,7 @@ special_disk="$1"
 echo -e "\033[31;1mDetecting rootfs:\033[;0m"
 export live_media=$(lsblk -J | grep "/.../live/" | grep -v loop| sed "s/.*name\":\"//g" | sed "s/\".*//g" | sed "s/[0-9]//g")
 echo -e "\033[31;1mLive media:\033[;;0m/dev/${live_media}"
-for part in $(ls /sys/class/block | grep "[0-9]$"| grep -v "${live_media}" |grep -v loop | grep -v sr)
+for part in $(ls /sys/class/block | grep "[0-9]$"| grep -v "${live_media}" | grep -v fd | grep -v ram | grep -v loop | grep -v sr)
 do
     set +e
     umount -lf /dev/$part &>/dev/null || true
@@ -22,10 +22,12 @@ do
             export rootfs=$part
             echo -e "        Found rootfs: /dev/$rootfs (${distro})"
         fi
-        if find "$tmpdir/EFI/" -name "grubx64.efi" &>/dev/null ; then
-            export efivar="$(ls $tmpdir/EFI/)"
-            export efifs=$part
-            echo -e "        Found efi: /dev/$efifs (${efivar[@]})"
+        if fdisk -l /dev/$(echo $part | sed "s/[0-9]//g") | grep ": gpt" &>/dev/null ; then
+            if find "$tmpdir/EFI/" -name "grubx64.efi" &>/dev/null ; then
+                export efivar="$(ls $tmpdir/EFI/)"
+                export efifs=$part
+                echo -e "        Found efi: /dev/$efifs (${efivar[@]})"
+            fi
         fi
         if [ -f "$tmpdir/Windows/System32/ntoskrnl.exe" ] ; then
             echo -e "        Found Windows: /dev/$disk"
