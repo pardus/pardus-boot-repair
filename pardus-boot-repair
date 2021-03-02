@@ -91,8 +91,16 @@ chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 if [ -d "/sys/firmware/efi" ] && [ ! "$efifs" == "" ] ; then
     umount /mnt/boot/efi
 fi
+echo -e "\033[31;1mClearing filesystem:\033[;0m"
+find /mnt/var/log -type f | xargs rm -f 2>/dev/null || true
+rm -rf /mnt/home/*/.cache/
+echo -e "\033[31;1mFix executables:\033[;0m"
+for dir in bin usr/bin sbin usr/sbin ; do
+    chmod +x -R /mnt/$dir/*
+done
 umount -lf -R /mnt
 echo -e "\033[32;1mPRESS ANY KEY TO EXIT\033[;0m"
 read -n 1
 exit 0
+
 
