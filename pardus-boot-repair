@@ -56,24 +56,6 @@ do
     mount --bind /$i /mnt/$i
 done
 set -e
-fetch_deb(){
-    mkdir -p /mnt/debs/ || true
-    for pkg in $@ ; do
-        f="$(find /*/live/medium/pool/ -type f  -iname ${pkg}_*.deb 2>/dev/null)"
-        if [ "" !=  "$f" ] ; then
-            cp -pvf "$f" /mnt/debs/
-        fi
-    done
-    chroot /mnt sh -c "dpkg -i /debs/*"
-    rm -rf /mnt/debs
-}
-set +e
-fetch_deb "efibootmgr" "grub-common" "grub-efi-amd64" "grub-efi-amd64-bin" \
-    "grub-efi-amd64-signed" "grub2-common" "libefiboot1" "libefivar1" \
-    "mokutil" "os-prober" "shim-helpers-amd64-signed" "shim-signed" \
-    "shim-signed-common" "shim-unsigned" "grub-pc-bin" "gettext-base"
-set -e
-
 if [ -d "/sys/firmware/efi" ] && [ ! "$efifs" == "" ]; then
     chroot /mnt grub-install --target=x86_64-efi /dev/$(echo $rootfs | sed "s/[0-9]//g")
 else
