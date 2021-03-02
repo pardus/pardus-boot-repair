@@ -100,13 +100,13 @@ find /mnt/var/log -type f | xargs rm -f 2>/dev/null || true
 rm -rf /mnt/home/*/.cache/
 echo -e "\033[31;1mFix executables:\033[;0m"
 for dir in bin usr/bin sbin usr/sbin ; do
-    chmod +x -R /mnt/$dir/* || true
+    chmod +x -R /mnt/$dir/* 2>/dev/null || true
 done
 echo -e "\033[31;1mRefresh caches:\033[;0m"
 chroot /mnt fc-cache -f || true
-chroot /mnt glib-compile-schemas /usr/share/glib2.0/schemas || true
-chroot /mnt gdk-pixbug-query-loaders --update-cache || true
-chroot /mnt update-ca-certificates --refresh || true
+chroot /mnt glib-compile-schemas /usr/share/glib-2.0/schemas/ || true
+chroot /mnt update-ca-certificates --fresh || true
+chroot /mnt update-mime-database /usr/share/mime || true
 umount -lf -R /mnt
 echo -e "\033[32;1mPRESS ANY KEY TO EXIT\033[;0m"
 read -n 1
