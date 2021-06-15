@@ -3,9 +3,14 @@ export LANG=C
 rootfs=""
 efifs=""
 special_disk="$1"
+pause_exit(){
+    echo -e "\033[32;1mPRESS ANY KEY TO EXIT\033[;0m"
+    read -n 1
+    exit $1
+}
 echo -e "\033[31;1mDetecting rootfs:\033[;0m"
 export live_media=$(lsblk -J | grep "/.../live/" | grep -v loop| sed "s/.*name\":\"//g" | sed "s/\".*//g" | sed "s/[0-9]//g")
-[ "${live_media}"  == "" ] && live_media=null
+[[ "${live_media}"  == "" ]] && live_media=null
 echo -e "\033[31;1mLive media:\033[;;0m/dev/${live_media}"
 for part in $(ls /sys/class/block | grep "[0-9]$"| grep -v "${live_media}" | grep -v fd | grep -v ram | grep -v loop | grep -v sr)
 do
@@ -41,8 +46,7 @@ done
 
 if [ "$rootfs" == "" ] ; then
     echo "Error: Failed to detect rootfs."
-    read -n 1
-    exit 1
+    pause_exit 1
 fi
 echo -e "\033[31;1mReinstalling grub:\033[;0m"
 rmdir $tmpdir || true
@@ -55,24 +59,26 @@ for i in dev sys proc
 do
     mount --bind /$i /mnt/$i
 done
+
 if [ -d "/sys/firmware/efi" ] && [ ! "$efifs" == "" ]; then
-    chroot /mnt grub-install --target=x86_64-efi /dev/$(echo $rootfs | sed "s/[0-9]//g")
+    mount --bind /sys/firmware/efi/efivars /mnt/sys/firmware/efi/efivars
+    chroot /mnt grub-install --target=x86_64-efi /dev/$(echo $rootfs | sed "s/[0-9]//g") || pause_exit 1
 else
-    chroot /mnt grub-install --target=i386-pc /dev/$(echo $rootfs | sed "s/[0-9]//g")
+    chroot /mnt grub-install --target=i386-pc /dev/$(echo $rootfs | sed "s/[0-9]//g") || pause_exit 1
 fi
 sync
 for kernel in $(ls /mnt/lib/modules)
 do
     echo -e "\033[31;1mDepmod: \033[;0m$kernel"
     if [ -d /mnt/lib/modules/$kernel/kernel ] ; then
-        chroot /mnt depmod -a $kernel
+        chroot /mnt depmod -a $kernel || pause_exit 1
     else
         rm -rf /mnt/lib/modules/$kernel
     fi
 done
 echo -e "\033[31;1mGenerating initramfs:\033[;0m"
 if chroot /mnt which update-initramfs &>/dev/null ; then
-    chroot /mnt update-initramfs -u -k all
+    chroot /mnt update-initramfs -u -k all  || pause_exit 1
 else
     echo "\033[33;1minitramfs-tools not found\033[;0m"
 fi
@@ -94,6 +100,4 @@ chroot /mnt update-mime-database /usr/share/mime || true
 chroot /mnt update-ca-certificates --fresh || true
 chroot /mnt fc-cache -fv || true
 umount -lf -R /mnt
-echo -e "\033[32;1mPRESS ANY KEY TO EXIT\033[;0m"
-read -n 1
-exit 0
+pause_exit 0
