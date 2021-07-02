@@ -1,3 +1,16 @@
+pardus-boot-repair (0.2.0) unstable; urgency=medium
+
+  [ Ali Rıza KESKİN ]
+  * fix build
+  * Update 'pardus-boot-repair'
+  * icon
+  * replace icon
+  * update desktop file
+  * rename desktop file
+  * efivar bind fix
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 02 Jul 2021 15:01:38 +0300
+
 pardus-boot-repair (0.1.0) unstable; urgency=medium
 
   * Initial commit
