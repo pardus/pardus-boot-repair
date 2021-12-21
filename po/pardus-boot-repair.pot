@@ -1,0 +1,100 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-21 11:13+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../pardus-boot-repair:18
+#, sh-format
+msgid "Select user"
+msgstr ""
+
+#: ../pardus-boot-repair:19 ../pardus-boot-repair:29 ../pardus-boot-repair:40
+#: ../pardus-boot-repair:50 ../pardus-boot-repair:60
+#, sh-format
+msgid "Exit"
+msgstr ""
+
+#: ../pardus-boot-repair:20 ../pardus-boot-repair:30 ../pardus-boot-repair:41
+#: ../pardus-boot-repair:51 ../pardus-boot-repair:61
+#, sh-format
+msgid "Select"
+msgstr ""
+
+#: ../pardus-boot-repair:21
+#, sh-format
+msgid "User"
+msgstr ""
+
+#: ../pardus-boot-repair:28
+#, sh-format
+msgid "Select rootfs partition"
+msgstr ""
+
+#: ../pardus-boot-repair:31
+#, sh-format
+msgid "Rootfs partition"
+msgstr ""
+
+#: ../pardus-boot-repair:39
+#, sh-format
+msgid "Pardus Boot Repair"
+msgstr ""
+
+#: ../pardus-boot-repair:42
+#, sh-format
+msgid "Action"
+msgstr ""
+
+#: ../pardus-boot-repair:42
+#, sh-format
+msgid "Name"
+msgstr ""
+
+#: ../pardus-boot-repair:43
+#, sh-format
+msgid "Reinstall grub"
+msgstr ""
+
+#: ../pardus-boot-repair:44
+#, sh-format
+msgid "Reset password"
+msgstr ""
+
+#: ../pardus-boot-repair:45
+#, sh-format
+msgid "Open chroot shell"
+msgstr ""
+
+#: ../pardus-boot-repair:49
+#, sh-format
+msgid "Select grub disk"
+msgstr ""
+
+#: ../pardus-boot-repair:52
+#, sh-format
+msgid "Grub disk"
+msgstr ""
+
+#: ../pardus-boot-repair:59
+#, sh-format
+msgid "Select efi partition"
+msgstr ""
+
+#: ../pardus-boot-repair:62
+#, sh-format
+msgid "EFI partition"
+msgstr ""
