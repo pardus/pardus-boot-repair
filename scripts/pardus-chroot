@@ -29,3 +29,4 @@ fi
 for dir in devpts dev sys proc run ; do
     while umount "$DESTDIR/$dir" 2>/dev/null; do : ;done
 done
+umount -lf "$DESTDIR"  2>/dev/null

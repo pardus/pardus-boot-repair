@@ -74,11 +74,15 @@ while true ; do
         x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi grub-reinstall"
     elif [[ "$selection" == "password" ]] ; then
         user=$(select_user)
-        x-terminal-emulator -e "env user=$user disk=$disk reset-password"
+        if [[ "$user" != "" ]] ; then
+            x-terminal-emulator -e "env user=$user disk=$disk reset-password"
+        fi
     elif [[ "$selection" == "chroot" ]] ; then
         xhost +
         user=$(select_user)
-        x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -"
+        if [[ "$user" != "" ]] ; then
+            x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -"
+        fi
     else
         exit 0
     fi
