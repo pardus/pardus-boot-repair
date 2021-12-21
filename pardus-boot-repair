@@ -6,7 +6,7 @@
 export TEXTDOMAIN=pardus-boot-repair
 export TEXTDOMAINDIR=/usr/share/locale
 
-if ps aux | grep lib/live-installer ; then
+if ps aux | grep lib/live-installer | grep -v grep ; then
     zenity --error --text="$(eval_gettext "You cannot open boot repair during installation")" \
         --ok-label="$(eval_gettext "OK")"
     exit 1
