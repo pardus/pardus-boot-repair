@@ -1,0 +1,31 @@
+#!/bin/bash
+set -e
+DESTDIR="$1"
+if [[ -b "$1" ]] ; then
+    DESTDIR=$(mktemp -d)
+    mount "$1" "$DESTDIR"
+fi
+shift
+if [[ $UID -ne 0 ]] ; then
+    echo "You must be root!"
+    exit 1
+fi
+if [[ "$DESTDIR" == "" ||  ! -f "$DESTDIR/etc/os-release" ]] ; then
+    echo "Target filesystem is invalid: $DESTDIR"
+    exit 1
+fi
+mount --bind /dev "$DESTDIR/dev"
+mount -t devpts devpts "$DESTDIR/dev/pts"
+mount -t sysfs sysfs "$DESTDIR/sys"
+mount -t proc proc "$DESTDIR/proc"
+mount -t tmpfs tmpfs  "$DESTDIR/run"
+if [[ -d /sys/firmware/efi/ ]] ; then
+    mount -t efivarfs efivarfs  "$DESTDIR/sys/firmware/efi/efivars"
+fi
+SHELL=/bin/bash unshare --fork --pid chroot $DESTDIR "$@"
+if [[ -d /sys/firmware/efi/ ]] ; then
+    while umount "$DESTDIR/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
+fi
+for dir in devpts dev sys proc run ; do
+    while umount "$DESTDIR/$dir" 2>/dev/null; do : ;done
+done
