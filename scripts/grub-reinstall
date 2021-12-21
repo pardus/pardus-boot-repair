@@ -33,6 +33,7 @@ for kernel in $(ls /mnt/lib/modules) ; do
     chroot /mnt depmod -a $kernel
     chroot /mnt update-initramfs -u -k $kernel
 done
+cat /etc/resolv.conf > /mnt/etc/resolv.conf
 chroot /mnt apt update || true
 chroot /mnt apt install --reinstall ${legacy:+grub-pc-bin} ${efi:+grub-efi-amd64-bin} grub-common -yq || true
 chroot /mnt grub-install --force $mbr
@@ -43,4 +44,4 @@ fi
 for dir in dev/pts dev sys proc ; do
     while umount -lf "/mnt/$dir" 2>/dev/null; do : ;done
 done
-
+umount -lf /mnt  2>/dev/null
