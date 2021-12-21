@@ -1,9 +1,17 @@
 #!/bin/bash
 
+
 . gettext.sh
 
 export TEXTDOMAIN=pardus-boot-repair
 export TEXTDOMAINDIR=/usr/share/locale
+
+if ps aux | grep lib/live-installer ; then
+    zenity --error --text="$(eval_gettext "You cannot open boot repair during installation")" \
+        --ok-label="$(eval_gettext "OK")"
+    exit 1
+fi
+
 
 list_partition(){
     for disk in $(ls /sys/block/* | grep "[0-9]$") ; do
