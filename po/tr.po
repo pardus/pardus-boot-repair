@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-21 11:13+0300\n"
-"PO-Revision-Date: 2021-12-21 11:17+0300\n"
+"POT-Creation-Date: 2021-12-21 16:42+0300\n"
+"PO-Revision-Date: 2021-12-21 16:43+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
 "Language: tr\n"
@@ -17,84 +17,94 @@ msgstr ""
 "X-Generator: Gtranslator 3.38.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ../pardus-boot-repair:18
+#: ../pardus-boot-repair:10
+#, sh-format
+msgid "You cannot open boot repair during installation"
+msgstr "Yükleme sırasında başlangıç onarmayı açamazsınız "
+
+#: ../pardus-boot-repair:11
+#, sh-format
+msgid "OK"
+msgstr "Tamam"
+
+#: ../pardus-boot-repair:26
 #, sh-format
 msgid "Select user"
 msgstr "Kullanıcı Seç"
 
-#: ../pardus-boot-repair:19 ../pardus-boot-repair:29 ../pardus-boot-repair:40
-#: ../pardus-boot-repair:50 ../pardus-boot-repair:60
+#: ../pardus-boot-repair:27 ../pardus-boot-repair:38 ../pardus-boot-repair:50
+#: ../pardus-boot-repair:61 ../pardus-boot-repair:72
 #, sh-format
 msgid "Exit"
 msgstr "Çıkış"
 
-#: ../pardus-boot-repair:20 ../pardus-boot-repair:30 ../pardus-boot-repair:41
-#: ../pardus-boot-repair:51 ../pardus-boot-repair:61
+#: ../pardus-boot-repair:28 ../pardus-boot-repair:39 ../pardus-boot-repair:51
+#: ../pardus-boot-repair:62 ../pardus-boot-repair:73
 #, sh-format
 msgid "Select"
 msgstr "Seç"
 
-#: ../pardus-boot-repair:21
+#: ../pardus-boot-repair:29
 #, sh-format
 msgid "User"
 msgstr "Kullanıcı"
 
-#: ../pardus-boot-repair:28
+#: ../pardus-boot-repair:37
 #, sh-format
 msgid "Select rootfs partition"
 msgstr "Rootfs bölümünü seçin"
 
-#: ../pardus-boot-repair:31
+#: ../pardus-boot-repair:40
 #, sh-format
 msgid "Rootfs partition"
 msgstr "Rootfs bölümü"
 
-#: ../pardus-boot-repair:39
+#: ../pardus-boot-repair:49
 #, sh-format
 msgid "Pardus Boot Repair"
 msgstr "Pardus Başlangıç Onarma"
 
-#: ../pardus-boot-repair:42
+#: ../pardus-boot-repair:52
 #, sh-format
 msgid "Action"
 msgstr "Eylem"
 
-#: ../pardus-boot-repair:42
+#: ../pardus-boot-repair:52
 #, sh-format
 msgid "Name"
 msgstr "İsim"
 
-#: ../pardus-boot-repair:43
+#: ../pardus-boot-repair:54
 #, sh-format
 msgid "Reinstall grub"
 msgstr "Grubu yeniden yükleyin"
 
-#: ../pardus-boot-repair:44
+#: ../pardus-boot-repair:55
 #, sh-format
 msgid "Reset password"
 msgstr "Şifreyi yenile"
 
-#: ../pardus-boot-repair:45
+#: ../pardus-boot-repair:56
 #, sh-format
 msgid "Open chroot shell"
 msgstr "Chroot kabuğunu aç"
 
-#: ../pardus-boot-repair:49
+#: ../pardus-boot-repair:60
 #, sh-format
 msgid "Select grub disk"
 msgstr "Grub diskini seçin"
 
-#: ../pardus-boot-repair:52
+#: ../pardus-boot-repair:63
 #, sh-format
 msgid "Grub disk"
 msgstr "Grub diski"
 
-#: ../pardus-boot-repair:59
+#: ../pardus-boot-repair:71
 #, sh-format
 msgid "Select efi partition"
 msgstr "Efi bölümünü seçin"
 
-#: ../pardus-boot-repair:62
+#: ../pardus-boot-repair:74
 #, sh-format
 msgid "EFI partition"
 msgstr "EFI bölümü"
