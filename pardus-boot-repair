@@ -109,7 +109,7 @@ while true ; do
             x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -" || fail $(eval_gettext "Failed to open chroot shell")
         fi
     elif [[ "$selection" == "reinstall" ]] ; then
-        yesno $(eval_gettext "This operation may damage your files! Do you want to continue?")
+        yesno "$(eval_gettext "This operation may damage your files! Do you want to continue?")"
         mbr=$(zenity --list \
             --title="$(eval_gettext "Select grub disk")" \
             --cancel-label="$(eval_gettext "Exit")" \
