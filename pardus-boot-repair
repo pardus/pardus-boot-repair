@@ -33,12 +33,12 @@ select_user(){
 }
 
 fail(){
-    zenity --error --text="$@" --ok-label="$(eval_gettext "OK")"
+    zenity --error --text="$@" --ok-label="$(eval_gettext "OK")" --width=400
     exit 1
 }
 
 yesno(){
-    zenity --question --text="$@"
+    zenity --question --width=400 --text="$@"
     if [[ $? -ne 0 ]] ; then
         exit 1
     fi
