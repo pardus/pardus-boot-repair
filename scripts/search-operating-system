@@ -3,6 +3,7 @@ grep "boot=live" "/proc/cmdline" &>/dev/null || exit 1
 for part in $(ls /sys/block/* | grep "[0-9]$" | grep -v "loop") ; do
     tmpdir=$(mktemp -d)
     umount -lf /dev/$part 2>/dev/null
+    type=$(blkid -o value -s TYPE /dev/$disk)
     timeout 3 mount -o defaults,ro /dev/$part $tmpdir 2>/dev/null
     if [[ -f "$tmpdir/etc/os-release" ]] ; then
         distro=$(cat $tmpdir/etc/os-release | grep "^NAME" | sed "s/.*=//g")
@@ -13,6 +14,10 @@ for part in $(ls /sys/block/* | grep "[0-9]$" | grep -v "loop") ; do
         echo "Windows-EFI: /dev/$part"
     elif [[ -f $tmpdir/EFI/pardus/grubx64.efi ]] ; then
         echo "Pardus-EFI: /dev/$part"
+    elif [[ -f $tmpdir/EFI/ ]] ; then
+        echo "EFI: /dev/$part"
+    else
+        echo "$type: /dev/$disk"
     fi
     umount -lf -R $tmpdir 2>/dev/null
 done

@@ -38,6 +38,10 @@ fail(){
     return 1
 }
 
+yesno(){
+    zenity --question --text="$@"
+}
+
 disk=$(zenity --list \
         --title="$(eval_gettext "Select rootfs partition")" \
         --cancel-label="$(eval_gettext "Exit")" \
@@ -70,7 +74,7 @@ while true ; do
             --height=400 --width=400 \
             $(ls /sys/block/ | grep -v "loop"))
         if [[ "$mbr" == "" ]] ; then
-            exit
+            return 1
         fi
         if [[ -d /sys/firmware/efi/ ]] ; then
             efi=$(zenity --list \
@@ -82,7 +86,7 @@ while true ; do
                 --height=400 --width=400 \
                 $(list_partition))
             if [[ "$efi" == "" ]] ; then
-                exit
+                return 1
             fi
         fi
         x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi grub-reinstall" || fail $(eval_gettext "Failed to reinstall grub")
@@ -98,6 +102,7 @@ while true ; do
             x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -" || fail $(eval_gettext "Failed to open chroot shell")
         fi
     elif [[ "$selection" == "reinstall" ]] ; then
+        yesno $(eval_gettext "This operation may damage your files! Do you want to continue?")
         mbr=$(zenity --list \
             --title="$(eval_gettext "Select grub disk")" \
             --cancel-label="$(eval_gettext "Exit")" \
@@ -106,7 +111,7 @@ while true ; do
             --height=400 --width=400 \
             $(ls /sys/block/ | grep -v "loop"))
         if [[ "$mbr" == "" ]] ; then
-            exit
+            return 1
         fi
         if [[ -d /sys/firmware/efi/ ]] ; then
             efi=$(zenity --list \
@@ -118,10 +123,10 @@ while true ; do
                 --height=400 --width=400 \
                 $(list_partition))
             if [[ "$efi" == "" ]] ; then
-                exit
+                return 1
             fi
         fi
-        x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi pardus-reinstall /dev/$disk"
+        x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi pardus-reinstall /dev/$disk" || fail $(eval_gettext "Failed to reinstall system")
     else
         exit 0
     fi
