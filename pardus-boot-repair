@@ -35,11 +35,14 @@ select_user(){
 
 fail(){
     zenity --error --text="$@" --ok-label="$(eval_gettext "OK")"
-    return 1
+    exit 1
 }
 
 yesno(){
     zenity --question --text="$@"
+    if [[ $? -ne 0 ]] ; then
+        exit 1
+    fi
 }
 
 disk=$(zenity --list \
@@ -53,6 +56,11 @@ disk=$(zenity --list \
 if [[ "$disk" == "" ]] ; then
     exit 0
 fi
+mount -o ro /dev/$disk /mnt
+if [[ ! -f /etc/os-release ]] ; then
+    fail "Invalid rootfs partition: /dev/$disk"
+fi
+umount /mnt
 while true ; do
     selection=$(zenity --list \
         --title="$(eval_gettext "Pardus Boot Repair")" \
@@ -74,7 +82,7 @@ while true ; do
             --height=400 --width=400 \
             $(ls /sys/block/ | grep -v "loop"))
         if [[ "$mbr" == "" ]] ; then
-            return 1
+            exit
         fi
         if [[ -d /sys/firmware/efi/ ]] ; then
             efi=$(zenity --list \
@@ -86,7 +94,7 @@ while true ; do
                 --height=400 --width=400 \
                 $(list_partition))
             if [[ "$efi" == "" ]] ; then
-                return 1
+                exit
             fi
         fi
         x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi grub-reinstall" || fail $(eval_gettext "Failed to reinstall grub")
@@ -111,7 +119,7 @@ while true ; do
             --height=400 --width=400 \
             $(ls /sys/block/ | grep -v "loop"))
         if [[ "$mbr" == "" ]] ; then
-            return 1
+            exit
         fi
         if [[ -d /sys/firmware/efi/ ]] ; then
             efi=$(zenity --list \
@@ -123,7 +131,7 @@ while true ; do
                 --height=400 --width=400 \
                 $(list_partition))
             if [[ "$efi" == "" ]] ; then
-                return 1
+                exit
             fi
         fi
         x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi pardus-reinstall /dev/$disk" || fail $(eval_gettext "Failed to reinstall system")
