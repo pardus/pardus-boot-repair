@@ -21,3 +21,7 @@ cat $old/etc/default/keyboard > $new/etc/default/keyboard
 cat $old/etc/timezone > $new/etc/timezone
 cat $old/etc/default/locale > $new/etc/default/locale
 chroot $new apt purge live-* -yq
+bash /usr/lib/live-installer/scripts/fetch-pkg-debian.sh || true
+for i in dev sys proc run ; do
+    mount --bind /$i /target/$i
+done
