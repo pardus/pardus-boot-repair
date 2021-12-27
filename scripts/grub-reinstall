@@ -26,6 +26,11 @@ then
     umount -lf /dev/$efi 2>/dev/null || true
     mount /dev/$efi /mnt/boot/efi
     mount --bind /sys/firmware/efi/efivars /mnt/sys/firmware/efi/efivars
+    if [[ "$(cat /sys/firmware/efi/fw_platform_size)" == "64" ]] ; then
+        efi64="1"
+    else
+        efi32="1"
+    fi
 else
   legacy="1"
 fi
@@ -35,7 +40,7 @@ for kernel in $(ls /mnt/lib/modules) ; do
 done
 cat /etc/resolv.conf > /mnt/etc/resolv.conf
 chroot /mnt apt update || true
-chroot /mnt apt install --reinstall ${legacy:+grub-pc-bin} ${efi:+grub-efi-amd64-bin} grub-common -yq || true
+chroot /mnt apt install --reinstall ${legacy:+grub-pc-bin} ${efi64:+grub-efi-amd64-bin} ${efi32:+grub-efi-ia32-bin} grub-common -yq || true
 chroot /mnt grub-install --force /dev/$mbr
 chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 if [[ -d /sys/firmware/efi/ ]] ; then
