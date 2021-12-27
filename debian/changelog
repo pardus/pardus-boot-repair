@@ -1,9 +1,33 @@
-pardus-boot-repair (0.2.1) unstable; urgency=medium
+pardus-boot-repair (0.3.2) unstable; urgency=medium
 
-  [ Ali Rıza KESKİN ]
-  * rewritten
+  * Update translations
 
- -- Ali Riza KESKIN <ali.riza.keskin@pardus.org.tr>  Mon, 01 Mar 2021 18:25:49 +0300
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 21 Dec 2021 16:45:59 +0300
+
+pardus-boot-repair (0.3.1) unstable; urgency=medium
+
+  [ Ali Riza KESKIN ]
+  * disable if live-installer started
+  * Update 'pardus-boot-repair'
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 21 Dec 2021 16:45:11 +0300
+
+pardus-boot-repair (0.3.0) unstable; urgency=medium
+
+  [ Fatih Altun ]
+  * Update terminal as false
+  * Add zenity to depends
+  * Add localization
+
+  [ Ali Riza KESKIN ]
+  * Update 'pardus-boot-repair'
+  * fix wrap & mount bug
+  * minor fix
+  * Update 'scripts/pardus-chroot'
+  * Update 'scripts/grub-reinstall'
+  * rewritten / big update
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 21 Dec 2021 12:31:51 +0300
 
 pardus-boot-repair (0.2.0) unstable; urgency=medium
 

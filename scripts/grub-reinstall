@@ -36,7 +36,7 @@ done
 cat /etc/resolv.conf > /mnt/etc/resolv.conf
 chroot /mnt apt update || true
 chroot /mnt apt install --reinstall ${legacy:+grub-pc-bin} ${efi:+grub-efi-amd64-bin} grub-common -yq || true
-chroot /mnt grub-install --force $mbr
+chroot /mnt grub-install --force /dev/$mbr
 chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 if [[ -d /sys/firmware/efi/ ]] ; then
     while umount -lf "/mnt/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
