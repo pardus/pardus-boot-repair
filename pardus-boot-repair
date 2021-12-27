@@ -98,7 +98,30 @@ while true ; do
             x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -" || fail $(eval_gettext "Failed to open chroot shell")
         fi
     elif [[ "$selection" == "reinstall" ]] ; then
-        x-terminal-emulator -e "pardus-reinstall /dev/$disk"
+        mbr=$(zenity --list \
+            --title="$(eval_gettext "Select grub disk")" \
+            --cancel-label="$(eval_gettext "Exit")" \
+            --ok-label="$(eval_gettext "Select")" \
+            --column="$(eval_gettext "Grub disk")" \
+            --height=400 --width=400 \
+            $(ls /sys/block/ | grep -v "loop"))
+        if [[ "$mbr" == "" ]] ; then
+            exit
+        fi
+        if [[ -d /sys/firmware/efi/ ]] ; then
+            efi=$(zenity --list \
+                --title="$(eval_gettext "Select efi partition")" \
+                --cancel-label="$(eval_gettext "Exit")" \
+                --ok-label="$(eval_gettext "Select")" \
+                --column="$(eval_gettext "EFI partition")" \
+                --column="" \
+                --height=400 --width=400 \
+                $(list_partition))
+            if [[ "$efi" == "" ]] ; then
+                exit
+            fi
+        fi
+        x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi pardus-reinstall /dev/$disk"
     else
         exit 0
     fi

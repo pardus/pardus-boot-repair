@@ -1,7 +1,17 @@
 #!/bin/bash
 mkdir -p /source /target
 mount /dev/loop0 /source
-mount "$1" /target
+while [[ ! -b /dev/$disk ]] ; do
+    echo $(ls /sys/block/* | grep "[0-9]$")
+    echo -n "Rootfs partition >>> "
+    read disk
+done
+while [[ ! -b /dev/$mbr ]] ; do
+    echo $(ls /sys/block/ | grep -v "loop")
+    echo -n "Grub disk >>> "
+    read mbr
+done
+mount /dev/$disk /target
 mkdir -p /target/pardus.old
 old="/target/pardus.old"
 new="/target"
@@ -25,3 +35,24 @@ bash /usr/lib/live-installer/scripts/fetch-pkg-debian.sh || true
 for i in dev sys proc run ; do
     mount --bind /$i /target/$i
 done
+if [[ -d /sys/firmware/efi/ ]]
+then
+    while [[ ! -b /dev/$efi ]] ; do
+        echo $(ls /sys/block/* | grep "[0-9]$")
+        echo -n "EFI partition >>> "
+        read efi
+    done
+    umount -lf /dev/$efi 2>/dev/null || true
+    mkdir /target/boot/efi
+    mount /dev/$efi /target/boot/efi
+    mount --bind /sys/firmware/efi/efivars /mnt/sys/firmware/efi/efivars
+fi
+chroot /target grub-install /dev/$mbr
+chroot /target grub-mkconfig -o /boot/grub/grub.cfg
+if [[ -d /sys/firmware/efi/ ]] ; then
+    while umount -lf "/target/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
+fi
+for dir in dev/pts dev sys proc ; do
+    while umount -lf "/target/$dir" 2>/dev/null; do : ;done
+done
+umount -lf /target  2>/dev/null
