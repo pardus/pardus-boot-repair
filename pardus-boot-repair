@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 . gettext.sh
 
 export TEXTDOMAIN=pardus-boot-repair
@@ -57,7 +56,7 @@ if [[ "$disk" == "" ]] ; then
     exit 0
 fi
 mount -o ro /dev/$disk /mnt
-if [[ ! -f /etc/os-release ]] ; then
+if [[ ! -f /mnt/etc/os-release ]] ; then
     fail "Invalid rootfs partition: /dev/$disk"
 fi
 umount /mnt
