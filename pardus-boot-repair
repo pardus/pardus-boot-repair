@@ -118,7 +118,7 @@ while true ; do
         xhost +
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
-            Xephyr :1 -title $(eval_gettext "Virtual desktop") &
+            Xephyr :1 -title "$(eval_gettext "Virtual desktop")" &
             env DISPLAY=:1 pardus-chroot /dev/$disk su $user -c '/etc/X11/xinit/xinitrc' || fail $(eval_gettext "Failed to open desktop")
             pkill Xephyr
         fi

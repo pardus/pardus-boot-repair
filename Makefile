@@ -18,4 +18,5 @@ install:
 	# po generation
 	make -C $(DESTDIR)/po;
 	rm -rvf $(DESTDIR)/po;
-
+pot:
+	make -C po generate-pot update-po

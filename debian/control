@@ -8,6 +8,6 @@ Homepage: https://pardus.org.tr
 
 Package: pardus-boot-repair
 Architecture: all
-Depends: ${misc:Depends}, libc6, live-boot, zenity
+Depends: ${misc:Depends}, libc6, live-boot, zenity, xserver-xephyr
 Description: Pardus boot repair
  Pardus boot repair tool
