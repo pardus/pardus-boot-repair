@@ -71,6 +71,7 @@ while true ; do
         "password"   "$(eval_gettext "Reset password")" \
         "chroot"     "$(eval_gettext "Open chroot shell")" \
         "reinstall"  "$(eval_gettext "Reinstall system")" \
+        "update"     "$(eval_gettext "Update system")" \
     )
     if [[ "$selection" == "grub" ]] ; then
         mbr=$(zenity --list \
@@ -100,10 +101,10 @@ while true ; do
     elif [[ "$selection" == "password" ]] ; then
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
-            pass=$(zenity --entry --text="Enter new passpord" --title "Reset password")
+            pass=$(zenity --entry --text= $(eval_gettext "Enter new passpord") --title  $(eval_gettext "Reset password"))
             export pass1="$pass"
             export pass2="$pass"
-            x-terminal-emulator -e "env user=$user disk=$disk reset-password" || fail $(eval_gettext "Failed to reset password")
+            env user="$user" disk="$disk" reset-password || fail $(eval_gettext "Failed to reset password")
             unset pass1 pass2
         fi
     elif [[ "$selection" == "chroot" ]] ; then
@@ -137,7 +138,9 @@ while true ; do
                 exit
             fi
         fi
-        x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi pardus-reinstall /dev/$disk" || fail $(eval_gettext "Failed to reinstall system")
+        x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi pardus-reinstall" || fail $(eval_gettext "Failed to reinstall system")
+    elif [[ "$selection" == "update" ]] ; then
+        x-terminal-emulator -e "env disk=$disk full-upgrade" || fail $(eval_gettext "Failed to update system")
     else
         exit 0
     fi

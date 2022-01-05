@@ -1,5 +1,5 @@
 #!/bin/bash
 for part in $(ls /sys/block/* | grep "[0-9]$" | grep -v "loop") ; do
     umount -lf /dev/$part 2>/dev/null || true
-    yes "" | fsck -f -y /dev/$part || true
+    yes "" | fsck -y /dev/$part || true
 done
