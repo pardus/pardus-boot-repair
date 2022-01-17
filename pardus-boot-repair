@@ -70,7 +70,7 @@ while true ; do
         "grub"       "$(eval_gettext "Reinstall grub")" \
         "password"   "$(eval_gettext "Reset password")" \
         "chroot"     "$(eval_gettext "Open chroot shell")" \
-        "desktop"    "$(eval_gettext "Open desktop")" \
+        "desktop"    "$(eval_gettext "Open desktop (experimental)")" \
         "reinstall"  "$(eval_gettext "Reinstall system")" \
         "update"     "$(eval_gettext "Update system")" \
     )
@@ -102,7 +102,7 @@ while true ; do
     elif [[ "$selection" == "password" ]] ; then
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
-            pass=$(zenity --entry --text= $(eval_gettext "Enter new passpord") --title  $(eval_gettext "Reset password"))
+            pass=$(zenity --entry --text=$(eval_gettext "Enter new passpord") --title $(eval_gettext "Reset password"))
             export pass1="$pass"
             export pass2="$pass"
             env user="$user" disk="$disk" reset-password || fail $(eval_gettext "Failed to reset password")
@@ -115,11 +115,12 @@ while true ; do
             x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -" || fail $(eval_gettext "Failed to open chroot shell")
         fi
     elif [[ "$selection" == "desktop" ]] ; then
+        yesno "$(eval_gettext "This feature is experimental and may damage your data! Do you want to continue?")"
         xhost +
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
             Xephyr :1 -title "$(eval_gettext "Virtual desktop")" &
-            env DISPLAY=:1 pardus-chroot /dev/$disk su $user -c '/etc/X11/xinit/xinitrc' || fail $(eval_gettext "Failed to open desktop")
+            env DISPLAY=:1 pardus-chroot /dev/$disk su $user -c '/etc/X11/xinit/xinitrc' || true
             pkill Xephyr
         fi
     elif [[ "$selection" == "reinstall" ]] ; then

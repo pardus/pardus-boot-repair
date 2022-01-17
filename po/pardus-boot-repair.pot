@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 09:12+0000\n"
+"POT-Creation-Date: 2022-01-17 15:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,15 +33,15 @@ msgid "Select user"
 msgstr ""
 
 #: ../pardus-boot-repair:26 ../pardus-boot-repair:49 ../pardus-boot-repair:66
-#: ../pardus-boot-repair:80 ../pardus-boot-repair:91 ../pardus-boot-repair:129
-#: ../pardus-boot-repair:140
+#: ../pardus-boot-repair:80 ../pardus-boot-repair:91 ../pardus-boot-repair:130
+#: ../pardus-boot-repair:141
 #, sh-format
 msgid "Exit"
 msgstr ""
 
 #: ../pardus-boot-repair:27 ../pardus-boot-repair:50 ../pardus-boot-repair:67
-#: ../pardus-boot-repair:81 ../pardus-boot-repair:92 ../pardus-boot-repair:130
-#: ../pardus-boot-repair:141
+#: ../pardus-boot-repair:81 ../pardus-boot-repair:92 ../pardus-boot-repair:131
+#: ../pardus-boot-repair:142
 #, sh-format
 msgid "Select"
 msgstr ""
@@ -93,7 +93,7 @@ msgstr ""
 
 #: ../pardus-boot-repair:73
 #, sh-format
-msgid "Open desktop"
+msgid "Open desktop (experimental)"
 msgstr ""
 
 #: ../pardus-boot-repair:74
@@ -106,22 +106,22 @@ msgstr ""
 msgid "Update system"
 msgstr ""
 
-#: ../pardus-boot-repair:79 ../pardus-boot-repair:128
+#: ../pardus-boot-repair:79 ../pardus-boot-repair:129
 #, sh-format
 msgid "Select grub disk"
 msgstr ""
 
-#: ../pardus-boot-repair:82 ../pardus-boot-repair:131
+#: ../pardus-boot-repair:82 ../pardus-boot-repair:132
 #, sh-format
 msgid "Grub disk"
 msgstr ""
 
-#: ../pardus-boot-repair:90 ../pardus-boot-repair:139
+#: ../pardus-boot-repair:90 ../pardus-boot-repair:140
 #, sh-format
 msgid "Select efi partition"
 msgstr ""
 
-#: ../pardus-boot-repair:93 ../pardus-boot-repair:142
+#: ../pardus-boot-repair:93 ../pardus-boot-repair:143
 #, sh-format
 msgid "EFI partition"
 msgstr ""
@@ -146,27 +146,29 @@ msgstr ""
 msgid "Failed to open chroot shell"
 msgstr ""
 
-#: ../pardus-boot-repair:121
+#: ../pardus-boot-repair:118
 #, sh-format
-msgid "Virtual desktop"
+msgid ""
+"This feature is experimental and may damage your data! Do you want to "
+"continue?"
 msgstr ""
 
 #: ../pardus-boot-repair:122
 #, sh-format
-msgid "Failed to open desktop"
+msgid "Virtual desktop"
 msgstr ""
 
-#: ../pardus-boot-repair:126
+#: ../pardus-boot-repair:127
 #, sh-format
 msgid "This operation may damage your files! Do you want to continue?"
 msgstr ""
 
-#: ../pardus-boot-repair:150
+#: ../pardus-boot-repair:151
 #, sh-format
 msgid "Failed to reinstall system"
 msgstr ""
 
-#: ../pardus-boot-repair:152
+#: ../pardus-boot-repair:153
 #, sh-format
 msgid "Failed to update system"
 msgstr ""

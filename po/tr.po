@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 09:12+0000\n"
+"POT-Creation-Date: 2022-01-17 15:48+0000\n"
 "PO-Revision-Date: 2021-12-21 16:43+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
@@ -33,15 +33,15 @@ msgid "Select user"
 msgstr "Kullanıcı Seç"
 
 #: ../pardus-boot-repair:26 ../pardus-boot-repair:49 ../pardus-boot-repair:66
-#: ../pardus-boot-repair:80 ../pardus-boot-repair:91 ../pardus-boot-repair:129
-#: ../pardus-boot-repair:140
+#: ../pardus-boot-repair:80 ../pardus-boot-repair:91 ../pardus-boot-repair:130
+#: ../pardus-boot-repair:141
 #, sh-format
 msgid "Exit"
 msgstr "Çıkış"
 
 #: ../pardus-boot-repair:27 ../pardus-boot-repair:50 ../pardus-boot-repair:67
-#: ../pardus-boot-repair:81 ../pardus-boot-repair:92 ../pardus-boot-repair:130
-#: ../pardus-boot-repair:141
+#: ../pardus-boot-repair:81 ../pardus-boot-repair:92 ../pardus-boot-repair:131
+#: ../pardus-boot-repair:142
 #, sh-format
 msgid "Select"
 msgstr "Seç"
@@ -93,7 +93,7 @@ msgstr "Chroot kabuğunu aç"
 
 #: ../pardus-boot-repair:73
 #, sh-format
-msgid "Open desktop"
+msgid "Open desktop (experimental)"
 msgstr ""
 
 #: ../pardus-boot-repair:74
@@ -106,67 +106,68 @@ msgstr "Grubu yeniden yükleyin"
 msgid "Update system"
 msgstr ""
 
-#: ../pardus-boot-repair:79 ../pardus-boot-repair:128
+#: ../pardus-boot-repair:79 ../pardus-boot-repair:129
 #, sh-format
 msgid "Select grub disk"
 msgstr "Grub diskini seçin"
 
-#: ../pardus-boot-repair:82 ../pardus-boot-repair:131
+#: ../pardus-boot-repair:82 ../pardus-boot-repair:132
 #, sh-format
 msgid "Grub disk"
 msgstr "Grub diski"
 
-#: ../pardus-boot-repair:90 ../pardus-boot-repair:139
+#: ../pardus-boot-repair:90 ../pardus-boot-repair:140
 #, sh-format
 msgid "Select efi partition"
 msgstr "Efi bölümünü seçin"
 
-#: ../pardus-boot-repair:93 ../pardus-boot-repair:142
+#: ../pardus-boot-repair:93 ../pardus-boot-repair:143
 #, sh-format
 msgid "EFI partition"
 msgstr "EFI bölümü"
 
 #: ../pardus-boot-repair:101
-#, fuzzy, sh-format
 msgid "Failed to reinstall grub"
-msgstr "Grubu yeniden yükleyin"
+msgstr "Grubu yeniden yükleme başarısız"
 
 #: ../pardus-boot-repair:105
-#, fuzzy, sh-format
 msgid "Enter new passpord"
-msgstr "Şifreyi yenile"
+msgstr "Yeni parolayı girin"
 
 #: ../pardus-boot-repair:108
-#, fuzzy, sh-format
 msgid "Failed to reset password"
-msgstr "Şifreyi yenile"
+msgstr "Parola yenileme başarısız"
 
 #: ../pardus-boot-repair:115
-#, fuzzy, sh-format
 msgid "Failed to open chroot shell"
-msgstr "Chroot kabuğunu aç"
+msgstr "Chroot kabuğunu açma başarısız"
 
-#: ../pardus-boot-repair:121
-#, sh-format
-msgid "Virtual desktop"
-msgstr "Sanal masaüstü"
+#: ../pardus-boot-repair:118
+msgid ""
+"This feature is experimental and may damage your data! Do you want to "
+"continue?"
+msgstr "Bu özellik deneyseldir ve verilerinize zarar verebilir! Devam etmek istiyor musunuz?"
 
 #: ../pardus-boot-repair:122
 #, sh-format
-msgid "Failed to open desktop"
-msgstr "Masaüstü açılamadı"
+msgid "Virtual desktop"
+msgstr "Sanal masaustu"
 
-#: ../pardus-boot-repair:126
+#: ../pardus-boot-repair:127
 #, sh-format
 msgid "This operation may damage your files! Do you want to continue?"
 msgstr "Bu işlem verilerinize zarar verebilir. Devam etmek istiyor musunuz?"
 
-#: ../pardus-boot-repair:150
+#: ../pardus-boot-repair:151
 #, sh-format
 msgid "Failed to reinstall system"
 msgstr "Sistem yeniden yüklenemedi"
 
-#: ../pardus-boot-repair:152
+#: ../pardus-boot-repair:153
 #, sh-format
 msgid "Failed to update system"
 msgstr "Sistem güncellenemedi"
+
+#, sh-format
+#~ msgid "Failed to open desktop"
+#~ msgstr "Masaüstü açılamadı"
