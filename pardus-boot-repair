@@ -102,7 +102,7 @@ while true ; do
     elif [[ "$selection" == "password" ]] ; then
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
-            pass=$(zenity --entry --text=$(eval_gettext "Enter new passpord") --title $(eval_gettext "Reset password"))
+            pass=$(zenity --entry --text="$(eval_gettext "Enter new passpord")" --title "$(eval_gettext "Reset password"))"
             export pass1="$pass"
             export pass2="$pass"
             env user="$user" disk="$disk" reset-password || fail $(eval_gettext "Failed to reset password")
