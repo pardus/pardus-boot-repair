@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set +e
 DESTDIR="$1"
 if [[ $UID -ne 0 ]] ; then
     echo "You must be root!"

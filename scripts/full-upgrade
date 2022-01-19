@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set +e
 while [[ ! -b /dev/$disk ]] ; do
     echo $(ls /sys/block/* | grep "[0-9]$")
     echo -n "Rootfs partition >>> "
