@@ -94,17 +94,16 @@ msgstr "Chroot kabuğunu aç"
 #: ../pardus-boot-repair:73
 #, sh-format
 msgid "Open desktop (experimental)"
-msgstr ""
+msgstr "Masaüstü aç (deneysel)"
 
 #: ../pardus-boot-repair:74
-#, fuzzy, sh-format
 msgid "Reinstall system"
-msgstr "Grubu yeniden yükleyin"
+msgstr "Sistemi yeniden yükle"
 
 #: ../pardus-boot-repair:75
 #, sh-format
 msgid "Update system"
-msgstr ""
+msgstr "Sistemi güncelle"
 
 #: ../pardus-boot-repair:79 ../pardus-boot-repair:129
 #, sh-format

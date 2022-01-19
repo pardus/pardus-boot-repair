@@ -12,6 +12,7 @@ mount --bind /sys /mnt/sys
 mount --bind /proc /mnt/proc
 [[ ! -d /mnt/var/lib/dpkg ]] && exit 1
 cat /etc/apt/sources.list > /mnt/etc/apt/sources.list
+cat /etc/resolv.conf > /mnt/etc/resolv.conf
 rm -rf /mnt/etc/apt/sources.list.d
 mkdir -p /mnt/etc/apt/sources.list.d
 rm -rf /mnt/var/lib/apt/lists/*
