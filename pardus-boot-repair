@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 . gettext.sh
 
 export TEXTDOMAIN=pardus-boot-repair
@@ -33,6 +32,18 @@ select_user(){
     umount /mnt
 }
 
+fail(){
+    zenity --error --text="$*" --ok-label="$(eval_gettext "OK")" --width=400
+    exit 1
+}
+
+yesno(){
+    zenity --question --width=400 --text="$*"
+    if [[ $? -ne 0 ]] ; then
+        exit 1
+    fi
+}
+
 disk=$(zenity --list \
         --title="$(eval_gettext "Select rootfs partition")" \
         --cancel-label="$(eval_gettext "Exit")" \
@@ -44,6 +55,11 @@ disk=$(zenity --list \
 if [[ "$disk" == "" ]] ; then
     exit 0
 fi
+mount -o ro /dev/$disk /mnt
+if [[ ! -f /mnt/etc/os-release ]] ; then
+    fail "Invalid rootfs partition: /dev/$disk"
+fi
+umount /mnt
 while true ; do
     selection=$(zenity --list \
         --title="$(eval_gettext "Pardus Boot Repair")" \
@@ -54,6 +70,8 @@ while true ; do
         "grub"       "$(eval_gettext "Reinstall grub")" \
         "password"   "$(eval_gettext "Reset password")" \
         "chroot"     "$(eval_gettext "Open chroot shell")" \
+        "reinstall"  "$(eval_gettext "Reinstall system")" \
+        "update"     "$(eval_gettext "Update system")" \
     )
     if [[ "$selection" == "grub" ]] ; then
         mbr=$(zenity --list \
@@ -79,18 +97,50 @@ while true ; do
                 exit
             fi
         fi
-        x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi grub-reinstall"
+        x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi grub-reinstall" || fail $(eval_gettext "Failed to reinstall grub")
     elif [[ "$selection" == "password" ]] ; then
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
-            x-terminal-emulator -e "env user=$user disk=$disk reset-password"
+            pass=$(zenity --entry --text="$(eval_gettext "Enter new passpord")" --title "$(eval_gettext "Reset password")")
+            export pass1="$pass"
+            export pass2="$pass"
+            env user="$user" disk="$disk" reset-password || fail $(eval_gettext "Failed to reset password")
+            unset pass1 pass2
         fi
     elif [[ "$selection" == "chroot" ]] ; then
         xhost +
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
-            x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -"
+            x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -" || fail $(eval_gettext "Failed to open chroot shell")
         fi
+    elif [[ "$selection" == "reinstall" ]] ; then
+        yesno "$(eval_gettext "This operation may damage your files! Do you want to continue?")"
+        mbr=$(zenity --list \
+            --title="$(eval_gettext "Select grub disk")" \
+            --cancel-label="$(eval_gettext "Exit")" \
+            --ok-label="$(eval_gettext "Select")" \
+            --column="$(eval_gettext "Grub disk")" \
+            --height=400 --width=400 \
+            $(ls /sys/block/ | grep -v "loop"))
+        if [[ "$mbr" == "" ]] ; then
+            exit
+        fi
+        if [[ -d /sys/firmware/efi/ ]] ; then
+            efi=$(zenity --list \
+                --title="$(eval_gettext "Select efi partition")" \
+                --cancel-label="$(eval_gettext "Exit")" \
+                --ok-label="$(eval_gettext "Select")" \
+                --column="$(eval_gettext "EFI partition")" \
+                --column="" \
+                --height=400 --width=400 \
+                $(list_partition))
+            if [[ "$efi" == "" ]] ; then
+                exit
+            fi
+        fi
+        x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi pardus-reinstall" || fail $(eval_gettext "Failed to reinstall system")
+    elif [[ "$selection" == "update" ]] ; then
+        x-terminal-emulator -e "env disk=$disk full-upgrade" || fail $(eval_gettext "Failed to update system")
     else
         exit 0
     fi
