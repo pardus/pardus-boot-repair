@@ -13,7 +13,7 @@ fi
 
 
 list_partition(){
-    for disk in $(ls /sys/block/* | grep "[0-9]$") ; do
+    for disk in $(ls /sys/block/* | grep "[0-9]$" | grep -v "loop") $(ls /dev/dm-* | cut -f 3 -d "/"); do
         os=$(search-operating-system | grep $disk | cut -f 1 -d ':' | sed "s/ /-/g")
         echo "$disk ($os)"
     done
