@@ -1,5 +1,8 @@
 #!/bin/bash
 for part in $(ls /sys/block/* | grep "[0-9]$" | grep -v "loop") ; do
     umount -lf /dev/$part 2>/dev/null || true
-    yes "" | fsck -y /dev/$part || true
+    type=$(blkid | grep /dev/$part | sed "s/.*TYPE=\"//g;s/\".*//g")
+    if [[ "$type" == "ext4" ]] ; then
+        yes "" | fsck.ext4 -y /dev/$part
+    fi
 done
