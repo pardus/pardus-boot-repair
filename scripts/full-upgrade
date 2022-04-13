@@ -25,3 +25,5 @@ for dir in dev/pts dev sys proc ; do
     while umount -lf "/mnt/$dir" 2>/dev/null; do : ;done
 done
 umount -lf /mnt  2>/dev/null
+echo -n "press any key to continue"
+read -n 1 
