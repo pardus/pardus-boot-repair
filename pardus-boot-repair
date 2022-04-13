@@ -1,4 +1,6 @@
 #!/bin/bash
+xhost +
+x-terminal-emulator -e "check-filesystem"
 
 . gettext.sh
 
@@ -55,7 +57,6 @@ disk=$(zenity --list \
 if [[ "$disk" == "" ]] ; then
     exit 0
 fi
-x-terminal-emulator -e "check-filesystem"
 mount -o ro /dev/$disk /mnt
 if [[ ! -f /mnt/etc/os-release ]] ; then
     fail "Invalid rootfs partition: /dev/$disk"
@@ -110,7 +111,6 @@ while true ; do
             unset pass1 pass2
         fi
     elif [[ "$selection" == "chroot" ]] ; then
-        xhost +
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
             x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -" || fail $(eval_gettext "Failed to open chroot shell")
