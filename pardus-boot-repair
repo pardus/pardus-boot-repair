@@ -1,4 +1,6 @@
 #!/bin/bash
+xhost +
+x-terminal-emulator -e "check-filesystem"
 
 . gettext.sh
 
@@ -72,6 +74,7 @@ while true ; do
         "chroot"     "$(eval_gettext "Open chroot shell")" \
         "reinstall"  "$(eval_gettext "Reinstall system")" \
         "update"     "$(eval_gettext "Update system")" \
+        "fix-broken" "$(eval_gettext "Try to fix broken packages")" \
     )
     if [[ "$selection" == "grub" ]] ; then
         mbr=$(zenity --list \
@@ -108,11 +111,12 @@ while true ; do
             unset pass1 pass2
         fi
     elif [[ "$selection" == "chroot" ]] ; then
-        xhost +
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
             x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -" || fail $(eval_gettext "Failed to open chroot shell")
         fi
+    elif [[ "$selection" == "fix-broken" ]] ; then
+        x-terminal-emulator -e "env disk=$disk fix-broken-packages" || fail $(eval_gettext "Failed to fix broken packages")
     elif [[ "$selection" == "reinstall" ]] ; then
         yesno "$(eval_gettext "This operation may damage your files! Do you want to continue?")"
         mbr=$(zenity --list \
