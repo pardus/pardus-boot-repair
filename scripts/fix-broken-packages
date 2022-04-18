@@ -19,6 +19,7 @@ export DEBIAN_FRONTEND=noninteractive
 chroot /mnt apt update
 chroot /mnt apt install -f -y
 chroot /mnt dpkg -l | grep "^i[A-Z]" | tr -s " " | cut -f 2 -d " " | while read package ; do
+    chroot /mnt dpkg --configure -a
     chroot /mnt dpkg -r --force-depends $package
     chroot /mnt apt install -f --allow-downgrades --allow-change-held-packages -o Dpkg::Options::="--force-confnew" -y
 done

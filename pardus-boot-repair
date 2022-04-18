@@ -75,6 +75,7 @@ while true ; do
         "reinstall"  "$(eval_gettext "Reinstall system")" \
         "update"     "$(eval_gettext "Update system")" \
         "fix-broken" "$(eval_gettext "Try to fix broken packages")" \
+        "report"     "$(eval_gettext "Create system report")"
     )
     if [[ "$selection" == "grub" ]] ; then
         mbr=$(zenity --list \
@@ -145,6 +146,9 @@ while true ; do
         x-terminal-emulator -e "env disk=$disk mbr=$mbr efi=$efi pardus-reinstall" || fail $(eval_gettext "Failed to reinstall system")
     elif [[ "$selection" == "update" ]] ; then
         x-terminal-emulator -e "env disk=$disk full-upgrade" || fail $(eval_gettext "Failed to update system")
+    elif [[ "$selection" == "report" ]] ; then
+        home=$(grep "x:1000:" /etc/passwd | cut -f 6 -d ":")
+        env disk="$disk" dump-info-log "$home"
     else
         exit 0
     fi
