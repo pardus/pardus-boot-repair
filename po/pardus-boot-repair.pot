@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-14 11:14+0000\n"
+"POT-Creation-Date: 2022-04-18 07:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,15 +33,15 @@ msgid "Select user"
 msgstr ""
 
 #: ../pardus-boot-repair:28 ../pardus-boot-repair:51 ../pardus-boot-repair:68
-#: ../pardus-boot-repair:82 ../pardus-boot-repair:93 ../pardus-boot-repair:124
-#: ../pardus-boot-repair:135
+#: ../pardus-boot-repair:83 ../pardus-boot-repair:94 ../pardus-boot-repair:125
+#: ../pardus-boot-repair:136
 #, sh-format
 msgid "Exit"
 msgstr ""
 
 #: ../pardus-boot-repair:29 ../pardus-boot-repair:52 ../pardus-boot-repair:69
-#: ../pardus-boot-repair:83 ../pardus-boot-repair:94 ../pardus-boot-repair:125
-#: ../pardus-boot-repair:136
+#: ../pardus-boot-repair:84 ../pardus-boot-repair:95 ../pardus-boot-repair:126
+#: ../pardus-boot-repair:137
 #, sh-format
 msgid "Select"
 msgstr ""
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Reinstall grub"
 msgstr ""
 
-#: ../pardus-boot-repair:73 ../pardus-boot-repair:107
+#: ../pardus-boot-repair:73 ../pardus-boot-repair:108
 #, sh-format
 msgid "Reset password"
 msgstr ""
@@ -106,62 +106,67 @@ msgstr ""
 msgid "Try to fix broken packages"
 msgstr ""
 
-#: ../pardus-boot-repair:81 ../pardus-boot-repair:123
+#: ../pardus-boot-repair:78
+#, sh-format
+msgid "Create system report"
+msgstr ""
+
+#: ../pardus-boot-repair:82 ../pardus-boot-repair:124
 #, sh-format
 msgid "Select grub disk"
 msgstr ""
 
-#: ../pardus-boot-repair:84 ../pardus-boot-repair:126
+#: ../pardus-boot-repair:85 ../pardus-boot-repair:127
 #, sh-format
 msgid "Grub disk"
 msgstr ""
 
-#: ../pardus-boot-repair:92 ../pardus-boot-repair:134
+#: ../pardus-boot-repair:93 ../pardus-boot-repair:135
 #, sh-format
 msgid "Select efi partition"
 msgstr ""
 
-#: ../pardus-boot-repair:95 ../pardus-boot-repair:137
+#: ../pardus-boot-repair:96 ../pardus-boot-repair:138
 #, sh-format
 msgid "EFI partition"
 msgstr ""
 
-#: ../pardus-boot-repair:103
+#: ../pardus-boot-repair:104
 #, sh-format
 msgid "Failed to reinstall grub"
 msgstr ""
 
-#: ../pardus-boot-repair:107
+#: ../pardus-boot-repair:108
 #, sh-format
 msgid "Enter new passpord"
 msgstr ""
 
-#: ../pardus-boot-repair:110
+#: ../pardus-boot-repair:111
 #, sh-format
 msgid "Failed to reset password"
 msgstr ""
 
-#: ../pardus-boot-repair:116
+#: ../pardus-boot-repair:117
 #, sh-format
 msgid "Failed to open chroot shell"
 msgstr ""
 
-#: ../pardus-boot-repair:119
+#: ../pardus-boot-repair:120
 #, sh-format
 msgid "Failed to fix broken packages"
 msgstr ""
 
-#: ../pardus-boot-repair:121
+#: ../pardus-boot-repair:122
 #, sh-format
 msgid "This operation may damage your files! Do you want to continue?"
 msgstr ""
 
-#: ../pardus-boot-repair:145
+#: ../pardus-boot-repair:146
 #, sh-format
 msgid "Failed to reinstall system"
 msgstr ""
 
-#: ../pardus-boot-repair:147
+#: ../pardus-boot-repair:148
 #, sh-format
 msgid "Failed to update system"
 msgstr ""
