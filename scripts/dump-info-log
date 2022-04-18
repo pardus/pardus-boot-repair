@@ -13,6 +13,7 @@ zip "$target/system-log" \
     /mnt/var/log/auth.log \
     /mnt/var/log/boot.log \
     /mnt/var/log/daemon.log \
+    /mnt/var/log/dmesg.log \
     /mnt/var/log/dpkg.log \
     /mnt/var/log/kern.log \
     /mnt/var/log/syslog.log \
@@ -22,5 +23,11 @@ zip "$target/system-log" \
     /mnt/etc/apt/sources.list \
     /mnt/etc/apt/sources.list.d/* \
     /mnt/var/log/auth.log \
-    /mnt/var/log/Xorg.0.log
+    /mnt/var/log/Xorg.0.log \
+    /mnt/var/lib/dpkg/status \
+    /mnt/var/log/lightdm/lightdm.log \
+    /mnt/var/log/apt/*.log \
+    /mnt/var/log/lightdm/lightdm.log \
+    /mnt/boot/grub/grub.cfg
+
 umount -lf -R /mnt
