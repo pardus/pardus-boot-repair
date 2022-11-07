@@ -1,8 +1,8 @@
-DESTDIR=/
+ESTDIR=/
 PREFIX=/usr
 SUBDIRS := po
 build:
-	: Please run make install
+	make -C po build
 install:
 	mkdir -p $(DESTDIR)/usr/bin/ || true
 	mkdir -p $(DESTDIR)/usr/share/applications || true
@@ -16,7 +16,9 @@ install:
 	mkdir -p $(DESTDIR)/usr/share/locale  || true
 	cp -a po $(DESTDIR)/.
 	# po generation
-	make -C $(DESTDIR)/po;
-	rm -rvf $(DESTDIR)/po;
+	make -C po install
 pot:
 	make -C po generate-pot update-po
+
+clean:
+	make -C po clean
