@@ -18,7 +18,8 @@ install:
 	# po generation
 	make -C po install
 pot:
-	make -C po generate-pot update-po
+	make -C po generate-pot
+	make -C po update-po
 
 clean:
 	make -C po clean

@@ -1,6 +1,10 @@
 #!/bin/bash
-xhost +
+xhost +local:
+source /etc/profile
 
+if [[ $UID -ne 0 ]] ; then
+    exec pkexec pardus-boot-repair
+fi
 . gettext.sh
 
 export TEXTDOMAIN=pardus-boot-repair
@@ -113,6 +117,7 @@ while true ; do
         "chroot"     "$(eval_gettext "Open chroot shell")" \
         "reinstall"  "$(eval_gettext "Reinstall system")" \
         "repair"     "$(eval_gettext "Repair partition")" \
+        "reset"      "$(eval_gettext "Reset user config")" \
         "update"     "$(eval_gettext "Update system")" \
         "fix-broken" "$(eval_gettext "Try to fix broken packages")" \
         "report"     "$(eval_gettext "Create system report")"
@@ -150,6 +155,12 @@ while true ; do
     elif [[ "$selection" == "repair" ]] ; then
         select_partition
          x-terminal-emulator -e "env disk=$disk check-filesystem"  || fail $(eval_gettext "Failed to repair partition")
+    elif [[ "$selection" == "reset" ]] ; then
+        select_rootfs
+        user=$(select_user)
+        if [[ "$user" != "" ]] ; then
+            x-terminal-emulator -e "pardus-chroot /dev/$disk su $user -c 'cd ; rm -rvf .dbus .cache .local .config ; echo -en Press any key to continue ;read -n 1'"  || fail $(eval_gettext "Failed to repair partition")
+        fi
     elif [[ "$selection" == "update" ]] ; then
         select_rootfs
         x-terminal-emulator -e "env disk=$disk full-upgrade" || fail $(eval_gettext "Failed to update system")

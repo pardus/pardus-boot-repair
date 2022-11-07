@@ -11,3 +11,5 @@ if [[ "$type" == "ext4" ]] ; then
 else
     yes "" | fsck.$type /dev/$disk
 fi
+echo -en "\033[32;1mPress any key to continue\033[;0m"
+read -n 1

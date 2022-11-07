@@ -1,10 +1,8 @@
 #!/usr/bin/make -f
 
-POTFILES := $(shell cat POTFILES.in)
+all: build
 
-all: generate-locales
-
-generate-pot: POTFILES.in
+generate-pot:
 	xgettext -o pardus-boot-repair.pot  -L Shell --keyword --keyword=eval_gettext ../pardus-boot-repair
 
 build:

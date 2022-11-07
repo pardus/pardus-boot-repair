@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-07 10:32+0300\n"
+"POT-Creation-Date: 2022-11-07 11:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,7 +109,7 @@ msgstr ""
 msgid "Reinstall grub"
 msgstr ""
 
-#: ../pardus-boot-repair:112 ../pardus-boot-repair:129
+#: ../pardus-boot-repair:112 ../pardus-boot-repair:130
 #, sh-format
 msgid "Reset password"
 msgstr ""
@@ -131,60 +131,65 @@ msgstr ""
 
 #: ../pardus-boot-repair:116
 #, sh-format
-msgid "Update system"
+msgid "Reset user config"
 msgstr ""
 
 #: ../pardus-boot-repair:117
 #, sh-format
-msgid "Try to fix broken packages"
+msgid "Update system"
 msgstr ""
 
 #: ../pardus-boot-repair:118
 #, sh-format
+msgid "Try to fix broken packages"
+msgstr ""
+
+#: ../pardus-boot-repair:119
+#, sh-format
 msgid "Create system report"
 msgstr ""
 
-#: ../pardus-boot-repair:124
+#: ../pardus-boot-repair:125
 #, sh-format
 msgid "Failed to reinstall grub"
 msgstr ""
 
-#: ../pardus-boot-repair:129
+#: ../pardus-boot-repair:130
 #, sh-format
 msgid "Enter new passpord"
 msgstr ""
 
-#: ../pardus-boot-repair:132
+#: ../pardus-boot-repair:133
 #, sh-format
 msgid "Failed to reset password"
 msgstr ""
 
-#: ../pardus-boot-repair:139
+#: ../pardus-boot-repair:140
 #, sh-format
 msgid "Failed to open chroot shell"
 msgstr ""
 
-#: ../pardus-boot-repair:143
+#: ../pardus-boot-repair:144
 #, sh-format
 msgid "Failed to fix broken packages"
 msgstr ""
 
-#: ../pardus-boot-repair:145
+#: ../pardus-boot-repair:146
 #, sh-format
 msgid "This operation may damage your files! Do you want to continue?"
 msgstr ""
 
-#: ../pardus-boot-repair:149
+#: ../pardus-boot-repair:150
 #, sh-format
 msgid "Failed to reinstall system"
 msgstr ""
 
-#: ../pardus-boot-repair:152
+#: ../pardus-boot-repair:153 ../pardus-boot-repair:158
 #, sh-format
 msgid "Failed to repair partition"
 msgstr ""
 
-#: ../pardus-boot-repair:155
+#: ../pardus-boot-repair:162
 #, sh-format
 msgid "Failed to update system"
 msgstr ""

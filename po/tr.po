@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-07 10:32+0300\n"
+"POT-Creation-Date: 2022-11-07 11:23+0300\n"
 "PO-Revision-Date: 2021-12-21 16:43+0300\n"
 "Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
 "Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
@@ -70,10 +70,12 @@ msgid "Grub disk"
 msgstr "Grub diski"
 
 #: ../pardus-boot-repair:80
+#, sh-format
 msgid "Select partition"
 msgstr "Bölüm seçin"
 
 #: ../pardus-boot-repair:83
+#, sh-format
 msgid "partition"
 msgstr "bölüm"
 
@@ -107,7 +109,7 @@ msgstr "İsim"
 msgid "Reinstall grub"
 msgstr "Grubu yeniden yükleyin"
 
-#: ../pardus-boot-repair:112 ../pardus-boot-repair:129
+#: ../pardus-boot-repair:112 ../pardus-boot-repair:130
 #, sh-format
 msgid "Reset password"
 msgstr "Şifreyi yenile"
@@ -123,64 +125,70 @@ msgid "Reinstall system"
 msgstr "Sistemi yeniden yükle"
 
 #: ../pardus-boot-repair:115
+#, sh-format
 msgid "Repair partition"
 msgstr "Bölüm onar"
 
 #: ../pardus-boot-repair:116
+msgid "Reset user config"
+msgstr "Kullanıcı ayarlarını sıfırla"
+
+#: ../pardus-boot-repair:117
 #, sh-format
 msgid "Update system"
 msgstr "Sistemi güncelle"
 
-#: ../pardus-boot-repair:117
+#: ../pardus-boot-repair:118
 #, sh-format
 msgid "Try to fix broken packages"
 msgstr "Bozuk paketleri onarmayı dene"
 
-#: ../pardus-boot-repair:118
+#: ../pardus-boot-repair:119
 #, sh-format
 msgid "Create system report"
 msgstr "Sistem raporu çıkart"
 
-#: ../pardus-boot-repair:124
+#: ../pardus-boot-repair:125
 #, sh-format
 msgid "Failed to reinstall grub"
 msgstr "Grubu yeniden yükleme başarısız"
 
-#: ../pardus-boot-repair:129
+#: ../pardus-boot-repair:130
 #, sh-format
 msgid "Enter new passpord"
 msgstr "Yeni parolayı girin"
 
-#: ../pardus-boot-repair:132
+#: ../pardus-boot-repair:133
 #, sh-format
 msgid "Failed to reset password"
 msgstr "Parola yenileme başarısız"
 
-#: ../pardus-boot-repair:139
+#: ../pardus-boot-repair:140
 #, sh-format
 msgid "Failed to open chroot shell"
 msgstr "Chroot kabuğunu açma başarısız"
 
-#: ../pardus-boot-repair:143
+#: ../pardus-boot-repair:144
 #, sh-format
 msgid "Failed to fix broken packages"
 msgstr "Bozuk paketler onarılamadı"
 
-#: ../pardus-boot-repair:145
+#: ../pardus-boot-repair:146
 #, sh-format
 msgid "This operation may damage your files! Do you want to continue?"
 msgstr "Bu işlem verilerinize zarar verebilir. Devam etmek istiyor musunuz?"
 
-#: ../pardus-boot-repair:149
+#: ../pardus-boot-repair:150
 #, sh-format
 msgid "Failed to reinstall system"
 msgstr "Sistem yeniden yüklenemedi"
 
-#: ../pardus-boot-repair:152
+#: ../pardus-boot-repair:153 ../pardus-boot-repair:158
+#, sh-format
 msgid "Failed to repair partition"
 msgstr "Bölüm onarılamadı"
 
-#: ../pardus-boot-repair:155
+#: ../pardus-boot-repair:162
 #, sh-format
 msgid "Failed to update system"
 msgstr "Sistem güncellenemedi"
