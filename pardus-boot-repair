@@ -156,6 +156,7 @@ while true ; do
         select_partition
          x-terminal-emulator -e "env disk=$disk check-filesystem"  || fail $(eval_gettext "Failed to repair partition")
     elif [[ "$selection" == "reset" ]] ; then
+        yesno "$(eval_gettext "This operation may damage your files! Do you want to continue?")"
         select_rootfs
         user=$(select_user)
         if [[ "$user" != "" ]] ; then
