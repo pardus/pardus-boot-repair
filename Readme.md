@@ -5,8 +5,10 @@ Boot repair tool for pardus.
 * grub repair
 * password change
 * create chroot shell
-* create chroot desktop (with Xephyr)
 * reinstallation
+* reset user config
+* repair partition
+* fix broken packages
 * full system update
 
 ## Installation:
@@ -19,7 +21,6 @@ make install
 * libc6
 * live-boot
 * zenity
-* xserver-xephyr
 
 ## Testing:
 1. Boot live from media.

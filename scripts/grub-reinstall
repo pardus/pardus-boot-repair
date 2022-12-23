@@ -42,6 +42,18 @@ cat /etc/resolv.conf > /mnt/etc/resolv.conf
 chroot /mnt apt update || true
 chroot /mnt apt install --reinstall ${legacy:+grub-pc-bin} ${efi64:+grub-efi-amd64-bin} ${efi32:+grub-efi-ia32-bin} grub-common -yq || true
 chroot /mnt grub-install --force /dev/$mbr
+
+# EFI hack for hardcoded winzort bootloader bioses.
+if [[ -f /mnt/boot/efi/pardus/bootx64.efi ]] ; then # amd64 only
+    mkdir -p /mnt/boot/efi/EFI/Microsoft/Boot/
+    if [[ -f "/mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi" ]] ; then
+        mv /mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi \
+            /mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw-winzort.efi
+    fi
+    cp /mnt/boot/efi/pardus/bootx64.efi \
+        /mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi
+fi
+
 chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 if [[ -d /sys/firmware/efi/ ]] ; then
     while umount -lf "/mnt/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
