@@ -1,3 +1,30 @@
+pardus-boot-repair (0.4.0) unstable; urgency=medium
+
+  [ Ali Rıza KESKİN ]
+  * boot repair check filesystem
+  * Update 'pardus-boot-repair'
+  * Update 'scripts/check-filesystem'
+  * Update 'scripts/fix-broken-packages'
+  * Update 'scripts/full-upgrade'
+  * Update 'scripts/grub-reinstall'
+  * done message
+  * translation update
+  * dump info log feature added,
+  * translation added
+  * more log added
+  * winzort bootloader hack for hardcoded bioses (dual boot test required)
+  * improve partition repair options
+  * rewrite translation mechanism
+  * reset user config added
+  * reset password format
+  * add yesno reset config
+  * update readme
+
+  [ Hugo Carvalho ]
+  * Add Portuguese translation
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 26 Dec 2022 18:40:35 +0300
+
 pardus-boot-repair (0.3.4) unstable; urgency=medium
 
   [ Ali Rıza KESKİN ]
