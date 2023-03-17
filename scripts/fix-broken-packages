@@ -1,32 +1,33 @@
 #!/bin/bash
 set +e
+DESTDIR=$(mktemp -d)
 while [[ ! -b /dev/$disk ]] ; do
     echo $(ls /sys/block/* | grep "[0-9]$")
     echo -n "Rootfs partition >>> "
     read disk
 done
-mount /dev/$disk /mnt
-mount --bind /dev /mnt/dev
-mount --bind /dev/pts /mnt/dev/pts
-mount --bind /sys /mnt/sys
-mount --bind /proc /mnt/proc
-[[ ! -d /mnt/var/lib/dpkg ]] && exit 1
-cat /etc/resolv.conf > /mnt/etc/resolv.conf
-rm -rf /mnt/etc/apt/sources.list.d
-mkdir -p /mnt/etc/apt/sources.list.d
-rm -rf /mnt/var/lib/apt/lists/*
+mount /dev/$disk "$DESTDIR"
+mount --bind /dev "$DESTDIR"/dev
+mount --bind /dev/pts "$DESTDIR"/dev/pts
+mount --bind /sys "$DESTDIR"/sys
+mount --bind /proc "$DESTDIR"/proc
+[[ ! -d "$DESTDIR"/var/lib/dpkg ]] && exit 1
+cat /etc/resolv.conf > "$DESTDIR"/etc/resolv.conf
+rm -rf "$DESTDIR"/etc/apt/sources.list.d
+mkdir -p "$DESTDIR"/etc/apt/sources.list.d
+rm -rf "$DESTDIR"/var/lib/apt/lists/*
 export DEBIAN_FRONTEND=noninteractive
-chroot /mnt apt update
-chroot /mnt apt install -f -y
-chroot /mnt dpkg -l | grep "^i[A-Z]" | tr -s " " | cut -f 2 -d " " | while read package ; do
-    chroot /mnt dpkg --configure -a
-    chroot /mnt dpkg -r --force-depends $package
-    chroot /mnt apt install -f --allow-downgrades --allow-change-held-packages -o Dpkg::Options::="--force-confnew" -y
+chroot "$DESTDIR" apt update
+chroot "$DESTDIR" apt install -f -y
+chroot "$DESTDIR" dpkg -l | grep "^i[A-Z]" | tr -s " " | cut -f 2 -d " " | while read package ; do
+    chroot "$DESTDIR" dpkg --configure -a
+    chroot "$DESTDIR" dpkg -r --force-depends $package
+    chroot "$DESTDIR" apt install -f --allow-downgrades --allow-change-held-packages -o Dpkg::Options::="--force-confnew" -y
 done
 sync
 for dir in dev/pts dev sys proc ; do
-    while umount -lf "/mnt/$dir" 2>/dev/null; do : ;done
+    while umount -lf ""$DESTDIR"/$dir" 2>/dev/null; do : ;done
 done
-umount -lf /mnt  2>/dev/null
+umount -lf "$DESTDIR"  2>/dev/null
 echo -en "\033[32;1mPress any key to continue\033[;0m"
 read -n 1 

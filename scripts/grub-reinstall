@@ -1,5 +1,6 @@
 #!/bin/bash
 set +e
+DESTDIR=$(mktemp -d)
 while [[ ! -b /dev/$disk ]] ; do
     echo $(ls /sys/block/* | grep "[0-9]$")
     echo -n "Rootfs partition >>> "
@@ -11,11 +12,11 @@ while [[ ! -b /dev/$mbr ]] ; do
     read mbr
 done
 umount -lf /dev/$disk 2>/dev/null  || true
-mount /dev/$disk /mnt
-mount --bind /dev /mnt/dev
-mount --bind /dev/pts /mnt/dev/pts
-mount --bind /sys /mnt/sys
-mount --bind /proc /mnt/proc
+mount /dev/$disk "$DESTDIR"
+mount --bind /dev "$DESTDIR"/dev
+mount --bind /dev/pts "$DESTDIR"/dev/pts
+mount --bind /sys "$DESTDIR"/sys
+mount --bind /proc "$DESTDIR"/proc
 if [[ -d /sys/firmware/efi/ ]]
 then
     while [[ ! -b /dev/$efi ]] ; do
@@ -24,9 +25,9 @@ then
         read efi
     done
     umount -lf /dev/$efi 2>/dev/null || true
-    mount /dev/$efi /mnt/boot/efi
-    mount --bind /sys/firmware/efi/efivars /mnt/sys/firmware/efi/efivars
-    rm -f /mnt/sys/firmware/efi/efivars/Boot*
+    mount /dev/$efi "$DESTDIR"/boot/efi
+    mount --bind /sys/firmware/efi/efivars "$DESTDIR"/sys/firmware/efi/efivars
+    rm -f "$DESTDIR"/sys/firmware/efi/efivars/Boot*
     if [[ "$(cat /sys/firmware/efi/fw_platform_size)" == "64" ]] ; then
         efi64="1"
     else
@@ -36,33 +37,33 @@ else
   legacy="1"
 fi
 
-for kernel in $(ls /mnt/lib/modules) ; do
-    chroot /mnt depmod -a $kernel
-    chroot /mnt update-initramfs -u -k $kernel
+for kernel in $(ls "$DESTDIR"/lib/modules) ; do
+    chroot "$DESTDIR" depmod -a $kernel
+    chroot "$DESTDIR" update-initramfs -u -k $kernel
 done
-cat /etc/resolv.conf > /mnt/etc/resolv.conf
-chroot /mnt apt update || true
-chroot /mnt apt install --reinstall ${legacy:+grub-pc-bin} ${efi64:+grub-efi-amd64-bin} ${efi32:+grub-efi-ia32-bin} grub-common -yq || true
-chroot /mnt grub-install --force /dev/$mbr
+cat /etc/resolv.conf > "$DESTDIR"/etc/resolv.conf
+chroot "$DESTDIR" apt update || true
+chroot "$DESTDIR" apt install --reinstall ${legacy:+grub-pc-bin} ${efi64:+grub-efi-amd64-bin} ${efi32:+grub-efi-ia32-bin} grub-common -yq || true
+chroot "$DESTDIR" grub-install --force /dev/$mbr
 
 # EFI hack for hardcoded winzort bootloader bioses.
-if [[ -f /mnt/boot/efi/pardus/bootx64.efi ]] ; then # amd64 only
-    mkdir -p /mnt/boot/efi/EFI/Microsoft/Boot/
-    if [[ -f "/mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi" ]] ; then
-        mv /mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi \
-            /mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw-winzort.efi
+if [[ -f "$DESTDIR"/boot/efi/pardus/bootx64.efi ]] ; then # amd64 only
+    mkdir -p "$DESTDIR"/boot/efi/EFI/Microsoft/Boot/
+    if [[ -f ""$DESTDIR"/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi" ]] ; then
+        mv "$DESTDIR"/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi \
+            "$DESTDIR"/boot/efi/EFI/Microsoft/Boot/bootmgfw-winzort.efi
     fi
-    cp /mnt/boot/efi/pardus/bootx64.efi \
-        /mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi
+    cp "$DESTDIR"/boot/efi/pardus/bootx64.efi \
+        "$DESTDIR"/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi
 fi
 
-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+chroot "$DESTDIR" grub-mkconfig -o /boot/grub/grub.cfg
 if [[ -d /sys/firmware/efi/ ]] ; then
-    while umount -lf "/mnt/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
+    while umount -lf ""$DESTDIR"/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
 fi
 for dir in dev/pts dev sys proc ; do
-    while umount -lf "/mnt/$dir" 2>/dev/null; do : ;done
+    while umount -lf ""$DESTDIR"/$dir" 2>/dev/null; do : ;done
 done
-umount -lf /mnt  2>/dev/null
+umount -lf "$DESTDIR"  2>/dev/null
 echo -en "\033[32;1mPress any key to continue\033[;0m"
 read -n 1 
