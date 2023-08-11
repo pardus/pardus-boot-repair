@@ -12,4 +12,4 @@ Exec=pardus-boot-repair
 Icon=pardus-boot-repair
 Terminal=false
 Type=Application
-Categories=System;
+Categories=System;X-Pardus-Apps;
