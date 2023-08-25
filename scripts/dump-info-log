@@ -1,5 +1,6 @@
 #!/bin/bash
 target="$1"
+DESTDIR=$(mktemp -d)
 if [[ "$1" == "" ]] ; then
     echo -n "Input output target"
     read target
@@ -8,26 +9,26 @@ if [[ "$disk" == "" || ! -b "/dev/$disk" ]] ; then
     echo -n "Input rootfs disk"
     read disk
 fi
-mount "/dev/$disk" /mnt
+mount "/dev/$disk" "$DESTDIR"
 zip "$target/system-log" \
-    /mnt/var/log/auth.log \
-    /mnt/var/log/boot.log \
-    /mnt/var/log/daemon.log \
-    /mnt/var/log/dmesg.log \
-    /mnt/var/log/dpkg.log \
-    /mnt/var/log/kern.log \
-    /mnt/var/log/syslog.log \
-    /mnt/var/log/user.log \
-    /mnt/var/log/pardus-installer.log \
-    /mnt/etc/hosts \
-    /mnt/etc/apt/sources.list \
-    /mnt/etc/apt/sources.list.d/* \
-    /mnt/var/log/auth.log \
-    /mnt/var/log/Xorg.0.log \
-    /mnt/var/lib/dpkg/status \
-    /mnt/var/log/lightdm/lightdm.log \
-    /mnt/var/log/apt/*.log \
-    /mnt/var/log/lightdm/lightdm.log \
-    /mnt/boot/grub/grub.cfg
+    "$DESTDIR"/var/log/auth.log \
+    "$DESTDIR"/var/log/boot.log \
+    "$DESTDIR"/var/log/daemon.log \
+    "$DESTDIR"/var/log/dmesg.log \
+    "$DESTDIR"/var/log/dpkg.log \
+    "$DESTDIR"/var/log/kern.log \
+    "$DESTDIR"/var/log/syslog.log \
+    "$DESTDIR"/var/log/user.log \
+    "$DESTDIR"/var/log/pardus-installer.log \
+    "$DESTDIR"/etc/hosts \
+    "$DESTDIR"/etc/apt/sources.list \
+    "$DESTDIR"/etc/apt/sources.list.d/* \
+    "$DESTDIR"/var/log/auth.log \
+    "$DESTDIR"/var/log/Xorg.0.log \
+    "$DESTDIR"/var/lib/dpkg/status \
+    "$DESTDIR"/var/log/lightdm/lightdm.log \
+    "$DESTDIR"/var/log/apt/*.log \
+    "$DESTDIR"/var/log/lightdm/lightdm.log \
+    "$DESTDIR"/boot/grub/grub.cfg
 
-umount -lf -R /mnt
+umount -lf -R "$DESTDIR"
