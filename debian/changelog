@@ -1,3 +1,11 @@
+pardus-boot-repair (0.5.2) unstable; urgency=medium
+
+  [ Ali Rıza KESKİN ]
+  * reset-password from gui fixes
+  * add missing dependency
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 16 Jan 2024 01:09:17 +0300
+
 pardus-boot-repair (0.5.1) unstable; urgency=medium
 
   [ raheel0x01 ]
