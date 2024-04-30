@@ -19,14 +19,29 @@ class Application(Gtk.Application):
           application_id="tr.org.pardus.boot-repair",
           **kwargs
         )
+
+        # main
         self.builder = Gtk.Builder()
         self.builder.add_from_resource("/tr/org/pardus/boot-repair/ui/AppWindow.ui")
         self.builder.connect_signals(self)
         self.window = self.builder.get_object("window_main")
+        self.deck = self.builder.get_object("deck_main")
+
+        # pages
+        self.page_main = self.builder.get_object("box_page_main")
+        self.page_questions = self.builder.get_object("box_page_questions")
+        self.page_advanced = self.builder.get_object("box_page_advanced")
+        self.page_loading = self.builder.get_object("box_page_loading")
 
     def do_activate(self):
         self.window.set_application(self)
         self.window.present()
+
+    def on_button_mainpage_clicked(self, widget):
+        self.deck.set_visible_child(self.page_main)
+
+    def on_row_advanced_options_activated(self, widget):
+        self.deck.set_visible_child(self.page_advanced)
 
 if __name__ == "__main__":
     app = Application()

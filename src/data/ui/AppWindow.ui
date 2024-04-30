@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <requires lib="libhandy" version="1.0"/>
+  <requires lib="libhandy" version="1.2"/>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -108,6 +108,7 @@
                     <property name="selection-mode">none</property>
                     <child>
                       <object class="HdyActionRow" id="row_reinstall_grub">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Reinstall grub bootloader</property>
@@ -121,6 +122,7 @@
                     </child>
                     <child>
                       <object class="HdyActionRow" id="row_reset_password">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Reset password</property>
@@ -134,6 +136,7 @@
                     </child>
                     <child>
                       <object class="HdyActionRow" id="row_fix_broken">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Try to fix broken packages</property>
@@ -147,6 +150,7 @@
                     </child>
                     <child>
                       <object class="HdyActionRow" id="row_update">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Update system</property>
@@ -160,9 +164,11 @@
                     </child>
                     <child>
                       <object class="HdyActionRow" id="row_advanced_options">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Advanced options</property>
+                        <signal name="activated" handler="on_row_advanced_options_activated" swapped="no"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -204,6 +210,7 @@
                     <property name="receives-default">True</property>
                     <property name="image">image_button_back</property>
                     <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_button_mainpage_clicked" swapped="no"/>
                   </object>
                 </child>
               </object>
@@ -225,6 +232,7 @@
                     <property name="selection-mode">none</property>
                     <child>
                       <object class="HdyActionRow" id="row_reinstall">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Reinstall system</property>
@@ -239,6 +247,7 @@
                     </child>
                     <child>
                       <object class="HdyActionRow" id="row_repair">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Repair filesystem</property>
@@ -253,6 +262,7 @@
                     </child>
                     <child>
                       <object class="HdyActionRow" id="row_reset">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Reset user config</property>
@@ -267,6 +277,7 @@
                     </child>
                     <child>
                       <object class="HdyActionRow" id="row_dump_log">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Create system report</property>
@@ -281,6 +292,7 @@
                     </child>
                     <child>
                       <object class="HdyActionRow" id="row_chroot">
+                        <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Open chroot shell</property>
