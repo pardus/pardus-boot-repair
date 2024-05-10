@@ -117,7 +117,37 @@ class Application(Gtk.Application):
         self.spinner_loading.start()
         if stop_spinner:
             self.spinner_loading.stop()
-    
+
+    def on_row_reset_password_activated(self, widget):
+        for child in self.carousel_questions.get_children():
+           self.carousel_questions.remove(child)
+        self.deck.set_visible_child(self.page_loading)
+        if self.get_rootfs(widget) == None:
+            return None
+        if self.get_user(widget) == None:
+            return None
+        def pre():
+            self.password_page = self.new_page_input(_("Enter new password"))
+            self.deck.set_visible_child(self.page_questions)
+            self.button_next.connect("clicked", after_userdata)
+        def after_userdata(x):
+            password1 = self.password_page.entry.get_text()
+            password2 = self.password_page.entry_second.get_text()
+            if password1 != password2:
+                self.password_page.warn_entry.set_visible(True)
+                return
+            self.password_page.warn_entry.set_visible(False)
+            self.deck.set_visible_child(self.page_loading)
+            self.update_status_page(_("Resetting password..."), "content-loading", "", False, False)
+            self.post_command = final
+            self.vte_command("env user={} disk={} pass1={} pass2={} reset-password".format(self.user, self.rootfs, password1, password2))
+        def final(x, widget):
+            self.user = None
+            self.update_status_page(_("Password reset"), "dialog-information", "", True, True)
+        
+        if pre() == None:
+            return
+
     def vte_command(self, command):
         try:
             exec = self.vte_terminal.spawn_async(

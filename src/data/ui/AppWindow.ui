@@ -127,6 +127,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Reset password</property>
+                        <signal name="activated" handler="on_row_reset_password_activated" swapped="no"/>
                         <child>
                           <placeholder/>
                         </child>
