@@ -60,12 +60,55 @@ class Application(Gtk.Application):
     def on_button_mainpage_clicked(self, widget):
         self.deck.set_visible_child(self.page_main)
 
+    def on_button_show_log_clicked(self, widget):
+        self.box_vte.set_visible(True)
+        self.status_page.set_visible(False)
+        self.btn_go_mainpage.set_visible(False)
+        self.btn_close_logs.set_visible(True)
+
+    def on_button_close_logs_clicked(self, widget):
+        self.box_vte.set_visible(False)
+        self.status_page.set_visible(True)
+        self.btn_go_mainpage.set_visible(True)
+        self.btn_close_logs.set_visible(False)
+
     def on_row_advanced_options_activated(self, widget):
         self.deck.set_visible_child(self.page_advanced)
 
     def on_questions_row_activated(self, widget):
         self.button_next.set_sensitive(True)
 
+    """
+        row functions is seperated to at least 2 subfunctions
+        pre() and post()
+        pre() function will be called first and it will prepare the page for the user input or execute the command then set the post_command to the post() function
+        post_command is a function that will be called after the vte command is executed (see vte_cb() function)
+        post() function will be called after the command is executed, it will update the status page and do the necessary actions
+    """
+    """
+        get_user, get_rootfs, get_mbr functions are used to get the user, rootfs and mbr (will try to get automatically if there is only one)
+        if there is no user, rootfs or mbr, it will show an error message
+        if there is only one user, rootfs or mbr, it will set self.user, self.rootfs or self.mbr to it
+        if there is more than one user, rootfs or mbr, the function will return None but it will create a listbox page for the user to select one of them
+        after the user selects one of them, the get_user, get_rootfs or get_mbr function will call the row function again
+    """
+    def on_row_reinstall_grub_activated(self, widget):
+        def pre():
+            self.deck.set_visible_child(self.page_loading)
+            for child in self.carousel_questions.get_children():
+               self.carousel_questions.remove(child)
+            if self.get_rootfs(widget) == None:
+                return
+            if self.get_mbr(widget) == None:
+                return
+
+            self.update_status_page(_("Reinstalling grub..."), "dialog-information", "", False, False)
+            self.post_command = post
+            self.vte_command("env disk={} mbr={} grub-reinstall".format(self.rootfs, self.mbr))
+        def post(Terminal, widget):
+            self.update_status_page(_("Grub reinstalled"), "dialog-information", "", True, True)
+            self.post_command = None
+        pre()
     def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
         self.status_page.set_title(title)
         self.status_page.set_icon_name(icon_name)
