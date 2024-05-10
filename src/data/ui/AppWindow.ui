@@ -157,6 +157,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Update system</property>
+                        <signal name="activated" handler="on_row_update_activated" swapped="no"/>
                         <child>
                           <placeholder/>
                         </child>

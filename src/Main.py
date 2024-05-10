@@ -110,15 +110,6 @@ class Application(Gtk.Application):
             self.post_command = None
         pre()
 
-    def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
-        self.status_page.set_title(title)
-        self.status_page.set_icon_name(icon_name)
-        self.status_page.set_description(description)
-        self.btn_go_mainpage.set_sensitive(enable_mainpage)
-        self.spinner_loading.start()
-        if stop_spinner:
-            self.spinner_loading.stop()
-
     def on_row_fix_broken_activated(self, widget):
         def pre():
             self.deck.set_visible_child(self.page_loading)
@@ -163,6 +154,30 @@ class Application(Gtk.Application):
         
         if pre() == None:
             return
+
+    def on_row_update_activated(self, widget):
+        def pre():
+            self.deck.set_visible_child(self.page_loading)
+            for child in self.carousel_questions.get_children():
+               self.carousel_questions.remove(child)
+            if self.get_rootfs(widget) == None:
+                return
+            self.update_status_page(_("Updating packages..."), "dialog-information", "", False, False)
+            self.post_command = post
+            self.vte_command("env disk={} full-upgrade".format(self.rootfs))
+        def post(Terminal, widget):
+            self.update_status_page(_("Packages updated"), "dialog-information", "", True, True)
+            self.post_command = None
+        pre()
+
+    def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
+        self.status_page.set_title(title)
+        self.status_page.set_icon_name(icon_name)
+        self.status_page.set_description(description)
+        self.btn_go_mainpage.set_sensitive(enable_mainpage)
+        self.spinner_loading.start()
+        if stop_spinner:
+            self.spinner_loading.stop()
 
     def vte_command(self, command):
         try:
