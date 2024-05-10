@@ -170,6 +170,21 @@ class Application(Gtk.Application):
             self.post_command = None
         pre()
 
+    def on_row_reinstall_activated(self, widget):
+        def pre():
+            self.deck.set_visible_child(self.page_loading)
+            for child in self.carousel_questions.get_children():
+               self.carousel_questions.remove(child)
+            if self.get_rootfs(widget) == None:
+                return
+            if self.get_mbr(widget) == None:
+                return
+            self.update_status_page(_("Reinstalling packages..."), "dialog-information", "", False, False)
+            self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs, self.mbr))
+        def post(Terminal, widget):
+            self.update_status_page(_("Reinstalled successfully"), "dialog-information", "", True, True)   
+        pre()
+
     def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
         self.status_page.set_title(title)
         self.status_page.set_icon_name(icon_name)

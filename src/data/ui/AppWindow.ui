@@ -241,6 +241,7 @@
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Reinstall system</property>
                         <property name="subtitle" translatable="yes">Reinstalls the system from scratch</property>
+                        <signal name="activated" handler="on_row_reinstall_activated" swapped="no"/>
                         <child>
                           <placeholder/>
                         </child>
