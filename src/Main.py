@@ -109,6 +109,7 @@ class Application(Gtk.Application):
             self.update_status_page(_("Grub reinstalled"), "dialog-information", "", True, True)
             self.post_command = None
         pre()
+
     def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
         self.status_page.set_title(title)
         self.status_page.set_icon_name(icon_name)
@@ -117,6 +118,21 @@ class Application(Gtk.Application):
         self.spinner_loading.start()
         if stop_spinner:
             self.spinner_loading.stop()
+
+    def on_row_fix_broken_activated(self, widget):
+        def pre():
+            self.deck.set_visible_child(self.page_loading)
+            for child in self.carousel_questions.get_children():
+               self.carousel_questions.remove(child)
+            if self.get_rootfs(widget) == None:
+                return
+            self.post_command = post
+            self.update_status_page(_("Trying to fix broken packages..."), "dialog-information", "", False, False)
+            self.vte_command("env disk={} fix-broken-packages".format(self.rootfs))
+        def post(Terminal, widget):
+            self.update_status_page(_("Packages fixed"), "dialog-information", "", True, True)
+            self.post_command = None
+        pre()
 
     def on_row_reset_password_activated(self, widget):
         for child in self.carousel_questions.get_children():
