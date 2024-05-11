@@ -267,12 +267,13 @@
                       </object>
                     </child>
                     <child>
-                      <object class="HdyActionRow" id="row_reset">
+                      <object class="HdyActionRow" id="row_reset_config">
                         <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Reset user config</property>
                         <property name="subtitle" translatable="yes">Resets user config files</property>
+                        <signal name="activated" handler="on_row_reset_config_activated" swapped="no"/>
                         <child>
                           <placeholder/>
                         </child>

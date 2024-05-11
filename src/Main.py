@@ -207,7 +207,26 @@ class Application(Gtk.Application):
         def post(x, widget):
             self.update_status_page(_("Partition repaired"), "dialog-information", "", True, True)
         pre()
-    
+
+    def on_row_reset_config_activated(self, widget):
+        def pre():
+            self.deck.set_visible_child(self.page_loading)
+            for child in self.carousel_questions.get_children():
+               self.carousel_questions.remove(child)
+            if self.get_rootfs(widget) == None:
+                return
+            users = self.list_users(self.rootfs)
+            if len(users) == 0:
+                self.update_status_page(_("No users found"), "dialog-error", _("No users found"), True, True)
+                return
+            self.update_status_page(_("Resetting configuration..."), "content-loading", "", False, False)
+            self.post_command = post
+            self.vte_command("pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs,users[0]))
+        def post(Terminal, widget):
+            self.update_status_page(_("Configuration reset"), "dialog-information", "", True, True)
+        pre()
+
+
     def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
         self.status_page.set_title(title)
         self.status_page.set_icon_name(icon_name)
