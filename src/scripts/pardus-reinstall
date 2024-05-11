@@ -63,5 +63,3 @@ for dir in dev/pts dev sys proc ; do
     while umount -lf "/target/$dir" 2>/dev/null; do : ;done
 done
 umount -lf /target  2>/dev/null
-echo -en "\033[32;1mPress any key to continue\033[;0m"
-read -n 1

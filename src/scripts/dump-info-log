@@ -30,5 +30,3 @@ zip "$target/system-log" \
     "$DESTDIR"/var/log/apt/*.log \
     "$DESTDIR"/var/log/lightdm/lightdm.log \
     "$DESTDIR"/boot/grub/grub.cfg
-
-umount -lf -R "$DESTDIR"
