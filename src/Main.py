@@ -237,6 +237,31 @@ class Application(Gtk.Application):
             self.update_status_page(_("Logs dumped"), "dialog-information", "", True, True)
         pre()
 
+    def on_row_chroot_activated(self, widget):
+        for child in self.carousel_questions.get_children():
+            self.carousel_questions.remove(child)
+        if self.get_rootfs(widget) == None:
+            return
+        if self.get_user(widget) == None:
+            return
+
+        def pre():
+            self.deck.set_visible_child(self.page_loading)
+            self.update_status_page(_("Chrooting..."), "dialog-information", "", False, True)
+            self.btn_close_logs.set_visible(True)
+            self.btn_go_mainpage.set_visible(False)
+            self.box_vte.set_visible(True)
+            self.status_page.set_visible(False)
+            self.post_command = post
+            self.vte_command("pardus-chroot /dev/{} su {} -".format(self.rootfs, self.user))
+        def post(Terminal, widget):
+            self.btn_close_logs.set_visible(False)
+            self.btn_go_mainpage.set_visible(True)
+            self.box_vte.set_visible(False)
+            self.status_page.set_visible(True)
+            self.update_status_page(_("Chrooted"), "dialog-information", "", True, True)
+        pre()
+
     def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
         self.status_page.set_title(title)
         self.status_page.set_icon_name(icon_name)

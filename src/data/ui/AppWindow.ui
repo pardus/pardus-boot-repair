@@ -305,6 +305,7 @@
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Open chroot shell</property>
                         <property name="subtitle" translatable="yes">Opens chroot shell in a terminal window</property>
+                        <signal name="activated" handler="on_row_chroot_activated" swapped="no"/>
                         <child>
                           <placeholder/>
                         </child>
