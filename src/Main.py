@@ -185,6 +185,29 @@ class Application(Gtk.Application):
             self.update_status_page(_("Reinstalled successfully"), "dialog-information", "", True, True)   
         pre()
 
+    def on_row_repair_filesystem_activated(self, widget):
+        def pre():
+            self.deck.set_visible_child(self.page_loading)
+            self.update_status_page(_("Searching for partitions..."), "content-loading", "", False, False)
+            partitions = self.list_partitions()
+            if len(partitions) == 0:
+                self.update_status_page(_("No partitions found"), "dialog-error", _("No partitions found"), True, True)
+                return
+
+            partition_names = [part.name for part in partitions]
+            self.repair_page = self.new_page_listbox(_("Select a partition to repair"), partition_names)
+            self.deck.set_visible_child(self.page_questions)
+            self.button_next.connect("clicked", after_userdata)
+        def after_userdata(widget): 
+            partition_for_repair = self.repair_page.listbox.get_selected_row().get_title()
+            self.deck.set_visible_child(self.page_loading)
+            self.update_status_page(_("Repairing partition..."), "content-loading", "", False, False)
+            self.post_command = post
+            self.vte_command("env disk={} check-filesystem".format(partition_for_repair))
+        def post(x, widget):
+            self.update_status_page(_("Partition repaired"), "dialog-information", "", True, True)
+        pre()
+    
     def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
         self.status_page.set_title(title)
         self.status_page.set_icon_name(icon_name)

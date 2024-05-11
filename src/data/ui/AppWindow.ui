@@ -251,12 +251,13 @@
                       </object>
                     </child>
                     <child>
-                      <object class="HdyActionRow" id="row_repair">
+                      <object class="HdyActionRow" id="row_repair_filesystem">
                         <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Repair filesystem</property>
                         <property name="subtitle" translatable="yes">Attempts to repair corrupt file system</property>
+                        <signal name="activated" handler="on_row_repair_filesystem_activated" swapped="no"/>
                         <child>
                           <placeholder/>
                         </child>
