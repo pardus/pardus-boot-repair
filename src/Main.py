@@ -226,6 +226,16 @@ class Application(Gtk.Application):
             self.update_status_page(_("Configuration reset"), "dialog-information", "", True, True)
         pre()
 
+    def on_row_dump_log_activated(self, widget):
+        def pre():
+            self.deck.set_visible_child(self.page_loading)
+            self.update_status_page(_("Dumping logs..."), "dialog-information", "", False, False)
+            liveuser_home = self.run_command('grep "x:1000:" /etc/passwd | cut -f 6 -d ":"')
+            self.post_command = post
+            self.vte_command("env disk={} dump-info-log {}".format(self.rootfs, liveuser_home))
+        def post(Terminal, widget):
+            self.update_status_page(_("Logs dumped"), "dialog-information", "", True, True)
+        pre()
 
     def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
         self.status_page.set_title(title)

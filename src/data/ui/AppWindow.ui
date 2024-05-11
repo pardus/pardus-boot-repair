@@ -289,6 +289,7 @@
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Create system report</property>
                         <property name="subtitle" translatable="yes">Dumps system logs</property>
+                        <signal name="activated" handler="on_row_dump_log_activated" swapped="no"/>
                         <child>
                           <placeholder/>
                         </child>
