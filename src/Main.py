@@ -550,6 +550,5 @@ class Partition(object):
         self.root_subvol = None
         self.mountpoint = None
 
-if __name__ == "__main__":
-    app = Application()
-    app.run(sys.argv)
+app = Application()    
+app.run(sys.argv)
