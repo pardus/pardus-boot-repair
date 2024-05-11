@@ -2,12 +2,12 @@ Source: pardus-boot-repair
 Section: utils
 Priority: optional
 Maintainer: Ali Riza KESKIN <ali.riza.keskin@pardus.org.tr>
-Build-Depends: make
+Build-Depends: make, libglib2.0-dev-bin, gettext, intltool
 Standards-Version: 4.3.0
 Homepage: https://pardus.org.tr
 
 Package: pardus-boot-repair
 Architecture: all
-Depends: ${misc:Depends}, libc6, live-boot, zenity, zip
+Depends: ${misc:Depends}, libc6, live-boot, zip, libhandy-1-0, libvte-2.91-0
 Description: Pardus boot repair
  Pardus boot repair tool
