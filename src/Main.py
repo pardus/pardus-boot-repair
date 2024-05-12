@@ -102,7 +102,8 @@ class Application(Gtk.Application):
                 return
             if self.get_mbr(widget) == None:
                 return
-
+            if os.path.exists("/sys/firmware/efi/efivars") and self.get_clearEfivars(widget) == None: 
+                return
             self.update_status_page(_("Reinstalling grub..."), "dialog-information", "", False, False)
             self.post_command = post
             self.vte_command("env disk={} mbr={} grub-reinstall".format(self.rootfs, self.mbr))
@@ -381,6 +382,25 @@ class Application(Gtk.Application):
                 self.pending_func = None
         return pre()
 
+    def get_clearEfivars(self,widget):
+        def pre():
+            if not hasattr(self, 'clear_efivars') or self.clear_efivars == None:
+                self.clear_efipage = self.new_page_listbox(_("Are you sure you want to clear efivars?"), [_("Yes"), _("No")])
+                self.deck.set_visible_child(self.page_questions)
+                self.button_next.connect("clicked", after_userdata)
+                return None
+            return self.clear_efivars
+        def after_userdata(widget):
+            if self.clear_efipage.listbox.get_selected_row().get_title() == _("Yes"):
+                self.clear_efivars = 'y'
+            else:
+                self.clear_efivars = 'n'
+            self.deck.set_visible_child(self.page_loading)
+            self.button_next.disconnect_by_func(after_userdata)
+            if self.pending_func != None:
+                Thread(target=self.pending_func).start()
+                self.pending_func = None
+        return pre()
     def detect_rootfs(self):
         pardus_rootfs = []
         rootfs = []

@@ -25,7 +25,10 @@ then
         fi
     done
     mount --bind /sys/firmware/efi/efivars "$DESTDIR"/sys/firmware/efi/efivars
-    rm -f "$DESTDIR"/sys/firmware/efi/efivars/Boot*
+    if [[ ! $clear_efi ]] ; then
+        read -p "Clear efi vars manually? [y/N] >>> " clear_efi
+    fi
+    [[ $clear_efi == "y" ]] && { rm -f "$DESTDIR"/sys/firmware/efi/efivars/Boot*; }
     [[ "$(cat /sys/firmware/efi/fw_platform_size)" == "64" ]] && efi64="1" || efi32="1"
 else
   legacy="1"
