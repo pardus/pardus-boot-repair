@@ -19,20 +19,15 @@ mount --bind /sys "$DESTDIR"/sys
 mount --bind /proc "$DESTDIR"/proc
 if [[ -d /sys/firmware/efi/ ]]
 then
-    while [[ ! -b /dev/$efi ]] ; do
-        echo $(ls /sys/block/* | grep "[0-9]$")
-        echo -n "EFI partition >>> "
-        read efi
+    # if there is a /boot or /boot/efi (or both) partitions, mount them.
+    for dir in "/boot" "/boot/efi"; do
+        if [[ -d "$DESTDIR$dir" ]] && [[ $(grep "$dir " "$DESTDIR"/etc/fstab) ]] ; then
+            chroot "$DESTDIR" mount "$dir"
+        fi
     done
-    umount -lf /dev/$efi 2>/dev/null || true
-    mount /dev/$efi "$DESTDIR"/boot/efi
     mount --bind /sys/firmware/efi/efivars "$DESTDIR"/sys/firmware/efi/efivars
     rm -f "$DESTDIR"/sys/firmware/efi/efivars/Boot*
-    if [[ "$(cat /sys/firmware/efi/fw_platform_size)" == "64" ]] ; then
-        efi64="1"
-    else
-        efi32="1"
-    fi
+    [[ "$(cat /sys/firmware/efi/fw_platform_size)" == "64" ]] && efi64="1" || efi32="1"
 else
   legacy="1"
 fi
