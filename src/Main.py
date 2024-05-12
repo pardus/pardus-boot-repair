@@ -90,10 +90,11 @@ class Application(Gtk.Application):
         if there is no user, rootfs or mbr, it will show an error message
         if there is only one user, rootfs or mbr, it will set self.user, self.rootfs or self.mbr to it
         if there is more than one user, rootfs or mbr, the function will return None but it will create a listbox page for the user to select one of them
-        after the user selects one of them, the get_user, get_rootfs or get_mbr function will call the row function again
+        after the user selects one of them, the get_user, get_rootfs or get_mbr function will call the row function again (see self.pending_func)
     """
     def on_row_reinstall_grub_activated(self, widget):
         def pre():
+            self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
             for child in self.carousel_questions.get_children():
                self.carousel_questions.remove(child)
@@ -112,6 +113,7 @@ class Application(Gtk.Application):
 
     def on_row_fix_broken_activated(self, widget):
         def pre():
+            self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
             for child in self.carousel_questions.get_children():
                self.carousel_questions.remove(child)
@@ -126,14 +128,15 @@ class Application(Gtk.Application):
         pre()
 
     def on_row_reset_password_activated(self, widget):
-        for child in self.carousel_questions.get_children():
-           self.carousel_questions.remove(child)
-        self.deck.set_visible_child(self.page_loading)
-        if self.get_rootfs(widget) == None:
-            return None
-        if self.get_user(widget) == None:
-            return None
         def pre():
+            self.pending_func = pre
+            for child in self.carousel_questions.get_children():
+               self.carousel_questions.remove(child)
+            self.deck.set_visible_child(self.page_loading)
+            if self.get_rootfs(widget) == None:
+                return None
+            if self.get_user(widget) == None:
+                return None
             self.password_page = self.new_page_input(_("Enter new password"))
             self.deck.set_visible_child(self.page_questions)
             self.button_next.connect("clicked", after_userdata)
@@ -146,9 +149,9 @@ class Application(Gtk.Application):
             self.password_page.warn_entry.set_visible(False)
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Resetting password..."), "content-loading", "", False, False)
-            self.post_command = final
+            self.post_command = post
             self.vte_command("env user={} disk={} pass1={} pass2={} reset-password".format(self.user, self.rootfs, password1, password2))
-        def final(x, widget):
+        def post(x, widget):
             self.user = None
             self.update_status_page(_("Password reset"), "dialog-information", "", True, True)
         
@@ -157,6 +160,7 @@ class Application(Gtk.Application):
 
     def on_row_update_activated(self, widget):
         def pre():
+            self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
             for child in self.carousel_questions.get_children():
                self.carousel_questions.remove(child)
@@ -172,6 +176,7 @@ class Application(Gtk.Application):
 
     def on_row_reinstall_activated(self, widget):
         def pre():
+            self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
             for child in self.carousel_questions.get_children():
                self.carousel_questions.remove(child)
@@ -187,6 +192,7 @@ class Application(Gtk.Application):
 
     def on_row_repair_filesystem_activated(self, widget):
         def pre():
+            self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Searching for partitions..."), "content-loading", "", False, False)
             partitions = self.list_partitions()
@@ -210,6 +216,7 @@ class Application(Gtk.Application):
 
     def on_row_reset_config_activated(self, widget):
         def pre():
+            self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
             for child in self.carousel_questions.get_children():
                self.carousel_questions.remove(child)
@@ -228,6 +235,11 @@ class Application(Gtk.Application):
 
     def on_row_dump_log_activated(self, widget):
         def pre():
+            self.pending_func = pre
+            for child in self.carousel_questions.get_children():
+                self.carousel_questions.remove(child)
+            if self.get_rootfs(widget) == None:
+                return
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Dumping logs..."), "dialog-information", "", False, False)
             liveuser_home = self.run_command('grep "x:1000:" /etc/passwd | cut -f 6 -d ":"')
@@ -238,14 +250,14 @@ class Application(Gtk.Application):
         pre()
 
     def on_row_chroot_activated(self, widget):
-        for child in self.carousel_questions.get_children():
-            self.carousel_questions.remove(child)
-        if self.get_rootfs(widget) == None:
-            return
-        if self.get_user(widget) == None:
-            return
-
         def pre():
+            self.pending_func = pre
+            for child in self.carousel_questions.get_children():
+                self.carousel_questions.remove(child)
+            if self.get_rootfs(widget) == None:
+                return
+            if self.get_user(widget) == None:
+                return
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Chrooting..."), "dialog-information", "", False, True)
             self.btn_close_logs.set_visible(True)
@@ -297,7 +309,6 @@ class Application(Gtk.Application):
         def pre():
             if not hasattr(self, 'rootfs') or self.rootfs == None:
                 rootfs_list = self.detect_rootfs()
-                callerfunc = lambda n=0: sys._getframe(n + 1).f_code.co_name
                 if len(rootfs_list) == 0:
                     self.update_status_page(_("No rootfs found"), "dialog-error", _("No rootfs found"), True, True)
                     return None
@@ -307,11 +318,7 @@ class Application(Gtk.Application):
                         rootfs_names.append(part.name)
                     self.rootfs_page = self.new_page_listbox(_("Select a rootfs"), rootfs_names)
                     self.deck.set_visible_child(self.page_questions)
-                    self.pending_widget = widget
-                    print(callerfunc(1))
-                    self.pending_func = getattr(self,callerfunc(1))
                     self.button_next.connect("clicked", post)
-                    self.pending_widget = widget
                     return None
                 self.rootfs = rootfs_list[0].name
             return self.rootfs
@@ -320,15 +327,14 @@ class Application(Gtk.Application):
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Rootfs selected"), "dialog-information", "", False, False)
             self.button_next.disconnect_by_func(post)
-            Thread(target=self.pending_func, args=(self.pending_widget,)).start()
-            self.pending_func = None
-            self.pending_widget = None
+            if self.pending_func != None:
+                Thread(target=self.pending_func).start()
+                self.pending_func = None
 
         return pre()
 
     def get_user(self, widget):
         def pre():
-            callerfunc = lambda n=0: sys._getframe(n + 1).f_code.co_name
             if not hasattr(self, 'user') or self.user == None:
                 users = self.list_users(self.rootfs)
                 if len(users) == 0:
@@ -336,8 +342,6 @@ class Application(Gtk.Application):
                     return None
                 elif len(users) > 1:
                     self.users_page = self.new_page_listbox(_("Select a user"), users)
-                    self.pending_func = getattr(self,callerfunc(2))
-                    self.pending_widget = widget
                     self.deck.set_visible_child(self.page_questions)
                     self.button_next.connect("clicked", after_userdata)
                     return None
@@ -347,15 +351,14 @@ class Application(Gtk.Application):
             self.user = self.users_page.listbox.get_selected_row().get_title()
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("User selected"), "dialog-information", "", False, False)
-            Thread(target=self.pending_func, args=(self.pending_widget,)).start()
-            self.pending_func = None
-            self.pending_widget = None
             self.button_next.disconnect_by_func(after_userdata)
+            if self.pending_func != None:
+                Thread(target=self.pending_func).start()
+                self.pending_func = None
         return pre()
 
     def get_mbr(self,widget):
         def pre():
-            callerfunc = lambda n=0: sys._getframe(n + 1).f_code.co_name
             if not hasattr(self, 'mbr') or self.mbr == None:
                 mbrs = self.list_mbrs()
                 if len(mbrs) == 0:
@@ -364,7 +367,6 @@ class Application(Gtk.Application):
                 elif len(mbrs) > 1:
                     self.mbr_page = self.new_page_listbox(_("Select a MBR"), mbrs)
                     self.deck.set_visible_child(self.page_questions)
-                    self.pending_func = getattr(self,callerfunc(1))
                     self.button_next.connect("clicked", after_userdata)
                     return None
                 self.mbr = mbrs[0]
@@ -374,8 +376,9 @@ class Application(Gtk.Application):
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("MBR selected"), "dialog-information", "", False, False)
             self.button_next.disconnect_by_func(after_userdata)            
-            Thread(target=self.pending_func).start()
-            self.pending_func = None
+            if self.pending_func != None:
+                Thread(target=self.pending_func).start()
+                self.pending_func = None
         return pre()
 
     def detect_rootfs(self):
