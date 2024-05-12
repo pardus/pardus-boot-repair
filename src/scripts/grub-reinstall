@@ -13,10 +13,9 @@ while [[ ! -b /dev/$mbr ]] ; do
 done
 umount -lf /dev/$disk 2>/dev/null  || true
 mount /dev/$disk "$DESTDIR"
-mount --bind /dev "$DESTDIR"/dev
-mount --bind /dev/pts "$DESTDIR"/dev/pts
-mount --bind /sys "$DESTDIR"/sys
-mount --bind /proc "$DESTDIR"/proc
+for vol in /dev /dev/pts /sys /proc ; do
+    mount --bind $vol "$DESTDIR"$vol
+done
 if [[ -d /sys/firmware/efi/ ]]
 then
     # if there is a /boot or /boot/efi (or both) partitions, mount them.
