@@ -46,6 +46,22 @@ for path in dev dev/pts proc sys; do
     mount --bind "/$path" "$DESTDIR/$path"
 done
 
+if [[ $fs == 'btrfs' ]]; then
+    while IFS= read -r line; do
+        [[ "$line" =~ ^#.*$ ]] && continue
+        [[ -z "$line" ]] && continue
+        DEVICE=$(echo "$line" | awk '{print $1}')
+        MOUNTPOINT=$(echo "$line" | awk '{print $2}')
+        FSTYPE=$(echo "$line" | awk '{print $3}')
+        OPTIONS=$(echo "$line" | awk '{print $4}')
+        [[ -z $OPTIONS || -z $MOUNTPOINT || -z $FSTYPE || -z $DEVICE ]] && continue
+        
+        if [[ $FSTYPE == 'btrfs' && $MOUNTPOINT != '/' ]]; then
+            mount -t "$FSTYPE" -o "$OPTIONS" "$DEVICE" "$DESTDIR/$MOUNTPOINT"
+        fi
+    done < "$DESTDIR/etc/fstab"
+fi
+
 cp /etc/resolv.conf "$DESTDIR/etc/resolv.conf"
 
 if [ -d "/sys/firmware/efi" ]; then
