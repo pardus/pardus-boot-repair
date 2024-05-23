@@ -106,7 +106,10 @@ class Application(Gtk.Application):
                 return
             self.update_status_page(_("Reinstalling grub..."), "dialog-information", "", False, False)
             self.post_command = post
-            self.vte_command("env disk={} mbr={} grub-reinstall".format(self.rootfs, self.mbr))
+            if self.rootfs.root_subvol == None:
+                self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr))
+            else:
+                self.vte_command("env subvolume={} disk={} mbr={} grub-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr))
         def post(Terminal, widget):
             self.update_status_page(_("Grub reinstalled"), "dialog-information", "", True, True)
             self.post_command = None
@@ -122,7 +125,10 @@ class Application(Gtk.Application):
                 return
             self.post_command = post
             self.update_status_page(_("Trying to fix broken packages..."), "dialog-information", "", False, False)
-            self.vte_command("env disk={} fix-broken-packages".format(self.rootfs))
+            if self.rootfs.root_subvol == None:
+                self.vte_command("env disk={} fix-broken-packages".format(self.rootfs.name))
+            else:
+                self.vte_command("env subvolume={} disk={} fix-broken-packages".format(self.rootfs.root_subvol, self.rootfs.name))
         def post(Terminal, widget):
             self.update_status_page(_("Packages fixed"), "dialog-information", "", True, True)
             self.post_command = None
@@ -151,7 +157,10 @@ class Application(Gtk.Application):
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Resetting password..."), "content-loading", "", False, False)
             self.post_command = post
-            self.vte_command("env user={} disk={} pass1={} pass2={} reset-password".format(self.user, self.rootfs, password1, password2))
+            if self.rootfs.root_subvol == None:
+                self.vte_command("env disk={} user={} pass1={} pass2={} reset-password".format(self.rootfs.name, self.user, password1, password2))
+            else:
+                self.vte_command("env subvolume={} user={} disk={} pass1={} pass2={} reset-password".format(self.rootfs.root_subvol, self.user, self.rootfs.name, password1, password2))
         def post(x, widget):
             self.user = None
             self.update_status_page(_("Password reset"), "dialog-information", "", True, True)
@@ -169,7 +178,10 @@ class Application(Gtk.Application):
                 return
             self.update_status_page(_("Updating packages..."), "dialog-information", "", False, False)
             self.post_command = post
-            self.vte_command("env disk={} full-upgrade".format(self.rootfs))
+            if self.rootfs.root_subvol == None:
+                self.vte_command("env disk={} full-upgrade".format(self.rootfs.name))
+            else:
+                self.vte_command("env subvolume={} disk={} full-upgrade".format(self.rootfs.root_subvol, self.rootfs.name))
         def post(Terminal, widget):
             self.update_status_page(_("Packages updated"), "dialog-information", "", True, True)
             self.post_command = None
@@ -186,7 +198,10 @@ class Application(Gtk.Application):
             if self.get_mbr(widget) == None:
                 return
             self.update_status_page(_("Reinstalling packages..."), "dialog-information", "", False, False)
-            self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs, self.mbr))
+            if self.rootfs.root_subvol == None:
+                self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr))
+            else:
+                self.vte_command("env subvolume={} disk={} mbr={} pardus-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr))
         def post(Terminal, widget):
             self.update_status_page(_("Reinstalled successfully"), "dialog-information", "", True, True)   
         pre()
@@ -229,7 +244,10 @@ class Application(Gtk.Application):
                 return
             self.update_status_page(_("Resetting configuration..."), "content-loading", "", False, False)
             self.post_command = post
-            self.vte_command("pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs,users[0]))
+            if self.rootfs.root_subvol == None:
+                self.vte_command("env pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.name ,users[0]))
+            else:
+                self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.root_subvol, self.rootfs.name ,users[0]))
         def post(Terminal, widget):
             self.update_status_page(_("Configuration reset"), "dialog-information", "", True, True)
         pre()
@@ -245,7 +263,10 @@ class Application(Gtk.Application):
             self.update_status_page(_("Dumping logs..."), "dialog-information", "", False, False)
             liveuser_home = self.run_command('grep "x:1000:" /etc/passwd | cut -f 6 -d ":"')
             self.post_command = post
-            self.vte_command("env disk={} dump-info-log {}".format(self.rootfs, liveuser_home))
+            if self.rootfs.root_subvol == None:
+                self.vte_command("env disk={} dump-info-log {}".format(self.rootfs.name, liveuser_home))
+            else:
+                self.vte_command("env subvolumes={} disk={} dump-info-log {}".format(self.rootfs.root_subvol, self.rootfs.name, liveuser_home))
         def post(Terminal, widget):
             self.update_status_page(_("Logs dumped"), "dialog-information", "", True, True)
         pre()
@@ -266,7 +287,10 @@ class Application(Gtk.Application):
             self.box_vte.set_visible(True)
             self.status_page.set_visible(False)
             self.post_command = post
-            self.vte_command("pardus-chroot /dev/{} su {} -".format(self.rootfs, self.user))
+            if self.rootfs.root_subvol == None:
+                self.vte_command("env disk={} pardus-chroot /dev/{} su {} -".format(self.rootfs.name, self.rootfs.name, self.user))
+            else:
+                self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -".format(self.rootfs.root_subvol ,self.rootfs.name, self.user))
         def post(Terminal, widget):
             self.btn_close_logs.set_visible(False)
             self.btn_go_mainpage.set_visible(True)
@@ -321,10 +345,11 @@ class Application(Gtk.Application):
                     self.deck.set_visible_child(self.page_questions)
                     self.button_next.connect("clicked", post)
                     return None
-                self.rootfs = rootfs_list[0].name
+                self.rootfs = rootfs_list[0]
             return self.rootfs
         def post():
-            self.rootfs = self.rootfs_page.listbox.get_selected_row().get_title()
+            selected = self.rootfs_page.listbox.get_selected_row().get_title()
+            self.rootfs = next((x for x in rootfs_list if x.name == selected), None)
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Rootfs selected"), "dialog-information", "", False, False)
             self.button_next.disconnect_by_func(post)
@@ -468,13 +493,17 @@ class Application(Gtk.Application):
             partitions.append(partition)
         return partitions
 
-    def list_users(self, rootfs_name):
-        self.run_command("mount /dev/{} /mnt".format(rootfs_name))
+    def list_users(self, rootfs):
+        TEMPDIR = self.run_command('mktemp -d')
+        if self.rootfs.root_subvol != None:
+            self.run_command("mount -o subvol={} /dev/{} {}".format(rootfs.root_subvol, rootfs.name, TEMPDIR))
+        else:
+            self.run_command("mount /dev/{} {}".format(rootfs.name, TEMPDIR))
         output = self.run_command(
-            'grep -e ":x:[0-9][0-9][0-9][0-9]:" /mnt/etc/passwd | cut -f 1 -d ":"')
+            'grep -e ":x:[0-9][0-9][0-9][0-9]:" {}/etc/passwd | cut -f 1 -d ":"'.format(TEMPDIR))
         if output == "":
             return []
-        self.run_command("umount -lf /mnt")
+        self.run_command("umount -lf {}".format(TEMPDIR))
         users = output.split()
         users.append("root")
         return users
