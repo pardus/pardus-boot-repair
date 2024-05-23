@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set +e
 DESTDIR=$(mktemp -d)
 . pardus-mount-rootfs

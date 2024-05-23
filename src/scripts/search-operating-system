@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 grep "boot=live" "/proc/cmdline" &>/dev/null || exit 1
 for part in $(ls /sys/block/* | grep "[0-9]$" | grep -v "loop") $(ls /dev/dm-* | cut -f 3 -d "/"); do
     tmpdir=$(mktemp -d)

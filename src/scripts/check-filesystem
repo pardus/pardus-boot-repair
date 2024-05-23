@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 while [[ ! -b /dev/$disk ]] ; do
     echo $(ls /sys/block/* | grep "[0-9]$")
     echo -n "partition >>> "

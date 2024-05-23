@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set +e
 DESTDIR="$1"
 if [[ $UID -ne 0 ]] ; then

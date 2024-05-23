@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 target="$1"
 DESTDIR=$(mktemp -d)
 if [[ "$1" == "" ]] ; then
