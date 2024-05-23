@@ -2,7 +2,7 @@
 target="$1"
 DESTDIR=$(mktemp -d)
 if [[ "$1" == "" ]] ; then
-    echo -n "Input output target"
+    echo -n "Enter the target directory to save the logs to: "
     read target
 fi
 . pardus-mount-rootfs
