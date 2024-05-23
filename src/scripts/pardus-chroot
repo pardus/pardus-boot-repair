@@ -7,24 +7,14 @@ if [[ $UID -ne 0 ]] ; then
 fi
 if [[ -b "$1" ]] ; then
     DESTDIR=$(mktemp -d)
-    mount "$1" "$DESTDIR"
+    . pardus-mount-rootfs
 fi
 shift
 if [[ "$DESTDIR" == "" ||  ! -f "$DESTDIR/etc/os-release" ]] ; then
     echo "Target filesystem is invalid: $DESTDIR"
     exit 1
 fi
-mount --bind /dev "$DESTDIR/dev"
-mount --bind /run  "$DESTDIR/run"
-mount --bind /media  "$DESTDIR/media"
-mount -t devpts devpts "$DESTDIR/dev/pts"
-mount -t sysfs sysfs "$DESTDIR/sys"
-mount -t proc proc "$DESTDIR/proc"
-mount -t tmpfs tmpfs  "$DESTDIR/dev/shm"
-if [[ -d /sys/firmware/efi/ ]] ; then
-    mount -t efivarfs efivarfs  "$DESTDIR/sys/firmware/efi/efivars"
-fi
-cat /etc/resolv.conf > /$DESTDIR/etc/resolv.conf
+
 SHELL=/bin/bash unshare --fork --pid chroot "$DESTDIR" "$@"
 if [[ -d /sys/firmware/efi/ ]] ; then
     while umount "$DESTDIR/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done

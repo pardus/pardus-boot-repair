@@ -22,6 +22,7 @@ while [[ ! -b /dev/$disk ]]; do
     read disk
 done
 
+umount -lf /dev/$disk 2>/dev/null  || true
 fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n')"
 mount /dev/$disk "$DESTDIR"
 

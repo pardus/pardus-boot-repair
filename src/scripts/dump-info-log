@@ -5,10 +5,8 @@ if [[ "$1" == "" ]] ; then
     echo -n "Input output target"
     read target
 fi
-if [[ "$disk" == "" || ! -b "/dev/$disk" ]] ; then
-    echo -n "Input rootfs disk"
-    read disk
-fi
+. pardus-mount-rootfs
+
 mount "/dev/$disk" "$DESTDIR"
 zip "$target/system-log" \
     "$DESTDIR"/var/log/auth.log \
