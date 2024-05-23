@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set +e
+
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root"
+    exit 1
+fi
+
+if [[ $(ls /sys/block/* | grep "[0-9]" | wc -l) -eq 0 ]]; then
+    echo "No block devices found"
+    exit 1
+fi
+
+# check if $DESTDIR is a valid directory
+if [[ ! -d $DESTDIR ]]; then
+    DESTDIR=$(mktemp -d)
+fi
+
+while [[ ! -b /dev/$disk ]]; do
+    echo $(ls /sys/block/* | grep "[0-9]$")
+    echo -n "Rootfs partition >>> "
+    read disk
+done
+
+fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n')"
+mount /dev/$disk "$DESTDIR"
+
+# btrfs subvolumes
+if [[ $fs == 'btrfs' ]]; then
+    if [[ $(btrfs subvolume list "$DESTDIR" | wc -l) -eq 0 ]]; then
+        echo "No subvolumes found"
+    else
+        if [ -z ${subvolume+x} ]; then
+            while [[ -z ${subvolume+x} ]]; do
+                echo $(btrfs subvolume list "$DESTDIR" | awk '{print $9}')
+                echo -n "Rootfs Subvolume >>> "
+                read subvolume
+            done
+        fi
+        umount "$DESTDIR" -f -l
+        mount -o subvol="$subvolume" /dev/$disk "$DESTDIR"
+    fi
+fi
+
+for path in dev dev/pts proc sys; do
+    mount --bind "/$path" "$DESTDIR/$path"
+done
+
+cp /etc/resolv.conf "$DESTDIR/etc/resolv.conf"
+
+if [ -d "/sys/firmware/efi" ]; then
+    mount --bind /sys/firmware/efi/efivars "$DESTDIR/sys/firmware/efi/efivars"
+fi
