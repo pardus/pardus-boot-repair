@@ -161,6 +161,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} user={} pass1={} pass2={} reset-password".format(self.rootfs.name, self.user, password1, password2))
             else:
                 self.vte_command("env subvolume={} user={} disk={} pass1={} pass2={} reset-password".format(self.rootfs.root_subvol, self.user, self.rootfs.name, password1, password2))
+            self.button_next.disconnect_by_func(after_userdata)
         def post(x, widget):
             self.user = None
             self.update_status_page(_("Password Reset Completed"), "emblem-ok-symbolic", _("Your password has been successfully reset. You can now log in to your account with the new password."), True, True)
