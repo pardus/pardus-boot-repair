@@ -274,14 +274,14 @@ class Application(Gtk.Application):
     def on_row_chroot_activated(self, widget):
         def pre():
             self.pending_func = pre
+            self.deck.set_visible_child(self.page_loading)
+            self.update_status_page(_("Chrooting..."), "dialog-information", "", False, True)
             for child in self.carousel_questions.get_children():
                 self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
                 return
             if self.get_user(widget) == None:
                 return
-            self.deck.set_visible_child(self.page_loading)
-            self.update_status_page(_("Chrooting..."), "dialog-information", "", False, True)
             self.btn_close_logs.set_visible(True)
             self.btn_go_mainpage.set_visible(False)
             self.box_vte.set_visible(True)
@@ -456,11 +456,9 @@ class Application(Gtk.Application):
                     pardus_rootfs.append(part)
                 if part.is_rootfs:
                     rootfs.append(part)
-                self.run_command('umount -l ' + TEMPDIR)
-                self.run_command('rm -rf ' + TEMPDIR)
 
             self.run_command('umount -l ' + TEMPDIR)
-            self.run_command('rm -rf ' + TEMPDIR)
+            self.run_command('rmdir ' + TEMPDIR)
         if len(pardus_rootfs) > 0:
             return pardus_rootfs
         return rootfs
