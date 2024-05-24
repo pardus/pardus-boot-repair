@@ -1,7 +1,7 @@
 <policyconfig>
 <vendor>Pardus Developers</vendor>
 <vendor_url>https://www.pardus.org.tr</vendor_url>
-<action id="tr.org.pardus.pkexec.pardus-boot-repair">
+<action id="tr.org.pardus.boot-repair">
 <description>Pardus Boot Repair</description>
 <message>Authentication is required for boot repair</message>
 <message xml:lang="tr">Başlangıç onarma için yetkilendirme gerekiyor</message>
