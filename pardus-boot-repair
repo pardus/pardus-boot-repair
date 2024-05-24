@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
-import sys
-sys.path.insert(0, '/usr/share/pardus/pardus-boot-repair/src/')
+import sys, os
+if 0 != os.getuid():
+    os.execvp('pkexec', ['pkexec'] + sys.argv)
+
+sys.path.insert(0, '/usr/share/pardus/pardus-boot-repair/')
 import Main
