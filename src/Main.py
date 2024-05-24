@@ -266,7 +266,7 @@ class Application(Gtk.Application):
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} dump-info-log {}".format(self.rootfs.name, liveuser_home))
             else:
-                self.vte_command("env subvolumes={} disk={} dump-info-log {}".format(self.rootfs.root_subvol, self.rootfs.name, liveuser_home))
+                self.vte_command("env subvolume={} disk={} dump-info-log {}".format(self.rootfs.root_subvol, self.rootfs.name, liveuser_home))
         def post(Terminal, widget):
             self.update_status_page(_("Logs dumped"), "dialog-information", "", True, True)
         pre()
