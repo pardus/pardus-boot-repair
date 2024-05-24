@@ -1,4 +1,4 @@
-ESTDIR=/
+DESTDIR=/
 PREFIX=/usr
 SUBDIRS := po
 build:
