@@ -41,7 +41,7 @@ class Application(Gtk.Application):
 
         # questions page
         self.carousel_questions = self.builder.get_object("carousel_questions")
-        self.button_next = self.builder.get_object("button_next")
+        self.button_questions_mainpage = self.builder.get_object("button_mainpage1")
 
         # loading page
         self.btn_go_mainpage = self.builder.get_object("button_loading_to_mainpage")
@@ -75,9 +75,6 @@ class Application(Gtk.Application):
 
     def on_row_advanced_options_activated(self, widget):
         self.deck.set_visible_child(self.page_advanced)
-
-    def on_questions_row_activated(self, widget):
-        self.button_next.set_sensitive(True)
 
     """
         row functions is seperated to at least 2 subfunctions
@@ -145,16 +142,11 @@ class Application(Gtk.Application):
                 return None
             if self.get_user(widget) == None:
                 return None
-            self.password_page = self.new_page_input(_("Enter new password"))
+            self.password_page = self.new_page_input(_("Enter new password"), after_userdata)
             self.deck.set_visible_child(self.page_questions)
-            self.button_next.connect("clicked", after_userdata)
         def after_userdata(x):
             password1 = self.password_page.entry.get_text()
             password2 = self.password_page.entry_second.get_text()
-            if password1 != password2:
-                self.password_page.warn_entry.set_visible(True)
-                return
-            self.password_page.warn_entry.set_visible(False)
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Resetting password"), "content-loading-symbolic", _("We're resetting your password to provide access to your account. This process will only take a moment. Once complete, you'll be able to log in with your new password into your Pardus system."), False, False)
             self.post_command = post
@@ -162,7 +154,6 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} user={} pass1={} pass2={} reset-password".format(self.rootfs.name, self.user, password1, password2))
             else:
                 self.vte_command("env subvolume={} user={} disk={} pass1={} pass2={} reset-password".format(self.rootfs.root_subvol, self.user, self.rootfs.name, password1, password2))
-            self.button_next.disconnect_by_func(after_userdata)
         def post(x, widget):
             self.user = None
             self.update_status_page(_("Password Reset Completed"), "emblem-ok-symbolic", _("Your password has been successfully reset. You can now log in to your account with the new password."), True, True)
@@ -219,11 +210,9 @@ class Application(Gtk.Application):
                 return
 
             partition_names = [part.name for part in partitions]
-            self.repair_page = self.new_page_listbox(_("Choose Partition for Filesystem Repair"), partition_names)
+            self.repair_page = self.new_page_listbox(_("Choose Partition for Filesystem Repair"), partition_names, after_userdata)
             self.deck.set_visible_child(self.page_questions)
-            self.button_next.connect("clicked", after_userdata)
         def after_userdata(widget): 
-            self.button_next.disconnect_by_func(after_userdata)
             partition_for_repair = self.repair_page.listbox.get_selected_row().get_title()
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Repairing Filesystem on {}".format(partition_for_repair)), "content-loading-symbolic", _("We're currently repairing the filesystem on the selected partition. This process may take some time, depending on the size and severity of the issues found. Please be patient while we work to restore the partition's functionality."), False, False)
@@ -344,9 +333,8 @@ class Application(Gtk.Application):
                     rootfs_names = []
                     for part in rootfs_list:
                         rootfs_names.append(part.name)
-                    self.rootfs_page = self.new_page_listbox(_("Select a root filesystem"), rootfs_names)
+                    self.rootfs_page = self.new_page_listbox(_("Select a root filesystem"), rootfs_names, post)
                     self.deck.set_visible_child(self.page_questions)
-                    self.button_next.connect("clicked", post)
                     return None
                 self.rootfs = rootfs_list[0]
             return self.rootfs
@@ -355,7 +343,6 @@ class Application(Gtk.Application):
             self.rootfs = next((x for x in rootfs_list if x.name == selected), None)
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _("You've selected the root filesystem for further action."), False, False)
-            self.button_next.disconnect_by_func(post)
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
                 self.pending_func = None
@@ -370,9 +357,8 @@ class Application(Gtk.Application):
                     self.update_status_page(_("No Users Detected"), "dialog-error-symbolic", _("We couldn't find any users on your system. This could indicate an issue with user accounts or system configuration. Please ensure that users are properly configured."), True, True)
                     return None
                 elif len(users) > 1:
-                    self.users_page = self.new_page_listbox(_("Select a user"), users)
+                    self.users_page = self.new_page_listbox(_("Select a user"), users, after_userdata)
                     self.deck.set_visible_child(self.page_questions)
-                    self.button_next.connect("clicked", after_userdata)
                     return None
                 self.user = users[0]
             return self.user
@@ -380,7 +366,6 @@ class Application(Gtk.Application):
             self.user = self.users_page.listbox.get_selected_row().get_title()
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("User Chosen"), "emblem-ok-symbolic", _( "You've selected a user for further action. This step is important for making changes specific to the chosen user."), False, False)
-            self.button_next.disconnect_by_func(after_userdata)
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
                 self.pending_func = None
@@ -394,9 +379,8 @@ class Application(Gtk.Application):
                     self.update_status_page(_("Master Boot Record (MBR) Missing"), "dialog-error-symbolic", _("We couldn't locate the Master Boot Record (MBR) on your system. This critical component is necessary for booting your system. Please check your disk connections and configuration."), True, True)
                     return None
                 elif len(mbrs) > 1:
-                    self.mbr_page = self.new_page_listbox(_("Select the Master Boot Record (MBR)"), mbrs)
+                    self.mbr_page = self.new_page_listbox(_("Select the Master Boot Record (MBR)"), mbrs, after_userdata)
                     self.deck.set_visible_child(self.page_questions)
-                    self.button_next.connect("clicked", after_userdata)
                     return None
                 self.mbr = mbrs[0]
             return self.mbr
@@ -404,7 +388,6 @@ class Application(Gtk.Application):
             self.mbr = self.mbr_page.listbox.get_selected_row().get_title()
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("MBR chosen"), "emblem-ok-symbolic", _("You've successfully selected the Master Boot Record (MBR). This selection is essential for configuring your system's boot process."), False, False)
-            self.button_next.disconnect_by_func(after_userdata)            
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
                 self.pending_func = None
@@ -413,9 +396,8 @@ class Application(Gtk.Application):
     def get_clearEfivars(self,widget):
         def pre():
             if not hasattr(self, 'clear_efivars') or self.clear_efivars == None:
-                self.clear_efipage = self.new_page_listbox(_("Are you sure you want to clear efivars?"), [_("Yes"), _("No")])
+                self.clear_efipage = self.new_page_listbox(_("Are you sure you want to clear efivars?"), [_("Yes"), _("No")], after_userdata)
                 self.deck.set_visible_child(self.page_questions)
-                self.button_next.connect("clicked", after_userdata)
                 return None
             return self.clear_efivars
         def after_userdata(widget):
@@ -424,7 +406,6 @@ class Application(Gtk.Application):
             else:
                 self.clear_efivars = 'n'
             self.deck.set_visible_child(self.page_loading)
-            self.button_next.disconnect_by_func(after_userdata)
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
                 self.pending_func = None
@@ -514,21 +495,38 @@ class Application(Gtk.Application):
             'ls /sys/block/ | grep -Ev "loop|sr"')
         return mbrs.split()
 
-    def new_page_listbox(self, label_text, Row_titles):
+    def new_page_listbox(self, label_text, Row_titles, btn_next_clicked_signal):
         page = Questions_page_listbox(label_text)
+        def on_questions_row_activated(widget):
+            page.button.set_sensitive(True)
+
+        page.button.connect('clicked', btn_next_clicked_signal)
         for title in Row_titles:
             row = Handy.ActionRow()
             row.set_title(title)
             row.set_visible(True)
             row.get_style_context().add_class('activatable')
             row.set_property('activatable', True)
-            row.connect("activate", self.on_questions_row_activated)
+            row.connect("activated", on_questions_row_activated)
             page.listbox.insert(row, -1)
         self.carousel_questions.insert(page, -1)
         return page
 
-    def new_page_input(self, label_text):
+    def new_page_input(self, label_text, btn_continue_clicked_signal):
         page = Questions_page_password_input(label_text)
+        def input_change_event(widget):
+            entry_text = page.entry.get_text()
+            entry_second_text = page.entry_second.get_text()
+            if entry_text != entry_second_text and (entry_text != "" and entry_second_text != ""):
+                page.warn_entry.set_visible(True)
+                page.button.set_sensitive(False)
+            if entry_text == entry_second_text and entry_text != "":
+                page.warn_entry.set_visible(False)
+                page.button.set_sensitive(True)
+
+        page.entry.connect("changed", input_change_event)
+        page.entry_second.connect("changed", input_change_event)
+        page.button.connect('clicked', btn_continue_clicked_signal)
         self.carousel_questions.insert(page, -1)
         return page
 
@@ -559,7 +557,22 @@ class Questions_page_listbox(Page):
         self.listbox.set_activate_on_single_click(True)
         self.listbox.get_style_context().add_class('content')
         self.listbox.set_visible(True)
+        self.listbox.set_vexpand(True)
+        self.listbox.set_hexpand(True)
         self.add(self.listbox)
+
+        self.button = Gtk.Button()
+        self.button.set_label(_("Continue"))
+        self.button.set_visible(True)
+        self.button.set_sensitive(False)
+        self.button.set_hexpand(True)
+        self.button.set_vexpand(False)
+        self.button.set_halign(Gtk.Align.FILL)
+        self.button.set_valign(Gtk.Align.END)
+        self.button.set_image(Gtk.Image.new_from_icon_name("go-next-symbolic", Gtk.IconSize.BUTTON))
+        self.button.set_always_show_image(True)
+        self.button.set_image_position(Gtk.PositionType.RIGHT)
+        self.add(self.button)
 
 class Questions_page_password_input(Page):
     def __init__(self, label_text):
@@ -589,6 +602,19 @@ class Questions_page_password_input(Page):
         self.warn_entry.get_style_context().add_class('error')
         self.warn_entry.set_visible(False)
         self.add(self.warn_entry)
+
+        self.button = Gtk.Button()
+        self.button.set_label(_("Continue"))
+        self.button.set_visible(True)
+        self.button.set_sensitive(False)
+        self.button.set_hexpand(True)
+        self.button.set_vexpand(True)
+        self.button.set_halign(Gtk.Align.FILL)
+        self.button.set_valign(Gtk.Align.END)
+        self.button.set_image(Gtk.Image.new_from_icon_name("go-next-symbolic", Gtk.IconSize.BUTTON))
+        self.button.set_always_show_image(True)
+        self.button.set_image_position(Gtk.PositionType.RIGHT)
+        self.add(self.button)
 
 class Partition(object):
     def __init__(self):

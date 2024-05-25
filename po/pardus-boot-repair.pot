@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 09:45+0300\n"
+"POT-Creation-Date: 2024-05-25 13:06+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,244 +17,240 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/data/ui/AppWindow.ui:81
+#: src/data/ui/AppWindow.ui:76
 msgid "Pardus Boot Repair"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:114
+#: src/data/ui/AppWindow.ui:109
 msgid "Reinstall GRUB Bootloader"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:115
+#: src/data/ui/AppWindow.ui:110
 msgid "Reinstalls the GRUB bootloader to ensure the system can boot properly."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:130
+#: src/data/ui/AppWindow.ui:125
 msgid "Reset password"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:131
+#: src/data/ui/AppWindow.ui:126
 msgid "Resets the user account password."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:146
+#: src/data/ui/AppWindow.ui:141
 msgid "Fix Broken Packages"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:147
+#: src/data/ui/AppWindow.ui:142
 msgid "Attempts to repair broken packages."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:162
+#: src/data/ui/AppWindow.ui:157
 msgid "Update system"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:163
+#: src/data/ui/AppWindow.ui:158
 msgid "Updates all installed packages to the latest versions."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:178
+#: src/data/ui/AppWindow.ui:173
 msgid "Advanced options"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:179
+#: src/data/ui/AppWindow.ui:174
 msgid "Reinstall system, Repair filesystem, Open chroot shell..."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:216 src/data/ui/AppWindow.ui:348
-#: src/data/ui/AppWindow.ui:463
+#: src/data/ui/AppWindow.ui:211 src/data/ui/AppWindow.ui:343
+#: src/data/ui/AppWindow.ui:458
 msgid "Main page"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:247
+#: src/data/ui/AppWindow.ui:242
 msgid "Reinstall system"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:248
+#: src/data/ui/AppWindow.ui:243
 msgid "Completely reinstalls the operating system."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:263
+#: src/data/ui/AppWindow.ui:258
 msgid "Repair filesystem"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:264
+#: src/data/ui/AppWindow.ui:259
 msgid "Scans and repairs the filesystem for errors to ensure data integrity."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:279
+#: src/data/ui/AppWindow.ui:274
 msgid "Reset User Configuration"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:280
+#: src/data/ui/AppWindow.ui:275
 msgid "Reverts settings to default, erasing custom user configurations."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:295
+#: src/data/ui/AppWindow.ui:290
 msgid "Extract system logs"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:296
+#: src/data/ui/AppWindow.ui:291
 msgid "Retrieves system logs for analysis and troubleshooting purposes."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:311
+#: src/data/ui/AppWindow.ui:306
 msgid "Open Chroot Shell"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:312
+#: src/data/ui/AppWindow.ui:307
 msgid "Opens a chroot environment for system maintenance or recovery tasks."
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:359
+#: src/data/ui/AppWindow.ui:354
 msgid "Hide logs"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:405
+#: src/data/ui/AppWindow.ui:400
 msgid "Show logs"
 msgstr ""
 
-#: src/data/ui/AppWindow.ui:505
-msgid "Continue"
-msgstr ""
-
-#: src/Main.py:108
+#: src/Main.py:105
 msgid "Reinstalling GRUB Bootloader"
 msgstr ""
 
-#: src/Main.py:108
+#: src/Main.py:105
 msgid ""
 "We're reinstalling the GRUB boot loader to ensure your system can start up "
 "properly. This process may take a few moments. Once complete, your computer "
 "should boot into Pardus as usual."
 msgstr ""
 
-#: src/Main.py:115
+#: src/Main.py:112
 msgid "GRUB Successfully Reinstalled"
 msgstr ""
 
-#: src/Main.py:115
+#: src/Main.py:112
 msgid ""
 "Great news! The GRUB boot loader has been successfully reinstalled on your "
 "system. You're all set to restart your computer and resume normal operation."
 msgstr ""
 
-#: src/Main.py:128
+#: src/Main.py:125
 msgid "Fixing Broken Packages"
 msgstr ""
 
-#: src/Main.py:128
+#: src/Main.py:125
 msgid ""
 "We're resolving issues with broken packages on your system to ensure "
 "everything works. This may take some time, but we're on it. Once complete, "
 "your system should be stable and ready for use."
 msgstr ""
 
-#: src/Main.py:134
+#: src/Main.py:131
 msgid "Packages Repaired"
 msgstr ""
 
-#: src/Main.py:134
+#: src/Main.py:131
 msgid ""
 "Great news! The broken packages on your system have been successfully "
 "repaired."
 msgstr ""
 
-#: src/Main.py:148
+#: src/Main.py:145
 msgid "Enter new password"
 msgstr ""
 
-#: src/Main.py:159
+#: src/Main.py:149
 msgid "Resetting password"
 msgstr ""
 
-#: src/Main.py:159
+#: src/Main.py:149
 msgid ""
 "We're resetting your password to provide access to your account. This "
 "process will only take a moment. Once complete, you'll be able to log in "
 "with your new password into your Pardus system."
 msgstr ""
 
-#: src/Main.py:168
+#: src/Main.py:157
 msgid "Password Reset Completed"
 msgstr ""
 
-#: src/Main.py:168
+#: src/Main.py:157
 msgid ""
 "Your password has been successfully reset. You can now log in to your "
 "account with the new password."
 msgstr ""
 
-#: src/Main.py:181
+#: src/Main.py:170
 msgid "Updating Software Packages"
 msgstr ""
 
-#: src/Main.py:181
+#: src/Main.py:170
 msgid ""
 "We're currently updating the software packages on your system to ensure you "
 "have the latest features and security enhancements. This process may take "
 "some time depending on the number of updates available. Please be patient."
 msgstr ""
 
-#: src/Main.py:188
+#: src/Main.py:177
 msgid "Software Packages Updated"
 msgstr ""
 
-#: src/Main.py:188
+#: src/Main.py:177
 msgid ""
 "Your system's software packages have been successfully updated. You now have "
 "the latest features and security patches installed."
 msgstr ""
 
-#: src/Main.py:202
+#: src/Main.py:191
 msgid "System Reinstallation"
 msgstr ""
 
-#: src/Main.py:202
+#: src/Main.py:191
 msgid ""
 "We're performing a clean reinstall of your system to ensure a fresh start. "
 "This process will reset your system to its original state, removing all "
 "applications."
 msgstr ""
 
-#: src/Main.py:208
+#: src/Main.py:197
 msgid "System Reinstallation Completed"
 msgstr ""
 
-#: src/Main.py:208
+#: src/Main.py:197
 msgid ""
 "Your system has been successfully reinstalled. Everything is now fresh and "
 "ready for you."
 msgstr ""
 
-#: src/Main.py:215
+#: src/Main.py:204
 msgid "Detecting Partitions"
 msgstr ""
 
-#: src/Main.py:215
+#: src/Main.py:204
 msgid "We're scanning your system to locate available partitions."
 msgstr ""
 
-#: src/Main.py:218
+#: src/Main.py:207
 msgid "Unable to Detect Partitions"
 msgstr ""
 
-#: src/Main.py:218
+#: src/Main.py:207
 msgid ""
 "We couldn't find any partitions on your system. This could indicate a "
 "problem with your disk or partition table. Please double-check your disk "
 "connections and configuration."
 msgstr ""
 
-#: src/Main.py:222
+#: src/Main.py:211
 msgid "Choose Partition for Filesystem Repair"
 msgstr ""
 
-#: src/Main.py:229
+#: src/Main.py:216
 msgid "Repairing Filesystem on {}"
 msgstr ""
 
-#: src/Main.py:229
+#: src/Main.py:216
 msgid ""
 "We're currently repairing the filesystem on the selected partition. This "
 "process may take some time, depending on the size and severity of the issues "
@@ -262,25 +258,25 @@ msgid ""
 "functionality."
 msgstr ""
 
-#: src/Main.py:233
+#: src/Main.py:220
 msgid "Filesystem Repair Successful"
 msgstr ""
 
-#: src/Main.py:233
+#: src/Main.py:220
 msgid ""
 "The filesystem has been successfully repaired. Your data should now be "
 "accessible without any issues."
 msgstr ""
 
-#: src/Main.py:246
+#: src/Main.py:233
 msgid "No users found"
 msgstr ""
 
-#: src/Main.py:248
+#: src/Main.py:235
 msgid "Resetting User Settings"
 msgstr ""
 
-#: src/Main.py:248
+#: src/Main.py:235
 msgid ""
 "We're resetting your user configuration to its default state. This will "
 "revert any custom settings back to their original values. Please note that "
@@ -288,21 +284,21 @@ msgid ""
 "be refreshed and ready for use."
 msgstr ""
 
-#: src/Main.py:255
+#: src/Main.py:242
 msgid "Configuration Reset Completed"
 msgstr ""
 
-#: src/Main.py:255
+#: src/Main.py:242
 msgid ""
 "Great news! Your user configuration has been successfully reset to its "
 "default settings."
 msgstr ""
 
-#: src/Main.py:267
+#: src/Main.py:254
 msgid "Extracting System Logs"
 msgstr ""
 
-#: src/Main.py:267
+#: src/Main.py:254
 msgid ""
 "We're collecting important system logs and placing them in the '{}' "
 "directory as you requested. These logs contain helpful information about "
@@ -311,147 +307,151 @@ msgid ""
 "waiting while we gather this data."
 msgstr ""
 
-#: src/Main.py:274
+#: src/Main.py:261
 msgid "System Logs Extracted"
 msgstr ""
 
-#: src/Main.py:274
+#: src/Main.py:261
 msgid ""
 "Great news! The system logs have been successfully extracted. This valuable "
 "information can help diagnose any issues with your system."
 msgstr ""
 
-#: src/Main.py:281
+#: src/Main.py:268
 msgid "Entering Chroot Environment"
 msgstr ""
 
-#: src/Main.py:302
+#: src/Main.py:289
 msgid "Chroot Process Successfully Concluded"
 msgstr ""
 
-#: src/Main.py:302
+#: src/Main.py:289
 msgid "The chroot process has finished successfully"
 msgstr ""
 
-#: src/Main.py:321 src/Main.py:333
+#: src/Main.py:308 src/Main.py:320
 msgid "An error occured"
 msgstr ""
 
-#: src/Main.py:341
+#: src/Main.py:328
 msgid "Root Filesystem Missing"
 msgstr ""
 
-#: src/Main.py:341
+#: src/Main.py:328
 msgid ""
 "We couldn't locate the root filesystem on your system. This could be due to "
 "a disk failure, misconfiguration, or other issues. Please ensure that your "
 "disk is properly connected and configured."
 msgstr ""
 
-#: src/Main.py:347
+#: src/Main.py:334
 msgid "Select a root filesystem"
 msgstr ""
 
-#: src/Main.py:357
+#: src/Main.py:343
 msgid "Root Filesystem Chosen"
 msgstr ""
 
-#: src/Main.py:357
+#: src/Main.py:343
 msgid "You've selected the root filesystem for further action."
 msgstr ""
 
-#: src/Main.py:370
+#: src/Main.py:355
 msgid "No Users Detected"
 msgstr ""
 
-#: src/Main.py:370
+#: src/Main.py:355
 msgid ""
 "We couldn't find any users on your system. This could indicate an issue with "
 "user accounts or system configuration. Please ensure that users are properly "
 "configured."
 msgstr ""
 
-#: src/Main.py:373
+#: src/Main.py:358
 msgid "Select a user"
 msgstr ""
 
-#: src/Main.py:382
+#: src/Main.py:366
 msgid "User Chosen"
 msgstr ""
 
-#: src/Main.py:382
+#: src/Main.py:366
 msgid ""
 "You've selected a user for further action. This step is important for making "
 "changes specific to the chosen user."
 msgstr ""
 
-#: src/Main.py:394
+#: src/Main.py:377
 msgid "Master Boot Record (MBR) Missing"
 msgstr ""
 
-#: src/Main.py:394
+#: src/Main.py:377
 msgid ""
 "We couldn't locate the Master Boot Record (MBR) on your system. This "
 "critical component is necessary for booting your system. Please check your "
 "disk connections and configuration."
 msgstr ""
 
-#: src/Main.py:397
+#: src/Main.py:380
 msgid "Select the Master Boot Record (MBR)"
 msgstr ""
 
-#: src/Main.py:406
+#: src/Main.py:388
 msgid "MBR chosen"
 msgstr ""
 
-#: src/Main.py:406
+#: src/Main.py:388
 msgid ""
 "You've successfully selected the Master Boot Record (MBR). This selection is "
 "essential for configuring your system's boot process."
 msgstr ""
 
-#: src/Main.py:416
+#: src/Main.py:397
 msgid "Are you sure you want to clear efivars?"
 msgstr ""
 
-#: src/Main.py:416 src/Main.py:422
+#: src/Main.py:397 src/Main.py:402
 msgid "Yes"
 msgstr ""
 
-#: src/Main.py:416
+#: src/Main.py:397
 msgid "No"
 msgstr ""
 
-#: src/Main.py:436
+#: src/Main.py:415
 msgid "Searching for Root Filesystem"
 msgstr ""
 
-#: src/Main.py:436
+#: src/Main.py:415
 msgid ""
 "We're searching for the root filesystem on your system. This is essential "
 "for proper system operation. Please wait while we locate the root "
 "filesystem. Thank you for your patience."
 msgstr ""
 
-#: src/Main.py:470
+#: src/Main.py:449
 msgid "Searching for Btrfs Root Filesystem Subvolume"
 msgstr ""
 
-#: src/Main.py:470
+#: src/Main.py:449
 msgid ""
 "We're searching for the Btrfs root filesystem subvolume on your system. This "
 "is essential for proper system operation. Please wait while we locate the "
 "Btrfs root filesystem subvolume. Thank you for your patience."
 msgstr ""
 
-#: src/Main.py:576
-msgid "Enter password"
-msgstr ""
-
-#: src/Main.py:583
-msgid "Re-enter password"
+#: src/Main.py:563 src/Main.py:605
+msgid "Continue"
 msgstr ""
 
 #: src/Main.py:587
+msgid "Enter password"
+msgstr ""
+
+#: src/Main.py:594
+msgid "Re-enter password"
+msgstr ""
+
+#: src/Main.py:598
 msgid "Passwords do not match"
 msgstr ""
