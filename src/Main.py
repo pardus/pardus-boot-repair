@@ -3,13 +3,14 @@ import sys
 import os
 import gi
 import subprocess
-from gettext import gettext as _
+import gettext
 gi.require_version("Gtk", "3.0")
 gi.require_version("Handy", "1")
 gi.require_version("Vte", "2.91")
 from threading import Thread
 from gi.repository import Gtk, Handy, Gdk, Gio, GLib, Vte
 
+gettext.install("pardus-boot-repair", "/usr/share/locale/")
 Handy.init()
 
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
