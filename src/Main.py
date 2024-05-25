@@ -105,7 +105,7 @@ class Application(Gtk.Application):
                 return
             if os.path.exists("/sys/firmware/efi/efivars") and self.get_clearEfivars(widget) == None: 
                 return
-            self.update_status_page(_("Reinstalling GRUB Bootloader"), "content-loading-symbolic", _("We're reinstalling the GRUB boot loader to ensure your system can start up properly. This process may take a few moments. Once complete, your system should boot into Pardus as usual."), False, False)
+            self.update_status_page(_("Reinstalling GRUB Bootloader"), "content-loading-symbolic", _("We're reinstalling the GRUB boot loader to ensure your system can start up properly. This process may take a few moments. Once complete, your computer should boot into Pardus as usual."), False, False)
             self.post_command = post
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr))
@@ -131,7 +131,7 @@ class Application(Gtk.Application):
             else:
                 self.vte_command("env subvolume={} disk={} fix-broken-packages".format(self.rootfs.root_subvol, self.rootfs.name))
         def post(Terminal, widget):
-            self.update_status_page(_("Packages Repaired"), "emblem-ok-symbolic", _("Great news! The broken packages on your system have been successfully fixed."), True, True)
+            self.update_status_page(_("Packages Repaired"), "emblem-ok-symbolic", _("Great news! The broken packages on your system have been successfully repaired."), True, True)
             self.post_command = None
         pre()
 
@@ -199,13 +199,13 @@ class Application(Gtk.Application):
                 return
             if self.get_mbr(widget) == None:
                 return
-            self.update_status_page(_("Fresh System Reinstallation"), "content-loading-symbolic", _("We're performing a clean reinstall of your system to ensure a fresh start. This process will reset your system to its original state, removing all data and applications."), False, False)
+            self.update_status_page(_("System Reinstallation"), "content-loading-symbolic", _("We're performing a clean reinstall of your system to ensure a fresh start. This process will reset your system to its original state, removing all applications."), False, False)
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr))
             else:
                 self.vte_command("env subvolume={} disk={} mbr={} pardus-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr))
         def post(Terminal, widget):
-            self.update_status_page(_("System Reinstallation Completed"), "emblem-ok-symbolic", _("Your system has been successfully reinstalled. Everything is now fresh and ready for you to set up."), True, True)   
+            self.update_status_page(_("System Reinstallation Completed"), "emblem-ok-symbolic", _("Your system has been successfully reinstalled. Everything is now fresh and ready for you."), True, True)   
         pre()
 
     def on_row_repair_filesystem_activated(self, widget):
