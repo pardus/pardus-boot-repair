@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 09:40+0300\n"
+"POT-Creation-Date: 2024-05-25 09:45+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,7 +107,7 @@ msgid "Opens a chroot environment for system maintenance or recovery tasks."
 msgstr ""
 
 #: src/data/ui/AppWindow.ui:359
-msgid "Close logs"
+msgid "Hide logs"
 msgstr ""
 
 #: src/data/ui/AppWindow.ui:405

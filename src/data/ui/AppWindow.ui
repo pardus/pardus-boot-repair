@@ -356,7 +356,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="button_close_logs">
-                    <property name="label" translatable="yes">Close logs</property>
+                    <property name="label" translatable="yes">Hide logs</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="image">image2</property>
