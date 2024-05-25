@@ -222,6 +222,7 @@ class Application(Gtk.Application):
             self.deck.set_visible_child(self.page_questions)
             self.button_next.connect("clicked", after_userdata)
         def after_userdata(widget): 
+            self.button_next.disconnect_by_func(after_userdata)
             partition_for_repair = self.repair_page.listbox.get_selected_row().get_title()
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Repairing Filesystem on {}".format(partition_for_repair)), "content-loading-symbolic", _("We're currently repairing the filesystem on the selected partition. This process may take some time, depending on the size and severity of the issues found. Please be patient while we work to restore the partition's functionality."), False, False)
