@@ -267,7 +267,7 @@ class Application(Gtk.Application):
         def pre():
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
-            self.update_status_page(_("Entering Chroot Environment"), "content-loading-symbolic", "We're accessing a special system environment called chroot at your request. This allows you to make changes as if you were working directly on your installed operating system. Please wait while we set up this environment to address your needs.", False, True)
+            self.update_status_page(_("Entering Chroot Environment"), "content-loading-symbolic", _("We're accessing a special system environment called chroot at your request. This allows you to make changes as if you were working directly on your installed operating system. Please wait while we set up this environment to address your needs."), False, True)
             for child in self.carousel_questions.get_children():
                 self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
