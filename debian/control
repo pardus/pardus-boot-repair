@@ -2,7 +2,7 @@ Source: pardus-boot-repair
 Section: utils
 Priority: optional
 Maintainer: Ali Riza KESKIN <ali.riza.keskin@pardus.org.tr>
-Build-Depends: make, libglib2.0-dev-bin, gettext, intltool
+Build-Depends: make, libglib2.0-dev-bin, gettext
 Standards-Version: 4.3.0
 Homepage: https://pardus.org.tr
 
