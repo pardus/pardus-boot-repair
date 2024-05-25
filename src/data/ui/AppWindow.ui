@@ -111,7 +111,8 @@
                         <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="title" translatable="yes">Reinstall grub bootloader</property>
+                        <property name="title" translatable="yes">Reinstall GRUB Bootloader</property>
+                        <property name="subtitle" translatable="yes">Reinstalls the GRUB bootloader to ensure the system can boot properly.</property>
                         <signal name="activated" handler="on_row_reinstall_grub_activated" swapped="no"/>
                         <child>
                           <placeholder/>
@@ -127,6 +128,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Reset password</property>
+                        <property name="subtitle" translatable="yes">Resets the user account password.</property>
                         <signal name="activated" handler="on_row_reset_password_activated" swapped="no"/>
                         <child>
                           <placeholder/>
@@ -141,7 +143,8 @@
                         <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="title" translatable="yes">Try to fix broken packages</property>
+                        <property name="title" translatable="yes">Fix Broken Packages</property>
+                        <property name="subtitle" translatable="yes">Attempts to repair broken packages.</property>
                         <signal name="activated" handler="on_row_fix_broken_activated" swapped="no"/>
                         <child>
                           <placeholder/>
@@ -157,6 +160,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Update system</property>
+                        <property name="subtitle" translatable="yes">Updates all installed packages to the latest versions.</property>
                         <signal name="activated" handler="on_row_update_activated" swapped="no"/>
                         <child>
                           <placeholder/>
@@ -172,6 +176,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Advanced options</property>
+                        <property name="subtitle" translatable="yes">Reinstall system, Repair filesystem, Open chroot shell...</property>
                         <signal name="activated" handler="on_row_advanced_options_activated" swapped="no"/>
                         <child>
                           <placeholder/>
@@ -240,7 +245,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Reinstall system</property>
-                        <property name="subtitle" translatable="yes">Reinstalls the system from scratch</property>
+                        <property name="subtitle" translatable="yes">Completely reinstalls the operating system.</property>
                         <signal name="activated" handler="on_row_reinstall_activated" swapped="no"/>
                         <child>
                           <placeholder/>
@@ -256,7 +261,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="title" translatable="yes">Repair filesystem</property>
-                        <property name="subtitle" translatable="yes">Attempts to repair corrupt file system</property>
+                        <property name="subtitle" translatable="yes">Scans and repairs the filesystem for errors to ensure data integrity.</property>
                         <signal name="activated" handler="on_row_repair_filesystem_activated" swapped="no"/>
                         <child>
                           <placeholder/>
@@ -271,8 +276,8 @@
                         <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="title" translatable="yes">Reset user config</property>
-                        <property name="subtitle" translatable="yes">Resets user config files</property>
+                        <property name="title" translatable="yes">Reset User Configuration</property>
+                        <property name="subtitle" translatable="yes">Reverts settings to default, erasing custom user configurations.</property>
                         <signal name="activated" handler="on_row_reset_config_activated" swapped="no"/>
                         <child>
                           <placeholder/>
@@ -287,8 +292,8 @@
                         <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="title" translatable="yes">Create system report</property>
-                        <property name="subtitle" translatable="yes">Dumps system logs</property>
+                        <property name="title" translatable="yes">Extract system logs</property>
+                        <property name="subtitle" translatable="yes">Retrieves system logs for analysis and troubleshooting purposes.</property>
                         <signal name="activated" handler="on_row_dump_log_activated" swapped="no"/>
                         <child>
                           <placeholder/>
@@ -303,8 +308,8 @@
                         <property name="activatable">True</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="title" translatable="yes">Open chroot shell</property>
-                        <property name="subtitle" translatable="yes">Opens chroot shell in a terminal window</property>
+                        <property name="title" translatable="yes">Open Chroot Shell</property>
+                        <property name="subtitle" translatable="yes">Opens a chroot environment for system maintenance or recovery tasks.</property>
                         <signal name="activated" handler="on_row_chroot_activated" swapped="no"/>
                         <child>
                           <placeholder/>
