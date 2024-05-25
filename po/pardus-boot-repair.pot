@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 13:45+0300\n"
+"POT-Creation-Date: 2024-05-25 13:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,86 +171,86 @@ msgid ""
 "with your new password into your Pardus system."
 msgstr ""
 
-#: src/Main.py:159
+#: src/Main.py:158
 msgid "Password Reset Completed"
 msgstr ""
 
-#: src/Main.py:159
+#: src/Main.py:158
 msgid ""
 "Your password has been successfully reset. You can now log in to your "
 "account with the new password."
 msgstr ""
 
-#: src/Main.py:172
+#: src/Main.py:171
 msgid "Updating Software Packages"
 msgstr ""
 
-#: src/Main.py:172
+#: src/Main.py:171
 msgid ""
 "We're currently updating the software packages on your system to ensure you "
 "have the latest features and security enhancements. This process may take "
 "some time depending on the number of updates available. Please be patient."
 msgstr ""
 
-#: src/Main.py:179
+#: src/Main.py:178
 msgid "Software Packages Updated"
 msgstr ""
 
-#: src/Main.py:179
+#: src/Main.py:178
 msgid ""
 "Your system's software packages have been successfully updated. You now have "
 "the latest features and security patches installed."
 msgstr ""
 
-#: src/Main.py:193
+#: src/Main.py:192
 msgid "System Reinstallation"
 msgstr ""
 
-#: src/Main.py:193
+#: src/Main.py:192
 msgid ""
 "We're performing a clean reinstall of your system to ensure a fresh start. "
 "This process will reset your system to its original state, removing all "
 "applications."
 msgstr ""
 
-#: src/Main.py:199
+#: src/Main.py:198
 msgid "System Reinstallation Completed"
 msgstr ""
 
-#: src/Main.py:199
+#: src/Main.py:198
 msgid ""
 "Your system has been successfully reinstalled. Everything is now fresh and "
 "ready for you."
 msgstr ""
 
-#: src/Main.py:206
+#: src/Main.py:205
 msgid "Detecting Partitions"
 msgstr ""
 
-#: src/Main.py:206
+#: src/Main.py:205
 msgid "We're scanning your system to locate available partitions."
 msgstr ""
 
-#: src/Main.py:209
+#: src/Main.py:208
 msgid "Unable to Detect Partitions"
 msgstr ""
 
-#: src/Main.py:209
+#: src/Main.py:208
 msgid ""
 "We couldn't find any partitions on your system. This could indicate a "
 "problem with your disk or partition table. Please double-check your disk "
 "connections and configuration."
 msgstr ""
 
-#: src/Main.py:213
+#: src/Main.py:212
 msgid "Choose Partition for Filesystem Repair"
 msgstr ""
 
-#: src/Main.py:218
+#: src/Main.py:217
 msgid "Repairing Filesystem on {}"
 msgstr ""
 
-#: src/Main.py:218
+#: src/Main.py:217
 msgid ""
 "We're currently repairing the filesystem on the selected partition. This "
 "process may take some time, depending on the size and severity of the issues "
@@ -258,25 +258,25 @@ msgid ""
 "functionality."
 msgstr ""
 
-#: src/Main.py:222
+#: src/Main.py:221
 msgid "Filesystem Repair Successful"
 msgstr ""
 
-#: src/Main.py:222
+#: src/Main.py:221
 msgid ""
 "The filesystem has been successfully repaired. Your data should now be "
 "accessible without any issues."
 msgstr ""
 
-#: src/Main.py:235
+#: src/Main.py:234
 msgid "No users found"
 msgstr ""
 
-#: src/Main.py:237
+#: src/Main.py:236
 msgid "Resetting User Settings"
 msgstr ""
 
-#: src/Main.py:237
+#: src/Main.py:236
 msgid ""
 "We're resetting your user configuration to its default state. This will "
 "revert any custom settings back to their original values. Please note that "
@@ -284,21 +284,21 @@ msgid ""
 "be refreshed and ready for use."
 msgstr ""
 
-#: src/Main.py:244
+#: src/Main.py:243
 msgid "Configuration Reset Completed"
 msgstr ""
 
-#: src/Main.py:244
+#: src/Main.py:243
 msgid ""
 "Great news! Your user configuration has been successfully reset to its "
 "default settings."
 msgstr ""
 
-#: src/Main.py:256
+#: src/Main.py:255
 msgid "Extracting System Logs"
 msgstr ""
 
-#: src/Main.py:256
+#: src/Main.py:255
 msgid ""
 "We're collecting important system logs and placing them in the '{}' "
 "directory as you requested. These logs contain helpful information about "
@@ -307,21 +307,21 @@ msgid ""
 "waiting while we gather this data."
 msgstr ""
 
-#: src/Main.py:263
+#: src/Main.py:262
 msgid "System Logs Extracted"
 msgstr ""
 
-#: src/Main.py:263
+#: src/Main.py:262
 msgid ""
 "Great news! The system logs have been successfully extracted. This valuable "
 "information can help diagnose any issues with your system."
 msgstr ""
 
-#: src/Main.py:270
+#: src/Main.py:269
 msgid "Entering Chroot Environment"
 msgstr ""
 
-#: src/Main.py:270
+#: src/Main.py:269
 msgid ""
 "We're accessing a special system environment called chroot at your request. "
 "This allows you to make changes as if you were working directly on your "
@@ -329,137 +329,137 @@ msgid ""
 "address your needs."
 msgstr ""
 
-#: src/Main.py:292
+#: src/Main.py:290
 msgid "Chroot Process Successfully Concluded"
 msgstr ""
 
-#: src/Main.py:292
+#: src/Main.py:290
 msgid "The chroot process has finished successfully"
 msgstr ""
 
-#: src/Main.py:311 src/Main.py:323
+#: src/Main.py:309 src/Main.py:321
 msgid "An error occured"
 msgstr ""
 
-#: src/Main.py:331
+#: src/Main.py:329
 msgid "Root Filesystem Missing"
 msgstr ""
 
-#: src/Main.py:331
+#: src/Main.py:329
 msgid ""
 "We couldn't locate the root filesystem on your system. This could be due to "
 "a disk failure, misconfiguration, or other issues. Please ensure that your "
 "disk is properly connected and configured."
 msgstr ""
 
-#: src/Main.py:337
+#: src/Main.py:335
 msgid "Select a root filesystem"
 msgstr ""
 
-#: src/Main.py:346
+#: src/Main.py:344
 msgid "Root Filesystem Chosen"
 msgstr ""
 
-#: src/Main.py:346
+#: src/Main.py:344
 msgid "You've selected the root filesystem for further action."
 msgstr ""
 
-#: src/Main.py:358
+#: src/Main.py:355
 msgid "No Users Detected"
 msgstr ""
 
-#: src/Main.py:358
+#: src/Main.py:355
 msgid ""
 "We couldn't find any users on your system. This could indicate an issue with "
 "user accounts or system configuration. Please ensure that users are properly "
 "configured."
 msgstr ""
 
-#: src/Main.py:361
+#: src/Main.py:358
 msgid "Select a user"
 msgstr ""
 
-#: src/Main.py:369
+#: src/Main.py:366
 msgid "User Chosen"
 msgstr ""
 
-#: src/Main.py:369
+#: src/Main.py:366
 msgid ""
 "You've selected a user for further action. This step is important for making "
 "changes specific to the chosen user."
 msgstr ""
 
-#: src/Main.py:380
+#: src/Main.py:377
 msgid "Master Boot Record (MBR) Missing"
 msgstr ""
 
-#: src/Main.py:380
+#: src/Main.py:377
 msgid ""
 "We couldn't locate the Master Boot Record (MBR) on your system. This "
 "critical component is necessary for booting your system. Please check your "
 "disk connections and configuration."
 msgstr ""
 
-#: src/Main.py:383
+#: src/Main.py:380
 msgid "Select the Master Boot Record (MBR)"
 msgstr ""
 
-#: src/Main.py:391
+#: src/Main.py:388
 msgid "MBR chosen"
 msgstr ""
 
-#: src/Main.py:391
+#: src/Main.py:388
 msgid ""
 "You've successfully selected the Master Boot Record (MBR). This selection is "
 "essential for configuring your system's boot process."
 msgstr ""
 
-#: src/Main.py:400
+#: src/Main.py:397
 msgid "Are you sure you want to clear efivars?"
 msgstr ""
 
-#: src/Main.py:400 src/Main.py:405
+#: src/Main.py:397 src/Main.py:402
 msgid "Yes"
 msgstr ""
 
-#: src/Main.py:400
+#: src/Main.py:397
 msgid "No"
 msgstr ""
 
-#: src/Main.py:418
+#: src/Main.py:415
 msgid "Searching for Root Filesystem"
 msgstr ""
 
-#: src/Main.py:418
+#: src/Main.py:415
 msgid ""
 "We're searching for the root filesystem on your system. This is essential "
 "for proper system operation. Please wait while we locate the root "
 "filesystem. Thank you for your patience."
 msgstr ""
 
-#: src/Main.py:452
+#: src/Main.py:449
 msgid "Searching for Btrfs Root Filesystem Subvolume"
 msgstr ""
 
-#: src/Main.py:452
+#: src/Main.py:449
 msgid ""
 "We're searching for the Btrfs root filesystem subvolume on your system. This "
 "is essential for proper system operation. Please wait while we locate the "
 "Btrfs root filesystem subvolume. Thank you for your patience."
 msgstr ""
 
-#: src/Main.py:566 src/Main.py:608
+#: src/Main.py:563 src/Main.py:605
 msgid "Continue"
 msgstr ""
 
-#: src/Main.py:590
+#: src/Main.py:587
 msgid "Enter password"
 msgstr ""
 
-#: src/Main.py:597
+#: src/Main.py:594
 msgid "Re-enter password"
 msgstr ""
 
-#: src/Main.py:601
+#: src/Main.py:598
 msgid "Passwords do not match"
 msgstr ""
