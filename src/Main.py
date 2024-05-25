@@ -53,6 +53,7 @@ class Application(Gtk.Application):
         self.vte_terminal = Vte.Terminal()
         self.box_vte.add(self.vte_terminal)
         self.vte_terminal.show()
+        self.post_command = None
 
     def do_activate(self):
         self.window.set_application(self)
@@ -190,6 +191,7 @@ class Application(Gtk.Application):
             if self.get_mbr(widget) == None:
                 return
             self.update_status_page(_("System Reinstallation"), "content-loading-symbolic", _("We're performing a clean reinstall of your system to ensure a fresh start. This process will reset your system to its original state, removing all applications."), False, False)
+            self.post_command = post
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr))
             else:
