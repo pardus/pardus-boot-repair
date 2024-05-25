@@ -51,7 +51,7 @@ pot:
 
 clean:
 	rm -f src/data/tr.org.pardus.boot-repair.gresource
-	rm -f mo
+	rm -rf mo
 
 run: gresource
 	python3 src/Main.py
