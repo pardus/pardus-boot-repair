@@ -7,7 +7,6 @@ if [[ "$1" == "" ]] ; then
 fi
 . pardus-mount-rootfs
 
-mount "/dev/$disk" "$DESTDIR"
 zip "$target/system-log" \
     "$DESTDIR"/var/log/auth.log \
     "$DESTDIR"/var/log/boot.log \
