@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 08:22+0300\n"
+"POT-Creation-Date: 2024-05-25 09:40+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -125,7 +125,7 @@ msgstr ""
 #: src/Main.py:108
 msgid ""
 "We're reinstalling the GRUB boot loader to ensure your system can start up "
-"properly. This process may take a few moments. Once complete, your system "
+"properly. This process may take a few moments. Once complete, your computer "
 "should boot into Pardus as usual."
 msgstr ""
 
@@ -156,7 +156,8 @@ msgstr ""
 
 #: src/Main.py:134
 msgid ""
-"Great news! The broken packages on your system have been successfully fixed."
+"Great news! The broken packages on your system have been successfully "
+"repaired."
 msgstr ""
 
 #: src/Main.py:148
@@ -206,14 +207,14 @@ msgid ""
 msgstr ""
 
 #: src/Main.py:202
-msgid "Fresh System Reinstallation"
+msgid "System Reinstallation"
 msgstr ""
 
 #: src/Main.py:202
 msgid ""
 "We're performing a clean reinstall of your system to ensure a fresh start. "
-"This process will reset your system to its original state, removing all data "
-"and applications."
+"This process will reset your system to its original state, removing all "
+"applications."
 msgstr ""
 
 #: src/Main.py:208
@@ -223,7 +224,7 @@ msgstr ""
 #: src/Main.py:208
 msgid ""
 "Your system has been successfully reinstalled. Everything is now fresh and "
-"ready for you to set up."
+"ready for you."
 msgstr ""
 
 #: src/Main.py:215
