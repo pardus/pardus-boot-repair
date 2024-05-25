@@ -155,7 +155,6 @@ class Application(Gtk.Application):
             else:
                 self.vte_command("env subvolume={} user={} disk={} pass1={} pass2={} reset-password".format(self.rootfs.root_subvol, self.user, self.rootfs.name, password1, password2))
         def post(x, widget):
-            self.user = None
             self.update_status_page(_("Password Reset Completed"), "emblem-ok-symbolic", _("Your password has been successfully reset. You can now log in to your account with the new password."), True, True)
         
         if pre() == None:
@@ -351,16 +350,15 @@ class Application(Gtk.Application):
 
     def get_user(self, widget):
         def pre():
-            if not hasattr(self, 'user') or self.user == None:
-                users = self.list_users(self.rootfs)
-                if len(users) == 0:
-                    self.update_status_page(_("No Users Detected"), "dialog-error-symbolic", _("We couldn't find any users on your system. This could indicate an issue with user accounts or system configuration. Please ensure that users are properly configured."), True, True)
-                    return None
-                elif len(users) > 1:
-                    self.users_page = self.new_page_listbox(_("Select a user"), users, after_userdata)
-                    self.deck.set_visible_child(self.page_questions)
-                    return None
-                self.user = users[0]
+            users = self.list_users(self.rootfs)
+            if len(users) == 0:
+                self.update_status_page(_("No Users Detected"), "dialog-error-symbolic", _("We couldn't find any users on your system. This could indicate an issue with user accounts or system configuration. Please ensure that users are properly configured."), True, True)
+                return None
+            elif len(users) > 1:
+                self.users_page = self.new_page_listbox(_("Select a user"), users, after_userdata)
+                self.deck.set_visible_child(self.page_questions)
+                return None
+            self.user = users[0]
             return self.user
         def after_userdata(widget):
             self.user = self.users_page.listbox.get_selected_row().get_title()
