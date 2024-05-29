@@ -6,7 +6,7 @@ while [[ ! -b /dev/$mbr ]] ; do
     echo -n "Grub disk >>> "
     read mbr
 done
-. pardus-mount-rootfs
+source /usr/bin/pardus-mount-rootfs
 
 if [[ -d $old ]] ; then
     rm -rf "$old"

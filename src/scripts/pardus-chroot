@@ -9,7 +9,7 @@ fi
 if [[ -b "$1" ]] ; then
     DESTDIR=$(mktemp -d)
     disk=$(echo "$1" | sed 's/\/dev\///')
-    . pardus-mount-rootfs
+    source /usr/bin/pardus-mount-rootfs
 fi
 shift
 if [[ "$DESTDIR" == "" ||  ! -f "$DESTDIR/etc/os-release" ]] ; then

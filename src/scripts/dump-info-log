@@ -5,7 +5,7 @@ if [[ "$1" == "" ]] ; then
     echo -n "Enter the target directory to save the logs to: "
     read target
 fi
-. pardus-mount-rootfs
+source /usr/bin/pardus-mount-rootfs
 
 zip "$target/system-log" \
     "$DESTDIR"/var/log/auth.log \
