@@ -62,7 +62,7 @@ while IFS= read -r line; do
     fi
 done < "$DESTDIR/etc/fstab"
 
-cp /etc/resolv.conf "$DESTDIR/etc/resolv.conf"
+cp -L /etc/resolv.conf "$DESTDIR/etc/resolv.conf"
 
 if [ -d "/sys/firmware/efi" ]; then
     mount --bind /sys/firmware/efi/efivars "$DESTDIR/sys/firmware/efi/efivars"
