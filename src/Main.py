@@ -90,8 +90,8 @@ class Application(Gtk.Application):
         self.deck.set_visible_child(self.page_advanced)
 
     def on_button_about_clicked(self, widget):
-        self.aboutdialog.run()
-        self.aboutdialog.hide()
+        self.dialog_about.run()
+        self.dialog_about.hide()
 
     """
         row functions is seperated to at least 2 subfunctions
