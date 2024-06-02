@@ -53,6 +53,8 @@ class Application(Gtk.Application):
 
         # Vte Terminal
         self.vte_terminal = Vte.Terminal()
+        self.vte_terminal.set_hexpand(True)
+        self.vte_terminal.set_vexpand(True)
         self.box_vte.add(self.vte_terminal)
         self.vte_terminal.show()
         self.vte_terminal.connect("child-exited", self.vte_exited)
