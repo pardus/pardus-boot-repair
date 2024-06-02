@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 grep "boot=live" "/proc/cmdline" &>/dev/null || exit 1
-for part in $(ls /sys/block/* | grep "[0-9]$" | grep -v "loop") $(ls /dev/dm-* | cut -f 3 -d "/"); do
+if [ -z $parts ]; then
+    parts=$(ls /sys/block/* | grep "[0-9]$" | grep -v "loop") $(ls /dev/dm-* | cut -f 3 -d "/")
+fi
+
+for part in $parts; do
     tmpdir=$(mktemp -d)
     umount -lf /dev/$part 2>/dev/null
     type=$(blkid -o value -s TYPE /dev/$part)
