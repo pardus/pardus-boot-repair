@@ -3,6 +3,11 @@
 <interface domain="pardus-boot-repair">
   <requires lib="gtk+" version="3.24"/>
   <requires lib="libhandy" version="1.2"/>
+  <object class="GtkImage" id="image_button_about">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">dialog-information-symbolic</property>
+  </object>
   <object class="GtkImage" id="image_button_back">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -49,6 +54,15 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="show-close-button">True</property>
+                <child>
+                  <object class="GtkButton" id="button_about">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">image_button_about</property>
+                    <signal name="clicked" handler="on_button_about_clicked" swapped="no"/>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -517,6 +531,59 @@
               </packing>
             </child>
           </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAboutDialog" id="dialog_about">
+    <property name="can-focus">False</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="icon-name">pardus-boot-repair</property>
+    <property name="type-hint">dialog</property>
+    <property name="gravity">center</property>
+    <property name="transient-for">window_main</property>
+    <property name="program-name">Pardus Boot Repair</property>
+    <property name="version">0.5.2</property>
+    <property name="copyright">© 2024 Pardus</property>
+    <property name="comments" translatable="yes">Helps to repair broken systems</property>
+    <property name="website">https://github.com/pardus/pardus-boot-repair</property>
+    <property name="website-label" translatable="yes">Website</property>
+    <property name="license" translatable="yes">This program comes with absolutely no warranty.
+See the &lt;a href="https://www.gnu.org/licenses/gpl-3.0.html"&gt;GNU General Public License, version 3 or later&lt;/a&gt; for details.</property>
+    <property name="authors">Ali Rıza Keskin
+Edip H. &lt;edip@medip.dev&gt;</property>
+    <property name="translator-credits" translatable="yes" comments="Name Surname &lt;example@examplemail.com&gt;">translator-credits</property>
+    <property name="artists">Edip H. &lt;edip@medip.dev&gt;</property>
+    <property name="logo-icon-name">pardus-boot-repair</property>
+    <property name="wrap-license">True</property>
+    <property name="license-type">gpl-3-0</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
     </child>

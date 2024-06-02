@@ -13,6 +13,7 @@ from gi.repository import Gtk, Handy, Gdk, Gio, GLib, Vte
 gettext.install("pardus-boot-repair", "/usr/share/locale/")
 Handy.init()
 
+APPVERSION="0.5.2"
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
 
 resource = Gio.resource_load(APP_DIR + "/data/tr.org.pardus.boot-repair.gresource")
@@ -60,6 +61,10 @@ class Application(Gtk.Application):
         self.vte_terminal.connect("child-exited", self.vte_exited)
         self.post_command = None
 
+        self.dialog_about = self.builder.get_object("dialog_about")
+        self.dialog_about.set_version(APPVERSION)
+        self.button_about = self.builder.get_object("button_about")
+
     def do_activate(self):
         self.window.set_application(self)
         self.window.present()
@@ -83,6 +88,10 @@ class Application(Gtk.Application):
 
     def on_row_advanced_options_activated(self, widget):
         self.deck.set_visible_child(self.page_advanced)
+
+    def on_button_about_clicked(self, widget):
+        self.aboutdialog.run()
+        self.aboutdialog.hide()
 
     """
         row functions is seperated to at least 2 subfunctions
