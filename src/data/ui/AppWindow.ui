@@ -233,7 +233,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">TÜBİTAK ULAKBİM | 2024</property>
+                    <property name="label">TÜBİTAK ULAKBİM | 2024</property>
                     <style>
                       <class name="footer"/>
                     </style>
