@@ -359,22 +359,20 @@ class Application(Gtk.Application):
     def get_rootfs(self,widget):
         def pre():
             if not hasattr(self, 'rootfs') or self.rootfs == None:
-                rootfs_list = self.detect_rootfs()
-                if len(rootfs_list) == 0:
+                self.rootfs_list = self.detect_rootfs()
+                if len(self.rootfs_list) == 0:
                     self.update_status_page(_("Root Filesystem Missing"), "dialog-error-symbolic", _("We couldn't locate the root filesystem on your system. This could be due to a disk failure, misconfiguration, or other issues. Please ensure that your disk is properly connected and configured."), True, True)
                     return None
-                elif len(rootfs_list) > 1:
-                    rootfs_names = []
-                    for part in rootfs_list:
-                        rootfs_names.append(part.name)
-                    self.rootfs_page = self.new_page_listbox(_("Select a root filesystem"), rootfs_names, post)
+                elif len(self.rootfs_list) > 1:
+                    partition_names = [part.name for part in self.rootfs_list]
+                    self.rootfs_page = self.new_page_listbox(_("Select a root filesystem"), partition_names, post)
                     self.deck.set_visible_child(self.page_questions)
                     return None
-                self.rootfs = rootfs_list[0]
+                self.rootfs = self.rootfs_list[0]
             return self.rootfs
-        def post():
+        def post(widget):
             selected = self.rootfs_page.listbox.get_selected_row().get_title()
-            self.rootfs = next((x for x in rootfs_list if x.name == selected), None)
+            self.rootfs = next((x for x in self.rootfs_list if x.name == selected), None)
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _("You've selected the root filesystem for further action."), False, False)
             if self.pending_func != None:
