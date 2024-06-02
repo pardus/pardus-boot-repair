@@ -337,15 +337,15 @@ class Application(Gtk.Application):
 
     def vte_cb(self, pid, error):
         if error != None or pid == -1:
-            self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occured before executing the command"), True, True)
+            self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occurred before the command has been executed"), True, True)
             return
     def vte_exited(self, widget, status):
         exit_status = os.waitstatus_to_exitcode(status)
         if exit_status != 0:
-            self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occured while executing the command, Please check the logs"), True, True)
+            self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occured while executing the command. Please check the logs"), True, True)
             return
         if self.post_command == None:
-            self.update_status_page(_("Error"), "dialog-error-symbolic", _("An error occured after executing the command"), True, True)
+            self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occurred after the command has been executed."), True, True)
             return
         Thread(target=self.post_command).start()
         
