@@ -50,9 +50,12 @@ class Application(Gtk.Application):
         self.spinner_loading = self.builder.get_object("spinner_page_loading")
         self.btn_show_log = self.builder.get_object("button_show_log")
         self.box_vte = self.builder.get_object("box_vte")
+
+        # Vte Terminal
         self.vte_terminal = Vte.Terminal()
         self.box_vte.add(self.vte_terminal)
         self.vte_terminal.show()
+        self.vte_terminal.connect("child-exited", self.vte_exited)
         self.post_command = None
 
     def do_activate(self):
@@ -109,7 +112,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} mbr={} grub-reinstall".format(self.rootfs.name, self.mbr))
             else:
                 self.vte_command("env subvolume={} disk={} mbr={} grub-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr))
-        def post(Terminal, widget):
+        def post():
             self.update_status_page(_("GRUB Successfully Reinstalled"), "emblem-ok-symbolic", _("Great news! The GRUB boot loader has been successfully reinstalled on your system. You're all set to restart your computer and resume normal operation."), True, True)
             self.post_command = None
         pre()
@@ -128,7 +131,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} fix-broken-packages".format(self.rootfs.name))
             else:
                 self.vte_command("env subvolume={} disk={} fix-broken-packages".format(self.rootfs.root_subvol, self.rootfs.name))
-        def post(Terminal, widget):
+        def post():
             self.update_status_page(_("Packages Repaired"), "emblem-ok-symbolic", _("Great news! The broken packages on your system have been successfully repaired."), True, True)
             self.post_command = None
         pre()
@@ -156,7 +159,7 @@ class Application(Gtk.Application):
             else:
                 self.vte_command("env subvolume={} user={} disk={} pass1={} pass2={} reset-password".format(self.rootfs.root_subvol, self.user, self.rootfs.name, password1, password2))
             self.user = None
-        def post(x, widget):
+        def post():
             self.update_status_page(_("Password Reset Completed"), "emblem-ok-symbolic", _("Your password has been successfully reset. You can now log in to your account with the new password."), True, True)
         
         if pre() == None:
@@ -176,7 +179,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} full-upgrade".format(self.rootfs.name))
             else:
                 self.vte_command("env subvolume={} disk={} full-upgrade".format(self.rootfs.root_subvol, self.rootfs.name))
-        def post(Terminal, widget):
+        def post():
             self.update_status_page(_("Software Packages Updated"), "emblem-ok-symbolic", _("Your system's software packages have been successfully updated. You now have the latest features and security patches installed."), True, True)
             self.post_command = None
         pre()
@@ -197,7 +200,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr))
             else:
                 self.vte_command("env subvolume={} disk={} mbr={} pardus-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr))
-        def post(Terminal, widget):
+        def post():
             self.update_status_page(_("System Reinstallation Completed"), "emblem-ok-symbolic", _("Your system has been successfully reinstalled. Everything is now fresh and ready for you."), True, True)   
         pre()
 
@@ -220,7 +223,7 @@ class Application(Gtk.Application):
             self.update_status_page(_("Repairing Filesystem on {}".format(partition_for_repair)), "content-loading-symbolic", _("We're currently repairing the filesystem on the selected partition. This process may take some time, depending on the size and severity of the issues found. Please be patient while we work to restore the partition's functionality."), False, False)
             self.post_command = post
             self.vte_command("env disk={} check-filesystem".format(partition_for_repair))
-        def post(x, widget):
+        def post():
             self.update_status_page(_("Filesystem Repair Successful"), "emblem-ok-symbolic", _("The filesystem has been successfully repaired. Your data should now be accessible without any issues."), True, True)
         pre()
 
@@ -242,7 +245,7 @@ class Application(Gtk.Application):
                 self.vte_command("env pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.name ,users[0]))
             else:
                 self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.root_subvol, self.rootfs.name ,users[0]))
-        def post(Terminal, widget):
+        def post():
             self.update_status_page(_("Configuration Reset Completed"), "emblem-ok-symbolic", _("Great news! Your user configuration has been successfully reset to its default settings."), True, True)
         pre()
 
@@ -261,7 +264,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} dump-info-log {}".format(self.rootfs.name, liveuser_home))
             else:
                 self.vte_command("env subvolume={} disk={} dump-info-log {}".format(self.rootfs.root_subvol, self.rootfs.name, liveuser_home))
-        def post(Terminal, widget):
+        def post():
             self.update_status_page(_("System Logs Extracted"), "emblem-ok-symbolic", _("Great news! The system logs have been successfully extracted. This valuable information can help diagnose any issues with your system."), True, True)
         pre()
 
@@ -286,7 +289,7 @@ class Application(Gtk.Application):
             else:
                 self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -".format(self.rootfs.root_subvol ,self.rootfs.name, self.user))
             self.user = None
-        def post(Terminal, widget):
+        def post():
             self.btn_close_logs.set_visible(False)
             self.btn_go_mainpage.set_visible(True)
             self.box_vte.set_visible(False)
@@ -307,16 +310,26 @@ class Application(Gtk.Application):
         try:
             env_vars = [f'{key}={value}' for key, value in os.environ.items()]
             exec = self.vte_terminal.spawn_async(
-                Vte.PtyFlags.DEFAULT, os.environ['HOME'], ["/bin/bash", "-c", command], env_vars, GLib.SpawnFlags.SEARCH_PATH, None, None, -1, None, self.vte_cb)
+                Vte.PtyFlags.DEFAULT, os.environ['HOME'], ["/bin/bash", "-c", command], env_vars, GLib.SpawnFlags.SEARCH_PATH, None, None, -1, None)
         except Exception as e:
             # write error to stderr
             sys.stderr.write(str(e) + "\n")
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", str(e), True, True)
 
-    def vte_cb(self, widget, pid, error):
-        if self.post_command != None:
-            self.vte_terminal.connect("child-exited", self.post_command)
-
+    def vte_cb(self, pid, error):
+        if error != None or pid == -1:
+            self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occured before executing the command"), True, True)
+            return
+    def vte_exited(self, widget, status):
+        exit_status = os.waitstatus_to_exitcode(status)
+        if exit_status != 0:
+            self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occured while executing the command, Please check the logs"), True, True)
+            return
+        if self.post_command == None:
+            self.update_status_page(_("Error"), "dialog-error-symbolic", _("An error occured after executing the command"), True, True)
+            return
+        Thread(target=self.post_command).start()
+        
     def run_command(self, command: str):
         try:
             output = subprocess.check_output(["/bin/bash", "-c", command]).decode("utf-8").strip()
