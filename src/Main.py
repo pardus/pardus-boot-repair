@@ -312,7 +312,7 @@ class Application(Gtk.Application):
             sys.stderr.write(str(e) + "\n")
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", str(e), True, True)
 
-    def vte_cb(self, widget, status, user_data):
+    def vte_cb(self, widget, pid, error):
         if self.post_command != None:
             self.vte_terminal.connect("child-exited", self.post_command)
 
