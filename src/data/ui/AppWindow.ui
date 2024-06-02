@@ -11,22 +11,22 @@
   <object class="GtkImage" id="image_button_back">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="stock">gtk-go-back</property>
+    <property name="icon-name">go-previous-symbolic</property>
   </object>
   <object class="GtkImage" id="image_button_back1">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="stock">gtk-go-back</property>
+    <property name="icon-name">go-previous-symbolic</property>
   </object>
   <object class="GtkImage" id="image_button_back2">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="stock">gtk-go-back</property>
+    <property name="icon-name">go-previous-symbolic</property>
   </object>
   <object class="GtkImage" id="image_button_close_log">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">stock_close</property>
+    <property name="icon-name">window-close-symbolic</property>
   </object>
   <object class="GtkImage" id="image_button_show_log">
     <property name="visible">True</property>
