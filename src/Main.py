@@ -69,12 +69,14 @@ class Application(Gtk.Application):
         self.box_vte.set_visible(True)
         self.status_page.set_visible(False)
         self.btn_go_mainpage.set_visible(False)
+        self.btn_show_log.set_visible(False)
         self.btn_close_logs.set_visible(True)
 
     def on_button_close_logs_clicked(self, widget):
         self.box_vte.set_visible(False)
         self.status_page.set_visible(True)
         self.btn_go_mainpage.set_visible(True)
+        self.btn_show_log.set_visible(True)
         self.btn_close_logs.set_visible(False)
 
     def on_row_advanced_options_activated(self, widget):
@@ -279,10 +281,7 @@ class Application(Gtk.Application):
                 return
             if self.get_user(widget) == None:
                 return
-            self.btn_close_logs.set_visible(True)
-            self.btn_go_mainpage.set_visible(False)
-            self.box_vte.set_visible(True)
-            self.status_page.set_visible(False)
+            self.btn_show_log.clicked()
             self.post_command = post
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} pardus-chroot /dev/{} su {} -".format(self.rootfs.name, self.rootfs.name, self.user))
@@ -290,10 +289,7 @@ class Application(Gtk.Application):
                 self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -".format(self.rootfs.root_subvol ,self.rootfs.name, self.user))
             self.user = None
         def post():
-            self.btn_close_logs.set_visible(False)
-            self.btn_go_mainpage.set_visible(True)
-            self.box_vte.set_visible(False)
-            self.status_page.set_visible(True)
+            self.btn_close_logs.clicked()
             self.update_status_page(_("Chroot Process Successfully Concluded"), "emblem-ok-symbolic", _("The chroot process has finished successfully"), True, True)
         pre()
 
