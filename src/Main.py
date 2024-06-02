@@ -125,6 +125,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} mbr={} grub-reinstall".format(self.rootfs.name, self.mbr))
             else:
                 self.vte_command("env subvolume={} disk={} mbr={} grub-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr))
+            self.pending_func = None
         def post():
             self.update_status_page(_("GRUB Successfully Reinstalled"), "emblem-ok-symbolic", _("Great news! The GRUB boot loader has been successfully reinstalled on your system. You're all set to restart your computer and resume normal operation."), True, True)
             self.post_command = None
@@ -144,6 +145,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} fix-broken-packages".format(self.rootfs.name))
             else:
                 self.vte_command("env subvolume={} disk={} fix-broken-packages".format(self.rootfs.root_subvol, self.rootfs.name))
+            self.pending_func = None
         def post():
             self.update_status_page(_("Packages Repaired"), "emblem-ok-symbolic", _("Great news! The broken packages on your system have been successfully repaired."), True, True)
             self.post_command = None
@@ -161,6 +163,7 @@ class Application(Gtk.Application):
                 return None
             self.password_page = self.new_page_input(_("Enter new password"), after_userdata)
             self.deck.set_visible_child(self.page_questions)
+            self.pending_func = None
         def after_userdata(x):
             password1 = self.password_page.entry.get_text()
             password2 = self.password_page.entry_second.get_text()
@@ -192,6 +195,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} full-upgrade".format(self.rootfs.name))
             else:
                 self.vte_command("env subvolume={} disk={} full-upgrade".format(self.rootfs.root_subvol, self.rootfs.name))
+            self.pending_func = None
         def post():
             self.update_status_page(_("Software Packages Updated"), "emblem-ok-symbolic", _("Your system's software packages have been successfully updated. You now have the latest features and security patches installed."), True, True)
             self.post_command = None
@@ -213,6 +217,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr))
             else:
                 self.vte_command("env subvolume={} disk={} mbr={} pardus-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr))
+            self.pending_func = None
         def post():
             self.update_status_page(_("System Reinstallation Completed"), "emblem-ok-symbolic", _("Your system has been successfully reinstalled. Everything is now fresh and ready for you."), True, True)   
         pre()
@@ -230,6 +235,7 @@ class Application(Gtk.Application):
             partition_names = [part.name for part in partitions]
             self.repair_page = self.new_page_listbox(_("Choose Partition for Filesystem Repair"), partition_names, after_userdata)
             self.deck.set_visible_child(self.page_questions)
+            self.pending_func = None
         def after_userdata(widget): 
             partition_for_repair = self.repair_page.listbox.get_selected_row().get_title()
             self.deck.set_visible_child(self.page_loading)
@@ -258,6 +264,7 @@ class Application(Gtk.Application):
                 self.vte_command("env pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.name ,users[0]))
             else:
                 self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.root_subvol, self.rootfs.name ,users[0]))
+            self.pending_func = None
         def post():
             self.update_status_page(_("Configuration Reset Completed"), "emblem-ok-symbolic", _("Great news! Your user configuration has been successfully reset to its default settings."), True, True)
         pre()
@@ -277,6 +284,7 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} dump-info-log {}".format(self.rootfs.name, liveuser_home))
             else:
                 self.vte_command("env subvolume={} disk={} dump-info-log {}".format(self.rootfs.root_subvol, self.rootfs.name, liveuser_home))
+            self.pending_func = None
         def post():
             self.update_status_page(_("System Logs Extracted"), "emblem-ok-symbolic", _("Great news! The system logs have been successfully extracted. This valuable information can help diagnose any issues with your system."), True, True)
         pre()
@@ -299,6 +307,7 @@ class Application(Gtk.Application):
             else:
                 self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -".format(self.rootfs.root_subvol ,self.rootfs.name, self.user))
             self.user = None
+            self.pending_func = None
         def post():
             self.btn_close_logs.clicked()
             self.update_status_page(_("Chroot Process Successfully Concluded"), "emblem-ok-symbolic", _("The chroot process has finished successfully"), True, True)
@@ -370,7 +379,6 @@ class Application(Gtk.Application):
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _("You've selected the root filesystem for further action."), False, False)
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
-                self.pending_func = None
 
         return pre()
 
@@ -393,7 +401,6 @@ class Application(Gtk.Application):
             self.update_status_page(_("User Chosen"), "emblem-ok-symbolic", _( "You've selected a user for further action. This step is important for making changes specific to the chosen user."), False, False)
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
-                self.pending_func = None
         return pre()
 
     def get_mbr(self,widget):
@@ -415,7 +422,6 @@ class Application(Gtk.Application):
             self.update_status_page(_("MBR chosen"), "emblem-ok-symbolic", _("You've successfully selected the Master Boot Record (MBR). This selection is essential for configuring your system's boot process."), False, False)
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
-                self.pending_func = None
         return pre()
 
     def get_clearEfivars(self,widget):
@@ -433,7 +439,6 @@ class Application(Gtk.Application):
             self.deck.set_visible_child(self.page_loading)
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
-                self.pending_func = None
         return pre()
     def detect_rootfs(self):
         pardus_rootfs = []
