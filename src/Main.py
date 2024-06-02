@@ -233,7 +233,9 @@ class Application(Gtk.Application):
                 return
 
             partition_names = [part.name for part in partitions]
-            self.repair_page = self.new_page_listbox(_("Choose Partition for Filesystem Repair"), partition_names, after_userdata)
+            partition_os = [part.operating_system for part in partitions]
+
+            self.repair_page = self.new_page_listbox(_("Choose Partition for Filesystem Repair"), partition_names, partition_os, after_userdata)
             self.deck.set_visible_child(self.page_questions)
             self.pending_func = None
         def after_userdata(widget): 
@@ -365,7 +367,8 @@ class Application(Gtk.Application):
                     return None
                 elif len(self.rootfs_list) > 1:
                     partition_names = [part.name for part in self.rootfs_list]
-                    self.rootfs_page = self.new_page_listbox(_("Select a root filesystem"), partition_names, post)
+                    partition_os = [part.operating_system for part in self.rootfs_list]
+                    self.rootfs_page = self.new_page_listbox(_("Select a root filesystem"), partition_names, partition_os, post)
                     self.deck.set_visible_child(self.page_questions)
                     return None
                 self.rootfs = self.rootfs_list[0]
@@ -388,7 +391,7 @@ class Application(Gtk.Application):
                     self.update_status_page(_("No Users Detected"), "dialog-error-symbolic", _("We couldn't find any users on your system. This could indicate an issue with user accounts or system configuration. Please ensure that users are properly configured."), True, True)
                     return None
                 elif len(users) > 1:
-                    self.users_page = self.new_page_listbox(_("Select a user"), users, after_userdata)
+                    self.users_page = self.new_page_listbox(_("Select a user"), users, None, after_userdata)
                     self.deck.set_visible_child(self.page_questions)
                     return None
                 self.user = users[0]
@@ -409,7 +412,7 @@ class Application(Gtk.Application):
                     self.update_status_page(_("Master Boot Record (MBR) Missing"), "dialog-error-symbolic", _("We couldn't locate the Master Boot Record (MBR) on your system. This critical component is necessary for booting your system. Please check your disk connections and configuration."), True, True)
                     return None
                 elif len(mbrs) > 1:
-                    self.mbr_page = self.new_page_listbox(_("Select the Master Boot Record (MBR)"), mbrs, after_userdata)
+                    self.mbr_page = self.new_page_listbox(_("Select the Master Boot Record (MBR)"), mbrs, None, after_userdata)
                     self.deck.set_visible_child(self.page_questions)
                     return None
                 self.mbr = mbrs[0]
@@ -425,7 +428,7 @@ class Application(Gtk.Application):
     def get_clearEfivars(self,widget):
         def pre():
             if not hasattr(self, 'clear_efivars') or self.clear_efivars == None:
-                self.clear_efipage = self.new_page_listbox(_("Are you sure you want to clear efivars?"), [_("Yes"), _("No")], after_userdata)
+                self.clear_efipage = self.new_page_listbox(_("Are you sure you want to clear efivars?"), [_("Yes"), _("No")], None, after_userdata)
                 self.deck.set_visible_child(self.page_questions)
                 return None
             return self.clear_efivars
@@ -438,6 +441,12 @@ class Application(Gtk.Application):
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
         return pre()
+
+    def get_operating_system(self,partitions):
+        for part in partitions:
+            part.operating_system = self.run_command('env parts={} search-operating-system'.format(part.name)).split(":")[0].replace('"', '').strip()
+        return partitions
+
     def detect_rootfs(self):
         pardus_rootfs = []
         rootfs = []
@@ -501,6 +510,7 @@ class Application(Gtk.Application):
                 output = self.run_command('lsblk -no {} {}'.format(x,partition.path))
                 partition.__setattr__(x.lower(), output.strip())
             partitions.append(partition)
+        partitions = self.get_operating_system(partitions)
         return partitions
 
     def list_users(self, rootfs):
@@ -523,15 +533,21 @@ class Application(Gtk.Application):
             'ls /sys/block/ | grep -Ev "loop|sr"')
         return mbrs.split()
 
-    def new_page_listbox(self, label_text, Row_titles, btn_next_clicked_signal):
+    def new_page_listbox(self, label_text, row_titles, row_subtitles, btn_next_clicked_signal):
         page = Questions_page_listbox(label_text)
         def on_questions_row_activated(widget):
             page.button.set_sensitive(True)
 
+        if row_subtitles == None or len(row_subtitles) == 0:
+            row_subtitles = ["" for x in row_titles]
+        elif len(row_titles) != len(row_subtitles):
+            raise ValueError("row_titles and row_subtitles must have the same length")
+
         page.button.connect('clicked', btn_next_clicked_signal)
-        for title in Row_titles:
+        for title, subtitle in zip(row_titles, row_subtitles):
             row = Handy.ActionRow()
             row.set_title(title)
+            row.set_subtitle(subtitle)
             row.set_visible(True)
             row.get_style_context().add_class('activatable')
             row.set_property('activatable', True)
@@ -656,6 +672,7 @@ class Partition(object):
         self.is_pardus_rootfs = False
         self.root_subvol = None
         self.mountpoint = None
+        self.operating_system = None
 
 app = Application()    
 app.run(sys.argv)
