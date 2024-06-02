@@ -310,7 +310,7 @@ class Application(Gtk.Application):
         try:
             env_vars = [f'{key}={value}' for key, value in os.environ.items()]
             exec = self.vte_terminal.spawn_async(
-                Vte.PtyFlags.DEFAULT, os.environ['HOME'], ["/bin/bash", "-c", command], env_vars, GLib.SpawnFlags.SEARCH_PATH, None, None, -1, None)
+                Vte.PtyFlags.DEFAULT, os.environ['HOME'], ["/bin/bash", "-c", "clear && " + command], env_vars, GLib.SpawnFlags.SEARCH_PATH, None, None, -1, None)
         except Exception as e:
             # write error to stderr
             sys.stderr.write(str(e) + "\n")
