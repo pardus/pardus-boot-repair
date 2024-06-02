@@ -106,7 +106,7 @@ class Application(Gtk.Application):
             self.update_status_page(_("Reinstalling GRUB Bootloader"), "content-loading-symbolic", _("We're reinstalling the GRUB boot loader to ensure your system can start up properly. This process may take a few moments. Once complete, your computer should boot into Pardus as usual."), False, False)
             self.post_command = post
             if self.rootfs.root_subvol == None:
-                self.vte_command("env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr))
+                self.vte_command("env disk={} mbr={} grub-reinstall".format(self.rootfs.name, self.mbr))
             else:
                 self.vte_command("env subvolume={} disk={} mbr={} grub-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr))
         def post(Terminal, widget):
