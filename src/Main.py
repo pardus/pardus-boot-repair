@@ -527,9 +527,20 @@ class Application(Gtk.Application):
         return users
 
     def list_mbrs(self):
-        mbrs = self.run_command(
-            'ls /sys/block/ | grep -Ev "loop|sr"')
-        return mbrs.split()
+        entries = os.listdir('/sys/block/')
+        mbrs = []
+        for mbr in entries:
+            if mbr.startswith(('loop', 'sr', 'zram')):
+                continue
+            try:
+                with open('/sys/block/{}/size'.format(mbr)) as f:
+                    size = int(f.read())
+                    if size < 512:
+                        continue
+            except:
+                continue
+            mbrs.append(mbr)
+        return mbrs
 
     def new_page_listbox(self, label_text, row_titles, row_subtitles, btn_next_clicked_signal):
         page = Questions_page_listbox(label_text)
