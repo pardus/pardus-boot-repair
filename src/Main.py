@@ -325,15 +325,15 @@ class Application(Gtk.Application):
     def vte_command(self, command):
         try:
             env_vars = [f'{key}={value}' for key, value in os.environ.items()]
-            self.vte_terminal.reset(True, True)
             exec = self.vte_terminal.spawn_async(
-                Vte.PtyFlags.DEFAULT, os.environ['HOME'], ["/bin/bash", "-c", command], env_vars, GLib.SpawnFlags.SEARCH_PATH, None, None, -1, None)
+                Vte.PtyFlags.DEFAULT, os.environ['HOME'], ["/bin/bash", "-c", command], env_vars, GLib.SpawnFlags.SEARCH_PATH, None, None, -1, None, self.vte_cb)
         except Exception as e:
             # write error to stderr
             sys.stderr.write(str(e) + "\n")
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", str(e), True, True)
 
-    def vte_cb(self, pid, error):
+    def vte_cb(self,Terminal, pid, error):
+        Terminal.reset(True, True)
         if error != None or pid == -1:
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occurred before the command has been executed"), True, True)
             return
