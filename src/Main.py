@@ -252,20 +252,18 @@ class Application(Gtk.Application):
         def pre():
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
+            self.update_status_page(_("Resetting User Settings"), "content-loading-symbolic", _("We're resetting your user configuration to its default state. This will revert any custom settings back to their original values. Please note that any personalized preferences will be lost. Once complete, your system will be refreshed and ready for use."), False, False)
             for child in self.carousel_questions.get_children():
                self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
                 return
-            users = self.list_users(self.rootfs)
-            if len(users) == 0:
-                self.update_status_page(_("No users found"), "dialog-error-symbolic", _("No users found"), True, True)
+            if self.get_user(widget) == None:
                 return
-            self.update_status_page(_("Resetting User Settings"), "content-loading-symbolic", _("We're resetting your user configuration to its default state. This will revert any custom settings back to their original values. Please note that any personalized preferences will be lost. Once complete, your system will be refreshed and ready for use."), False, False)
             self.post_command = post
             if self.rootfs.root_subvol == None:
-                self.vte_command("env pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.name ,users[0]))
+                self.vte_command("env pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.name, self.user))
             else:
-                self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.root_subvol, self.rootfs.name ,users[0]))
+                self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.root_subvol, self.rootfs.name, self.user))
             self.pending_func = None
         def post():
             self.update_status_page(_("Configuration Reset Completed"), "emblem-ok-symbolic", _("Great news! Your user configuration has been successfully reset to its default settings."), True, True)
