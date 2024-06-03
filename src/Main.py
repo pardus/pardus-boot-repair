@@ -330,15 +330,18 @@ class Application(Gtk.Application):
         except Exception as e:
             # write error to stderr
             sys.stderr.write(str(e) + "\n")
+            self.btn_close_logs.clicked()
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", str(e), True, True)
 
     def vte_cb(self,Terminal, pid, error):
         Terminal.reset(True, True)
         if error != None or pid == -1:
+            self.btn_close_logs.clicked()
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occurred before the command has been executed"), True, True)
             return
     def vte_exited(self, widget, status):
         exit_status = os.waitstatus_to_exitcode(status)
+        self.btn_close_logs.clicked()
         if exit_status != 0:
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", _("An error occured while executing the command. Please check the logs"), True, True)
             return
