@@ -49,9 +49,10 @@ class Application(Gtk.Application):
         # loading page
         self.btn_go_mainpage = self.builder.get_object("button_loading_to_mainpage")
         self.btn_close_logs = self.builder.get_object("button_close_logs")
+        self.btn_show_log = self.builder.get_object("button_show_log")
+        self.btn_copy_logs = self.builder.get_object("button_copy_logs")
         self.status_page = self.builder.get_object("page_status")
         self.spinner_loading = self.builder.get_object("spinner_page_loading")
-        self.btn_show_log = self.builder.get_object("button_show_log")
         self.box_vte = self.builder.get_object("box_vte")
 
         # Vte Terminal
@@ -79,6 +80,7 @@ class Application(Gtk.Application):
         self.btn_go_mainpage.set_visible(False)
         self.btn_show_log.set_visible(False)
         self.btn_close_logs.set_visible(True)
+        self.btn_copy_logs.set_visible(True)
 
     def on_button_close_logs_clicked(self, widget):
         self.box_vte.set_visible(False)
@@ -86,6 +88,15 @@ class Application(Gtk.Application):
         self.btn_go_mainpage.set_visible(True)
         self.btn_show_log.set_visible(True)
         self.btn_close_logs.set_visible(False)
+        self.btn_copy_logs.set_visible(False)
+
+    def on_button_copy_logs_clicked(self, widget):
+        alltext, attrlist = self.vte_terminal.get_text_range(
+            0, 0, self.vte_terminal.get_scrollback_lines(), self.vte_terminal.get_column_count())
+
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        clipboard.set_text(alltext.strip(), -1)
+        clipboard.store()
 
     def on_row_advanced_options_activated(self, widget):
         self.deck.set_visible_child(self.page_advanced)

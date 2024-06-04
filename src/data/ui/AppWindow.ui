@@ -28,6 +28,11 @@
     <property name="can-focus">False</property>
     <property name="icon-name">window-close-symbolic</property>
   </object>
+  <object class="GtkImage" id="image_button_copy_logs">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">edit-copy-symbolic</property>
+  </object>
   <object class="GtkImage" id="image_button_show_log">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -433,6 +438,19 @@
                   </object>
                   <packing>
                     <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button_copy_logs">
+                    <property name="label" translatable="yes">Copy logs</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">image_button_copy_logs</property>
+                    <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_button_copy_logs_clicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
                   </packing>
                 </child>
               </object>
