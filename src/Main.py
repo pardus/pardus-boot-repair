@@ -219,7 +219,7 @@ class Application(Gtk.Application):
         def after_userdata(widget, userdata): 
             partition_for_repair = self.repair_page.listbox.get_selected_row().get_title()
             self.deck.set_visible_child(self.page_loading)
-            self.update_status_page(_("Repairing Filesystem on {}".format(partition_for_repair)), "content-loading-symbolic", _("We're currently repairing the filesystem on the selected partition. This process may take some time, depending on the size and severity of the issues found. Please be patient while we work to restore the partition's functionality."), False, False)
+            self.update_status_page(_("Repairing Filesystem on {}").format(partition_for_repair), "content-loading-symbolic", _("We're currently repairing the filesystem on the selected partition. This process may take some time, depending on the size and severity of the issues found. Please be patient while we work to restore the partition's functionality."), False, False)
             self.vte_command("env disk={} check-filesystem".format(partition_for_repair), post)
         def post():
             self.update_status_page(_("Filesystem Repair Successful"), "emblem-ok-symbolic", _("The filesystem has been successfully repaired. Your data should now be accessible without any issues."), True, True)
@@ -248,7 +248,7 @@ class Application(Gtk.Application):
             if self.get_rootfs(widget, pre) == None:
                 return
             liveuser_home = self.run_command('grep "x:1000:" /etc/passwd | cut -f 6 -d ":"')
-            self.update_status_page(_("Extracting System Logs"), "content-loading-symbolic", _("We're collecting important system logs and placing them in the '{}' directory as you requested. These logs contain helpful information about your system's activity and any issues it may be experiencing. Depending on how much information there is, this might take a little time. Thanks for waiting while we gather this data.".format(liveuser_home)), False, False)
+            self.update_status_page(_("Extracting System Logs"), "content-loading-symbolic", _("We're collecting important system logs and placing them in the '{}' directory as you requested. These logs contain helpful information about your system's activity and any issues it may be experiencing. Depending on how much information there is, this might take a little time. Thanks for waiting while we gather this data.").format(liveuser_home), False, False)
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} dump-info-log {}".format(self.rootfs.name, liveuser_home), post, False)
             else:
