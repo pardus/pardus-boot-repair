@@ -470,9 +470,10 @@
                 <property name="transition-type">none</property>
                 <property name="reveal-child">True</property>
                 <child>
-                  <object class="GtkBox" id="box_vte">
-                    <property name="can-focus">False</property>
-                    <property name="orientation">vertical</property>
+                  <object class="GtkScrolledWindow" id="box_vte">
+                    <property name="name">s</property>
+                    <property name="can-focus">True</property>
+                    <property name="shadow-type">in</property>
                     <child>
                       <placeholder/>
                     </child>
