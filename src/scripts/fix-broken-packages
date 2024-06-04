@@ -1,18 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set +e
 DESTDIR=$(mktemp -d)
-while [[ ! -b /dev/$disk ]] ; do
-    echo $(ls /sys/block/* | grep "[0-9]$")
-    echo -n "Rootfs partition >>> "
-    read disk
-done
-mount /dev/$disk "$DESTDIR"
-mount --bind /dev "$DESTDIR"/dev
-mount --bind /dev/pts "$DESTDIR"/dev/pts
-mount --bind /sys "$DESTDIR"/sys
-mount --bind /proc "$DESTDIR"/proc
+
+source /usr/bin/pardus-mount-rootfs
+
 [[ ! -d "$DESTDIR"/var/lib/dpkg ]] && exit 1
-cat /etc/resolv.conf > "$DESTDIR"/etc/resolv.conf
 rm -rf "$DESTDIR"/etc/apt/sources.list.d
 mkdir -p "$DESTDIR"/etc/apt/sources.list.d
 rm -rf "$DESTDIR"/var/lib/apt/lists/*
@@ -29,5 +21,3 @@ for dir in dev/pts dev sys proc ; do
     while umount -lf ""$DESTDIR"/$dir" 2>/dev/null; do : ;done
 done
 umount -lf "$DESTDIR"  2>/dev/null
-echo -en "\033[32;1mPress any key to continue\033[;0m"
-read -n 1 

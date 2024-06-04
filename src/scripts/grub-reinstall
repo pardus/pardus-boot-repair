@@ -1,38 +1,27 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set +e
 DESTDIR=$(mktemp -d)
-while [[ ! -b /dev/$disk ]] ; do
-    echo $(ls /sys/block/* | grep "[0-9]$")
-    echo -n "Rootfs partition >>> "
-    read disk
-done
 while [[ ! -b /dev/$mbr ]] ; do
     echo $(ls /sys/block/ | grep -v "loop")
     echo -n "Grub disk >>> "
     read mbr
 done
-umount -lf /dev/$disk 2>/dev/null  || true
-mount /dev/$disk "$DESTDIR"
-mount --bind /dev "$DESTDIR"/dev
-mount --bind /dev/pts "$DESTDIR"/dev/pts
-mount --bind /sys "$DESTDIR"/sys
-mount --bind /proc "$DESTDIR"/proc
+source /usr/bin/pardus-mount-rootfs
+
 if [[ -d /sys/firmware/efi/ ]]
 then
-    while [[ ! -b /dev/$efi ]] ; do
-        echo $(ls /sys/block/* | grep "[0-9]$")
-        echo -n "EFI partition >>> "
-        read efi
+    # if there is a /boot or /boot/efi (or both) partitions, mount them.
+    for dir in "/boot" "/boot/efi"; do
+        if [[ -d "$DESTDIR$dir" ]] && [[ $(grep "$dir " "$DESTDIR"/etc/fstab) ]] ; then
+            chroot "$DESTDIR" mount "$dir"
+        fi
     done
-    umount -lf /dev/$efi 2>/dev/null || true
-    mount /dev/$efi "$DESTDIR"/boot/efi
     mount --bind /sys/firmware/efi/efivars "$DESTDIR"/sys/firmware/efi/efivars
-    rm -f "$DESTDIR"/sys/firmware/efi/efivars/Boot*
-    if [[ "$(cat /sys/firmware/efi/fw_platform_size)" == "64" ]] ; then
-        efi64="1"
-    else
-        efi32="1"
+    if [[ ! $clear_efi ]] ; then
+        read -p "Clear efi vars manually? [y/N] >>> " clear_efi
     fi
+    [[ $clear_efi == "y" ]] && { rm -f "$DESTDIR"/sys/firmware/efi/efivars/Boot*; }
+    [[ "$(cat /sys/firmware/efi/fw_platform_size)" == "64" ]] && efi64="1" || efi32="1"
 else
   legacy="1"
 fi
@@ -41,7 +30,6 @@ for kernel in $(ls "$DESTDIR"/lib/modules) ; do
     chroot "$DESTDIR" depmod -a $kernel
     chroot "$DESTDIR" update-initramfs -u -k $kernel
 done
-cat /etc/resolv.conf > "$DESTDIR"/etc/resolv.conf
 chroot "$DESTDIR" apt update || true
 chroot "$DESTDIR" apt install --reinstall ${legacy:+grub-pc-bin} ${efi64:+grub-efi-amd64-bin} ${efi32:+grub-efi-ia32-bin} grub-common -yq || true
 chroot "$DESTDIR" grub-install --force /dev/$mbr
@@ -65,5 +53,3 @@ for dir in dev/pts dev sys proc ; do
     while umount -lf ""$DESTDIR"/$dir" 2>/dev/null; do : ;done
 done
 umount -lf "$DESTDIR"  2>/dev/null
-echo -en "\033[32;1mPress any key to continue\033[;0m"
-read -n 1 

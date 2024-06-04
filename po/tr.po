@@ -1,209 +1,601 @@
-#
-# Fatih Altun <fatih.altun@pardus.org.tr>, 2021.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024
+# This file is distributed under the same license as the PACKAGE package.
+# Edip Hzr <edip@medip.dev>, 2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0\n"
+"Project-Id-Version: 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-07 11:23+0300\n"
-"PO-Revision-Date: 2021-12-21 16:43+0300\n"
-"Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
-"Language-Team: Turkish <gelistirici@pardus.org.tr>\n"
+"POT-Creation-Date: 2024-06-04 22:44+0300\n"
+"PO-Revision-Date: 2024-06-04 22:48+0300\n"
+"Last-Translator: Edip Hzr <edip@medip.dev>\n"
+"Language-Team: Turkish <>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-04-09 10:16+0000\n"
-"X-Generator: Gtranslator 3.38.0\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 42.0\n"
 
-#: ../pardus-boot-repair:10
-#, sh-format
-msgid "You cannot open boot repair during installation"
-msgstr "Yükleme sırasında başlangıç onarmayı açamazsınız "
-
-#: ../pardus-boot-repair:11 ../pardus-boot-repair:37
-#, sh-format
-msgid "OK"
-msgstr "Tamam"
-
-#: ../pardus-boot-repair:26
-#, sh-format
-msgid "Select user"
-msgstr "Kullanıcı Seç"
-
-#: ../pardus-boot-repair:27 ../pardus-boot-repair:50 ../pardus-boot-repair:68
-#: ../pardus-boot-repair:81 ../pardus-boot-repair:93 ../pardus-boot-repair:107
-#, sh-format
-msgid "Exit"
-msgstr "Çıkış"
-
-#: ../pardus-boot-repair:28 ../pardus-boot-repair:51 ../pardus-boot-repair:69
-#: ../pardus-boot-repair:82 ../pardus-boot-repair:94 ../pardus-boot-repair:108
-#, sh-format
-msgid "Select"
-msgstr "Seç"
-
-#: ../pardus-boot-repair:29
-#, sh-format
-msgid "User"
-msgstr "Kullanıcı"
-
-#: ../pardus-boot-repair:49
-#, sh-format
-msgid "Select rootfs partition"
-msgstr "Rootfs bölümünü seçin"
-
-#: ../pardus-boot-repair:52
-#, sh-format
-msgid "Rootfs partition"
-msgstr "Rootfs bölümü"
-
-#: ../pardus-boot-repair:67
-#, sh-format
-msgid "Select grub disk"
-msgstr "Grub diskini seçin"
-
-#: ../pardus-boot-repair:70
-#, sh-format
-msgid "Grub disk"
-msgstr "Grub diski"
-
-#: ../pardus-boot-repair:80
-#, sh-format
-msgid "Select partition"
-msgstr "Bölüm seçin"
-
-#: ../pardus-boot-repair:83
-#, sh-format
-msgid "partition"
-msgstr "bölüm"
-
-#: ../pardus-boot-repair:92
-#, sh-format
-msgid "Select efi partition"
-msgstr "Efi bölümünü seçin"
-
-#: ../pardus-boot-repair:95
-#, sh-format
-msgid "EFI partition"
-msgstr "EFI bölümü"
-
-#: ../pardus-boot-repair:106
-#, sh-format
+#: src/data/ui/AppWindow.ui:100
 msgid "Pardus Boot Repair"
 msgstr "Pardus Başlangıç Onarma"
 
-#: ../pardus-boot-repair:109
-#, sh-format
-msgid "Action"
-msgstr "Eylem"
+#: src/data/ui/AppWindow.ui:133
+msgid "Reinstall GRUB Bootloader"
+msgstr "Grub Önyükleyicisini Yeniden Kur"
 
-#: ../pardus-boot-repair:109
-#, sh-format
-msgid "Name"
-msgstr "İsim"
+#: src/data/ui/AppWindow.ui:134
+msgid "Reinstalls the GRUB bootloader to ensure the system can boot properly."
+msgstr ""
+"Sistemin düzgün şekilde önyüklenebilmesini sağlamak için GRUB "
+"önyükleyicisini yeniden kurar."
 
-#: ../pardus-boot-repair:111
-#, sh-format
-msgid "Reinstall grub"
-msgstr "Grubu yeniden yükleyin"
-
-#: ../pardus-boot-repair:112 ../pardus-boot-repair:130
-#, sh-format
+#: src/data/ui/AppWindow.ui:149
 msgid "Reset password"
-msgstr "Şifreyi yenile"
+msgstr "Parolayı sıfırla"
 
-#: ../pardus-boot-repair:113
-#, sh-format
-msgid "Open chroot shell"
-msgstr "Chroot kabuğunu aç"
+#: src/data/ui/AppWindow.ui:150
+msgid "Resets the user account password."
+msgstr "Kullanıcı hesabının parolasını sıfırlar."
 
-#: ../pardus-boot-repair:114
-#, sh-format
-msgid "Reinstall system"
-msgstr "Sistemi yeniden yükle"
+#: src/data/ui/AppWindow.ui:165
+msgid "Fix Broken Packages"
+msgstr "Bozuk Paketleri Onar"
 
-#: ../pardus-boot-repair:115
-#, sh-format
-msgid "Repair partition"
-msgstr "Bölüm onar"
+#: src/data/ui/AppWindow.ui:166
+msgid "Attempts to repair broken packages."
+msgstr "Bozuk paketleri onarmaya çalışır."
 
-#: ../pardus-boot-repair:116
-msgid "Reset user config"
-msgstr "Kullanıcı ayarlarını sıfırla"
-
-#: ../pardus-boot-repair:117
-#, sh-format
+#: src/data/ui/AppWindow.ui:181
 msgid "Update system"
 msgstr "Sistemi güncelle"
 
-#: ../pardus-boot-repair:118
-#, sh-format
-msgid "Try to fix broken packages"
-msgstr "Bozuk paketleri onarmayı dene"
+#: src/data/ui/AppWindow.ui:182
+msgid "Updates all installed packages to the latest versions."
+msgstr "Kurulu tüm paketleri en son sürümlere günceller."
 
-#: ../pardus-boot-repair:119
-#, sh-format
-msgid "Create system report"
-msgstr "Sistem raporu çıkart"
+#: src/data/ui/AppWindow.ui:197
+msgid "Advanced options"
+msgstr "Gelişmiş seçenekler"
 
-#: ../pardus-boot-repair:125
-#, sh-format
-msgid "Failed to reinstall grub"
-msgstr "Grubu yeniden yükleme başarısız"
+#: src/data/ui/AppWindow.ui:198
+msgid "Reinstall system, Repair filesystem, Open chroot shell..."
+msgstr "Sistemi yeniden kur, Dosya sistemi onar, Chroot kabuğunu aç"
 
-#: ../pardus-boot-repair:130
-#, sh-format
-msgid "Enter new passpord"
-msgstr "Yeni parolayı girin"
+#: src/data/ui/AppWindow.ui:275 src/data/ui/AppWindow.ui:407
+#: src/data/ui/AppWindow.ui:522
+msgid "Main page"
+msgstr "Ana sayfa"
 
-#: ../pardus-boot-repair:133
-#, sh-format
-msgid "Failed to reset password"
-msgstr "Parola yenileme başarısız"
+#: src/data/ui/AppWindow.ui:306
+msgid "Reinstall system"
+msgstr "Sistemi yeniden kur"
 
-#: ../pardus-boot-repair:140
-#, sh-format
-msgid "Failed to open chroot shell"
-msgstr "Chroot kabuğunu açma başarısız"
+#: src/data/ui/AppWindow.ui:307
+msgid "Completely reinstalls the operating system."
+msgstr "İşletim sistemini tamamen yeniden kurar."
 
-#: ../pardus-boot-repair:144
-#, sh-format
-msgid "Failed to fix broken packages"
-msgstr "Bozuk paketler onarılamadı"
+#: src/data/ui/AppWindow.ui:322
+msgid "Repair filesystem"
+msgstr "Dosya sistemi onar"
 
-#: ../pardus-boot-repair:146
-#, sh-format
-msgid "This operation may damage your files! Do you want to continue?"
-msgstr "Bu işlem verilerinize zarar verebilir. Devam etmek istiyor musunuz?"
+#: src/data/ui/AppWindow.ui:323
+msgid "Scans and repairs the filesystem for errors to ensure data integrity."
+msgstr ""
+"Veri bütünlüğünü sağlamak için dosya sistemini hatalara karşı tarar ve "
+"onarır."
 
-#: ../pardus-boot-repair:150
-#, sh-format
-msgid "Failed to reinstall system"
-msgstr "Sistem yeniden yüklenemedi"
+#: src/data/ui/AppWindow.ui:338
+msgid "Reset User Configuration"
+msgstr "Kullanıcı yapılandırmasını sıfırla"
 
-#: ../pardus-boot-repair:153 ../pardus-boot-repair:158
-#, sh-format
-msgid "Failed to repair partition"
-msgstr "Bölüm onarılamadı"
+#: src/data/ui/AppWindow.ui:339
+msgid "Reverts settings to default, erasing custom user configurations."
+msgstr ""
+"Ayarları varsayılana döndürerek özel kullanıcı yapılandırmalarını siler."
 
-#: ../pardus-boot-repair:162
-#, sh-format
-msgid "Failed to update system"
-msgstr "Sistem güncellenemedi"
+#: src/data/ui/AppWindow.ui:354
+msgid "Extract system logs"
+msgstr "Sistem günlüklerini çıkart"
 
-#, sh-format
-#~ msgid "Open desktop (experimental)"
-#~ msgstr "Masaüstü aç (deneysel)"
+#: src/data/ui/AppWindow.ui:355
+msgid "Retrieves system logs for analysis and troubleshooting purposes."
+msgstr "Analiz ve sorun giderme amacıyla sistem günlüklerini alır."
 
-#~ msgid ""
-#~ "This feature is experimental and may damage your data! Do you want to "
-#~ "continue?"
-#~ msgstr ""
-#~ "Bu özellik deneyseldir ve verilerinize zarar verebilir! Devam etmek "
-#~ "istiyor musunuz?"
+#: src/data/ui/AppWindow.ui:370
+msgid "Open Chroot Shell"
+msgstr "Chroot kabuğunu aç"
 
-#, sh-format
-#~ msgid "Virtual desktop"
-#~ msgstr "Sanal masaustu"
+#: src/data/ui/AppWindow.ui:371
+msgid "Opens a chroot environment for system maintenance or recovery tasks."
+msgstr "Sistem bakımı veya kurtarma görevleri için bir chroot ortamı açar."
+
+#: src/data/ui/AppWindow.ui:418
+msgid "Hide logs"
+msgstr "Günlükleri Gizle"
+
+#: src/data/ui/AppWindow.ui:431
+msgid "Show logs"
+msgstr "Günlükleri göster"
+
+#: src/data/ui/AppWindow.ui:445
+msgid "Copy logs"
+msgstr "Günlükleri kopyala"
+
+#: src/data/ui/AppWindow.ui:567
+msgid "Helps to repair broken systems"
+msgstr "Bozuk paketleri onarmaya yardımcı olur."
+
+#: src/data/ui/AppWindow.ui:569
+msgid "Website"
+msgstr "Web sitesi"
+
+#: src/data/ui/AppWindow.ui:570
+msgid ""
+"This program comes with absolutely no warranty.\n"
+"See the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GNU General "
+"Public License, version 3 or later</a> for details."
+msgstr ""
+"Bu program kesinlikle hiçbir garanti içermemektedir.\n"
+"Ayrıntılar için <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GNU "
+"Genel Kamu Lisansı, sürüm 3 veya sonrası</a>'na bakın."
+
+#. Name Surname <example@examplemail.com>
+#: src/data/ui/AppWindow.ui:574
+msgid "translator-credits"
+msgstr "Edip H. <edip@medip.dev>"
+
+#: src/Main.py:133
+msgid "Processing your request."
+msgstr "İsteğiniz işleniyor."
+
+#: src/Main.py:134
+msgid "We will ask you some questions after we process your request."
+msgstr "İsteğinizi işleme koyduktan sonra size bazı sorular soracağız."
+
+#: src/Main.py:149
+msgid "Reinstalling GRUB Bootloader"
+msgstr "GRUB önyükleyicisi yeniden kuruluyor"
+
+#: src/Main.py:150
+msgid ""
+"We're reinstalling the GRUB boot loader to ensure your system can start up "
+"properly. This process may take a few moments. Once complete, your computer "
+"should boot into Pardus as usual."
+msgstr ""
+"Sisteminizin düzgün bir şekilde başlayabilmesini sağlamak için GRUB "
+"önyükleyicisini yeniden kuruyoruz. Bu işlem birkaç dakika sürebilir. İşlem "
+"tamamlandığında, Bilgisayarınız her zamanki gibi Pardus'a açılmalıdır."
+
+#: src/Main.py:159
+msgid "GRUB Successfully Reinstalled"
+msgstr "GRUB Başarıyla Yeniden Kuruldu"
+
+#: src/Main.py:160
+msgid ""
+"Great news! The GRUB boot loader has been successfully reinstalled on your "
+"system. You're all set to restart your computer and resume normal operation."
+msgstr ""
+"Harika bir haber! GRUB önyükleyicisi sisteminize başarıyla yeniden yüklendi. "
+"Bilgisayarınızı yeniden başlatmaya ve normal çalışmaya devam etmeye "
+"hazırsınız."
+
+#: src/Main.py:168
+msgid "Fixing Broken Packages"
+msgstr "Bozuk Paketler Onarılıyor"
+
+#: src/Main.py:169
+msgid ""
+"We're resolving issues with broken packages on your system to ensure "
+"everything works. This may take some time, but we're on it. Once complete, "
+"your system should be stable and ready for use."
+msgstr ""
+"Her şeyin çalıştığından emin olmak için sisteminizdeki bozuk paketlerle "
+"ilgili sorunları çözüyoruz. Bu biraz zaman alabilir, ancak üzerinde "
+"çalışıyoruz. Tamamlandığında, sisteminiz kararlı ve kullanıma hazır "
+"olmalıdır."
+
+#: src/Main.py:178
+msgid "Packages Repaired"
+msgstr "Paketler Onarıldı"
+
+#: src/Main.py:179
+msgid ""
+"Great news! The broken packages on your system have been successfully "
+"repaired."
+msgstr "Harika haber! Sisteminizdeki bozuk paketler başarıyla onarıldı."
+
+#: src/Main.py:190
+msgid "Enter new password"
+msgstr "Yeni parola girin"
+
+#: src/Main.py:197
+msgid "Resetting password"
+msgstr "Parola sıfırlanıyor"
+
+#: src/Main.py:198
+msgid ""
+"We're resetting your password to provide access to your account. This "
+"process will only take a moment. Once complete, you'll be able to log in "
+"with your new password into your Pardus system."
+msgstr ""
+"Hesabınıza erişim sağlamak için parolanızı sıfırlıyoruz. Bu işlem sadece bir "
+"dakika sürecektir. İşlem tamamlandığında yeni parolanızla Pardus sisteminize "
+"giriş yapabileceksiniz."
+
+#: src/Main.py:207
+msgid "Password Reset Completed"
+msgstr "Parola Sıfırlama Tamamlandı"
+
+#: src/Main.py:208
+msgid ""
+"Your password has been successfully reset. You can now log in to your "
+"account with the new password."
+msgstr ""
+"Parolanız başarıyla sıfırlandı. Artık yeni parolanızla hesabınıza giriş "
+"yapabilirsiniz."
+
+#: src/Main.py:216
+msgid "Updating Software Packages"
+msgstr "Yazılım Paketleri Güncelleniyor"
+
+#: src/Main.py:217
+msgid ""
+"We're currently updating the software packages on your system to ensure you "
+"have the latest features and security enhancements. This process may take "
+"some time depending on the number of updates available. Please be patient."
+msgstr ""
+"En son özelliklere ve güvenlik geliştirmelerine sahip olmanızı sağlamak için "
+"şu anda sisteminizdeki yazılım paketlerini güncelliyoruz. Bu süreç, mevcut "
+"güncellemelerin sayısına bağlı olarak biraz zaman alabilir. Lütfen sabırlı "
+"olun."
+
+#: src/Main.py:226
+msgid "Software Packages Updated"
+msgstr "Yazılım Paketleri güncellendi"
+
+#: src/Main.py:227
+msgid ""
+"Your system's software packages have been successfully updated. You now have "
+"the latest features and security patches installed."
+msgstr ""
+"Sisteminizin yazılım paketleri başarıyla güncellendi. Artık en son "
+"özellikler ve güvenlik yamaları yüklü."
+
+#: src/Main.py:237
+msgid "System Reinstallation"
+msgstr "Sistem Yeniden Kurulumu"
+
+#: src/Main.py:238
+msgid ""
+"We're performing a clean reinstall of your system to ensure a fresh start. "
+"This process will reset your system to its original state, removing all "
+"applications."
+msgstr ""
+"Yeni bir başlangıç yapmak için sisteminizi temiz bir şekilde yeniden "
+"kuruyoruz. Bu işlem, tüm uygulamaları kaldırarak sisteminizi varsayılan "
+"durumuna sıfırlayacaktır."
+
+#: src/Main.py:247
+msgid "System Reinstallation Completed"
+msgstr "Sistem Yeniden Kurulumu Tamamlandı"
+
+#: src/Main.py:248
+msgid ""
+"Your system has been successfully reinstalled. Everything is now fresh and "
+"ready for you."
+msgstr ""
+"Sisteminiz başarıyla yeniden yüklendi. Artık her şey temiz ve sizin için "
+"hazır."
+
+#: src/Main.py:254
+msgid "Detecting Partitions"
+msgstr "Bölümler Algılanıyor"
+
+#: src/Main.py:255
+msgid "We're scanning your system to locate available partitions."
+msgstr "Mevcut bölümleri bulmak için sisteminizi tarıyoruz."
+
+#: src/Main.py:258
+msgid "Unable to Detect Partitions"
+msgstr "Bölümler Algılanamıyor"
+
+#: src/Main.py:259
+msgid ""
+"We couldn't find any partitions on your system. This could indicate a "
+"problem with your disk or partition table. Please double-check your disk "
+"connections and configuration."
+msgstr ""
+"Sisteminizde herhangi bir bölüm bulamadık. Bu, diskinizde veya bölümleme "
+"tablonuzda bir sorun olduğunu gösterebilir. Lütfen disk bağlantılarınızı ve "
+"yapılandırmanızı iki kez kontrol edin."
+
+#: src/Main.py:266
+msgid "Choose Partition for Filesystem Repair"
+msgstr "Dosya Sistemi Onarımı için Bölüm Seçin"
+
+#: src/Main.py:272
+msgid "Repairing Filesystem on {}"
+msgstr "{} Üzerindeki Dosya Sistemi Onarılıyor"
+
+#: src/Main.py:273
+msgid ""
+"We're currently repairing the filesystem on the selected partition. This "
+"process may take some time, depending on the size and severity of the issues "
+"found. Please be patient while we work to restore the partition's "
+"functionality."
+msgstr ""
+"Şu anda seçilen bölümdeki dosya sistemini onarıyoruz. Bu işlem, bulunan "
+"sorunların boyutuna ve ciddiyetine bağlı olarak biraz zaman alabilir. "
+"Bölümün işlevselliğini geri kazandırmaya çalışırken lütfen sabırlı olun."
+
+#: src/Main.py:278
+msgid "Filesystem Repair Successful"
+msgstr "Dosya Sistemi Onarımı Başarılı"
+
+#: src/Main.py:279
+msgid ""
+"The filesystem has been successfully repaired. Your data should now be "
+"accessible without any issues."
+msgstr ""
+"Dosya sistemi başarıyla onarıldı. Verileriniz artık herhangi bir sorun "
+"olmadan erişilebilmelidir."
+
+#: src/Main.py:290
+msgid "Resetting User Settings"
+msgstr "Kullanıcı Ayarları Sıfırlanıyor"
+
+#: src/Main.py:291
+msgid ""
+"We're resetting your user configuration to its default state. This will "
+"revert any custom settings back to their original values. Please note that "
+"any personalized preferences will be lost. Once complete, your system will "
+"be refreshed and ready for use."
+msgstr ""
+"Kullanıcı yapılandırmanızı varsayılan durumuna sıfırlıyoruz. Bu, tüm özel "
+"ayarları varsayılan değerlerine geri döndürecektir. Kişiselleştirilmiş "
+"tercihlerin kaybolacağını lütfen unutmayın. İşlem tamamlandığında sisteminiz "
+"yenilenmiş ve kullanıma hazır olacaktır."
+
+#: src/Main.py:300
+msgid "Configuration Reset Completed"
+msgstr "Yapılandırma Sıfırlaması Tamamlandı"
+
+#: src/Main.py:301
+msgid ""
+"Great news! Your user configuration has been successfully reset to its "
+"default settings."
+msgstr ""
+"Harika haber! Kullanıcı yapılandırmanız başarıyla varsayılan ayarlarına "
+"sıfırlandı."
+
+#: src/Main.py:311
+msgid "Extracting System Logs"
+msgstr "Sistem Günlükleri Çıkarılıyor"
+
+#: src/Main.py:312
+msgid ""
+"We're collecting important system logs and placing them in the '{}' "
+"directory as you requested. These logs contain helpful information about "
+"your system's activity and any issues it may be experiencing. Depending on "
+"how much information there is, this might take a little time. Thanks for "
+"waiting while we gather this data."
+msgstr ""
+"Önemli sistem günlüklerini topluyor ve talep ettiğiniz gibi '{}' dizinine "
+"yerleştiriyoruz. Bu günlükler, sisteminizin etkinliği ve karşılaşabileceği "
+"sorunlar hakkında yararlı bilgiler içerir. Ne kadar bilgi olduğuna bağlı "
+"olarak bu işlem biraz zaman alabilir. Biz bu verileri toplarken beklediğiniz "
+"için teşekkür ederiz."
+
+#: src/Main.py:321
+msgid "System Logs Extracted"
+msgstr "Sistem Günlükleri Çıkarıldı"
+
+#: src/Main.py:322
+msgid ""
+"Great news! The system logs have been successfully extracted. This valuable "
+"information can help diagnose any issues with your system."
+msgstr ""
+"Haberler harika! Sistem günlükleri başarıyla çıkarıldı. Bu değerli bilgiler, "
+"sisteminizle ilgili herhangi bir sorunun teşhis edilmesine yardımcı olabilir."
+
+#: src/Main.py:328
+msgid "Entering Chroot Environment"
+msgstr "Chroot Ortamına Giriliyor"
+
+#: src/Main.py:329
+msgid ""
+"We're accessing a special system environment called chroot at your request. "
+"This allows you to make changes as if you were working directly on your "
+"installed operating system. Please wait while we set up this environment to "
+"address your needs."
+msgstr ""
+"İsteğiniz üzerine chroot adı verilen özel bir sistem ortamına erişiyoruz. "
+"Bu, doğrudan kurulu işletim sisteminiz üzerinde çalışıyormuş gibi "
+"değişiklikler yapmanıza olanak tanır. İhtiyaçlarınızı karşılamak için bu "
+"ortamı kurarken lütfen bekleyin."
+
+#: src/Main.py:345
+msgid "Chroot Process Successfully Concluded"
+msgstr "Chroot İşlemi Başarıyla Sonuçlandı"
+
+#: src/Main.py:346
+msgid "The chroot process has finished successfully"
+msgstr "Chroot işlemi başarıyla tamamlandı"
+
+#: src/Main.py:361
+msgid ""
+"Are you sure you want to continue? This action is irreversible and may cause "
+"data loss."
+msgstr ""
+"Devam etmek istediğinize emin misiniz? Bu işlem geri alınamaz ve veri "
+"kaybına neden olabilir"
+
+#: src/Main.py:362
+msgid "Operation Cancelled"
+msgstr "İşlem iptal edildi"
+
+#: src/Main.py:363
+msgid "The operation has been cancelled by the user."
+msgstr "İşlem kullanıcı tarafından iptal edildi."
+
+#: src/Main.py:377 src/Main.py:383 src/Main.py:391 src/Main.py:395
+#: src/Main.py:408
+msgid "An error occured"
+msgstr "Bir hata oluştu"
+
+#: src/Main.py:384
+msgid "An error occurred before the command has been executed"
+msgstr "Komut çalıştırılmadan önce bir hata oluştu"
+
+#: src/Main.py:392
+msgid "An error occured while executing the command. Please check the logs"
+msgstr "Komut çalıştırılırken bir hata oluştu. Lütfen günlükleri kontrol edin"
+
+#: src/Main.py:396
+msgid "An error occurred after the command has been executed."
+msgstr "Komut çalıştırıldıktan sonra bir hata oluştu."
+
+#: src/Main.py:416
+msgid "Root Filesystem Missing"
+msgstr "Kök Dosya Sistemi Eksik"
+
+#: src/Main.py:417
+msgid ""
+"We couldn't locate the root filesystem on your system. This could be due to "
+"a disk failure, misconfiguration, or other issues. Please ensure that your "
+"disk is properly connected and configured."
+msgstr ""
+"Sisteminizdeki kök dosya sistemini bulamadık. Bunun nedeni disk arızası, "
+"yanlış yapılandırma veya diğer sorunlar olabilir. Lütfen diskinizin doğru "
+"şekilde bağlandığından ve yapılandırıldığından emin olun."
+
+#: src/Main.py:424
+msgid "Select a root filesystem"
+msgstr "Bir kök dosya sistemi seçin"
+
+#: src/Main.py:435
+msgid "Root Filesystem Chosen"
+msgstr "Kök Dosya Sistemi Seçildi"
+
+#: src/Main.py:436
+msgid "You've selected the root filesystem for further action."
+msgstr "Sonraki işlem için kök dosya sistemini seçtiniz."
+
+#: src/Main.py:447
+msgid "No Users Detected"
+msgstr "Algılanan Kullanıcı Yok"
+
+#: src/Main.py:448
+msgid ""
+"We couldn't find any users on your system. This could indicate an issue with "
+"user accounts or system configuration. Please ensure that users are properly "
+"configured."
+msgstr ""
+"Sisteminizde herhangi bir kullanıcı bulamadık. Bu, kullanıcı hesapları veya "
+"sistem yapılandırmasıyla ilgili bir sorun olduğunu gösterebilir. Lütfen "
+"kullanıcıların düzgün yapılandırıldığından emin olun."
+
+#: src/Main.py:452
+msgid "Select a user"
+msgstr "Bir kullanıcı seçin"
+
+#: src/Main.py:461
+msgid "User Chosen"
+msgstr "Kullanıcı seçildi"
+
+#: src/Main.py:462
+msgid ""
+"You've selected a user for further action. This step is important for making "
+"changes specific to the chosen user."
+msgstr ""
+"Sonraki işlem için bir kullanıcı seçtiniz. Bu adım, seçilen kullanıcıya özel "
+"değişiklikler yapmak için önemlidir."
+
+#: src/Main.py:472
+msgid "Master Boot Record (MBR) Missing"
+msgstr "Ana Önyükleme Kaydı (MBR) Eksik"
+
+#: src/Main.py:473
+msgid ""
+"We couldn't locate the Master Boot Record (MBR) on your system. This "
+"critical component is necessary for booting your system. Please check your "
+"disk connections and configuration."
+msgstr ""
+"Sisteminizde Ana Önyükleme Kaydını (MBR) bulamadık. Bu kritik bileşen "
+"sisteminizin önyüklenmesi için gereklidir. Lütfen disk bağlantılarınızı ve "
+"yapılandırmanızı kontrol edin."
+
+#: src/Main.py:477
+msgid "Select the Master Boot Record (MBR)"
+msgstr "Ana Önyükleme Kaydını (MBR) seçin"
+
+#: src/Main.py:486
+msgid "MBR chosen"
+msgstr "MBR seçildi"
+
+#: src/Main.py:487
+msgid ""
+"You've successfully selected the Master Boot Record (MBR). This selection is "
+"essential for configuring your system's boot process."
+msgstr ""
+"Ana Önyükleme Kaydını (MBR) başarıyla seçtiniz. Bu seçim, sisteminizin "
+"önyükleme işlemini yapılandırmak için çok önemlidir."
+
+#: src/Main.py:516
+msgid "Searching for Root Filesystem"
+msgstr "Kök Dosya Sistemini Aranıyor"
+
+#: src/Main.py:517
+msgid ""
+"We're searching for the root filesystem on your system. This is essential "
+"for proper system operation. Please wait while we locate the root "
+"filesystem. Thank you for your patience."
+msgstr ""
+"Sisteminizdeki kök dosya sistemini arıyoruz. Bu, sistemin düzgün çalışması "
+"için gereklidir. Kök dosya sistemini bulana kadar lütfen bekleyin. Sabrınız "
+"için teşekkür ederiz."
+
+#: src/Main.py:552
+msgid "Searching for Btrfs Root Filesystem Subvolume"
+msgstr "Btrfs Kök Dosya Sistemi Alt Birimi Aranıyor"
+
+#: src/Main.py:553
+msgid ""
+"We're searching for the Btrfs root filesystem subvolume on your system. This "
+"is essential for proper system operation. Please wait while we locate the "
+"Btrfs root filesystem subvolume. Thank you for your patience."
+msgstr ""
+"Sisteminizde Btrfs kök dosya sistemi alt birimini arıyoruz. Bu, sistemin "
+"düzgün çalışması için gereklidir. Btrfs kök dosya sistemi alt birimini "
+"bulana kadar lütfen bekleyin. Sabrınız için teşekkür ederiz."
+
+#: src/Main.py:706 src/Main.py:750
+msgid "Continue"
+msgstr "Sürdür"
+
+#: src/Main.py:732
+msgid "Enter password"
+msgstr "Parolayı girin"
+
+#: src/Main.py:739
+msgid "Re-enter password"
+msgstr "Parolayı yeniden girin"
+
+#: src/Main.py:743
+msgid "Passwords do not match"
+msgstr "Parolalar eşleşmiyor"
+
+#~ msgid "No users found"
+#~ msgstr "Kullanıcı bulunamadı"
+
+#~ msgid "Are you sure you want to clear efivars?"
+#~ msgstr "Efivarları temizlemek istediğinize emin misiniz?"
+
+#~ msgid "Yes"
+#~ msgstr "Evet"
+
+#~ msgid "No"
+#~ msgstr "Hayır"

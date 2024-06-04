@@ -1,17 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 mkdir -p /source /target
 mount /dev/loop0 /source
-while [[ ! -b /dev/$disk ]] ; do
-    echo $(ls /sys/block/* | grep "[0-9]$")
-    echo -n "Rootfs partition >>> "
-    read disk
-done
 while [[ ! -b /dev/$mbr ]] ; do
     echo $(ls /sys/block/ | grep -v "loop")
     echo -n "Grub disk >>> "
     read mbr
 done
-mount /dev/$disk /target
+source /usr/bin/pardus-mount-rootfs
+
 if [[ -d $old ]] ; then
     rm -rf "$old"
 fi
@@ -63,5 +59,3 @@ for dir in dev/pts dev sys proc ; do
     while umount -lf "/target/$dir" 2>/dev/null; do : ;done
 done
 umount -lf /target  2>/dev/null
-echo -en "\033[32;1mPress any key to continue\033[;0m"
-read -n 1

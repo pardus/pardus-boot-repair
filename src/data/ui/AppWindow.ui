@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
+<interface domain="pardus-boot-repair">
+  <requires lib="gtk+" version="3.24"/>
+  <requires lib="libhandy" version="1.2"/>
+  <object class="GtkImage" id="image_button_about">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">dialog-information-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image_button_back">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">go-previous-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image_button_back1">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">go-previous-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image_button_back2">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">go-previous-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image_button_close_log">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">window-close-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image_button_copy_logs">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">edit-copy-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image_button_show_log">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">system-search-symbolic</property>
+  </object>
+  <object class="HdyApplicationWindow" id="window_main">
+    <property name="can-focus">False</property>
+    <property name="default-width">700</property>
+    <property name="default-height">500</property>
+    <child>
+      <object class="HdyDeck" id="deck_main">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkBox" id="box_page_main">
+            <property name="width-request">500</property>
+            <property name="height-request">-1</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">20</property>
+            <child>
+              <object class="HdyHeaderBar">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="show-close-button">True</property>
+                <child>
+                  <object class="GtkButton" id="button_about">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">image_button_about</property>
+                    <signal name="clicked" handler="on_button_about_clicked" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">center</property>
+                <property name="spacing">15</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="resource">/tr/org/pardus/boot-repair/images/pardus-boot-repair.svg</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Pardus Boot Repair</property>
+                    <style>
+                      <class name="title"/>
+                      <class name="large-title"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="HdyClamp">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkListBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="selection-mode">none</property>
+                    <child>
+                      <object class="HdyActionRow" id="row_reinstall_grub">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Reinstall GRUB Bootloader</property>
+                        <property name="subtitle" translatable="yes">Reinstalls the GRUB bootloader to ensure the system can boot properly.</property>
+                        <signal name="activated" handler="on_row_reinstall_grub_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="row_reset_password">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Reset password</property>
+                        <property name="subtitle" translatable="yes">Resets the user account password.</property>
+                        <signal name="activated" handler="on_row_reset_password_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="row_fix_broken">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Fix Broken Packages</property>
+                        <property name="subtitle" translatable="yes">Attempts to repair broken packages.</property>
+                        <signal name="activated" handler="on_row_fix_broken_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="row_update">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Update system</property>
+                        <property name="subtitle" translatable="yes">Updates all installed packages to the latest versions.</property>
+                        <signal name="activated" handler="on_row_update_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="row_advanced_options">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Advanced options</property>
+                        <property name="subtitle" translatable="yes">Reinstall system, Repair filesystem, Open chroot shell...</property>
+                        <signal name="activated" handler="on_row_advanced_options_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="content"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="valign">end</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkSeparator">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label">TÜBİTAK ULAKBİM | 2024</property>
+                    <style>
+                      <class name="footer"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="pack-type">end</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="box_page_advanced">
+            <property name="height-request">-1</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">20</property>
+            <child>
+              <object class="HdyHeaderBar">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkButton" id="button_mainpage">
+                    <property name="label" translatable="yes">Main page</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">image_button_back</property>
+                    <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_button_mainpage_clicked" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="HdyClamp">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="valign">baseline</property>
+                <child>
+                  <object class="GtkListBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="selection-mode">none</property>
+                    <child>
+                      <object class="HdyActionRow" id="row_reinstall">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Reinstall system</property>
+                        <property name="subtitle" translatable="yes">Completely reinstalls the operating system.</property>
+                        <signal name="activated" handler="on_row_reinstall_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="row_repair_filesystem">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Repair filesystem</property>
+                        <property name="subtitle" translatable="yes">Scans and repairs the filesystem for errors to ensure data integrity.</property>
+                        <signal name="activated" handler="on_row_repair_filesystem_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="row_reset_config">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Reset User Configuration</property>
+                        <property name="subtitle" translatable="yes">Reverts settings to default, erasing custom user configurations.</property>
+                        <signal name="activated" handler="on_row_reset_config_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="row_dump_log">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Extract system logs</property>
+                        <property name="subtitle" translatable="yes">Retrieves system logs for analysis and troubleshooting purposes.</property>
+                        <signal name="activated" handler="on_row_dump_log_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="row_chroot">
+                        <property name="activatable">True</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="title" translatable="yes">Open Chroot Shell</property>
+                        <property name="subtitle" translatable="yes">Opens a chroot environment for system maintenance or recovery tasks.</property>
+                        <signal name="activated" handler="on_row_chroot_activated" swapped="no"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <style>
+                          <class name="activatable"/>
+                        </style>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="content"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="box_page_loading">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">25</property>
+            <child>
+              <object class="HdyHeaderBar">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkButton" id="button_loading_to_mainpage">
+                    <property name="label" translatable="yes">Main page</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">image_button_back2</property>
+                    <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_button_mainpage_clicked" swapped="no"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button_close_logs">
+                    <property name="label" translatable="yes">Hide logs</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">image_button_close_log</property>
+                    <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_button_close_logs_clicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button_show_log">
+                    <property name="label" translatable="yes">Show logs</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">image_button_show_log</property>
+                    <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_button_show_log_clicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button_copy_logs">
+                    <property name="label" translatable="yes">Copy logs</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">image_button_copy_logs</property>
+                    <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_button_copy_logs_clicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="HdyStatusPage" id="page_status">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">content-loading</property>
+                <child>
+                  <object class="GtkSpinner" id="spinner_page_loading">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="active">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRevealer">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="transition-type">none</property>
+                <property name="reveal-child">True</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="box_vte">
+                    <property name="name">s</property>
+                    <property name="can-focus">True</property>
+                    <property name="shadow-type">in</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="box_page_questions">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-bottom">16</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">16</property>
+            <child>
+              <object class="HdyHeaderBar">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkButton" id="button_mainpage1">
+                    <property name="label" translatable="yes">Main page</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">image_button_back1</property>
+                    <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_button_mainpage_clicked" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="HdyCarousel" id="carousel_questions">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAboutDialog" id="dialog_about">
+    <property name="can-focus">False</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="icon-name">pardus-boot-repair</property>
+    <property name="type-hint">dialog</property>
+    <property name="gravity">center</property>
+    <property name="transient-for">window_main</property>
+    <property name="program-name">Pardus Boot Repair</property>
+    <property name="version">0.5.2</property>
+    <property name="copyright">© 2024 Pardus</property>
+    <property name="comments" translatable="yes">Helps to repair broken systems</property>
+    <property name="website">https://github.com/pardus/pardus-boot-repair</property>
+    <property name="website-label" translatable="yes">Website</property>
+    <property name="license" translatable="yes">This program comes with absolutely no warranty.
+See the &lt;a href="https://www.gnu.org/licenses/gpl-3.0.html"&gt;GNU General Public License, version 3 or later&lt;/a&gt; for details.</property>
+    <property name="authors">Ali Rıza Keskin
+Edip H. &lt;edip@medip.dev&gt;</property>
+    <property name="translator-credits" translatable="yes" comments="Name Surname &lt;example@examplemail.com&gt;">translator-credits</property>
+    <property name="artists">Edip H. &lt;edip@medip.dev&gt;</property>
+    <property name="logo-icon-name">pardus-boot-repair</property>
+    <property name="wrap-license">True</property>
+    <property name="license-type">gpl-3-0</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

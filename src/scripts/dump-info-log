@@ -1,15 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 target="$1"
 DESTDIR=$(mktemp -d)
 if [[ "$1" == "" ]] ; then
-    echo -n "Input output target"
+    echo -n "Enter the target directory to save the logs to: "
     read target
 fi
-if [[ "$disk" == "" || ! -b "/dev/$disk" ]] ; then
-    echo -n "Input rootfs disk"
-    read disk
-fi
-mount "/dev/$disk" "$DESTDIR"
+source /usr/bin/pardus-mount-rootfs
+
 zip "$target/system-log" \
     "$DESTDIR"/var/log/auth.log \
     "$DESTDIR"/var/log/boot.log \
@@ -30,5 +27,3 @@ zip "$target/system-log" \
     "$DESTDIR"/var/log/apt/*.log \
     "$DESTDIR"/var/log/lightdm/lightdm.log \
     "$DESTDIR"/boot/grub/grub.cfg
-
-umount -lf -R "$DESTDIR"
