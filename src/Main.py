@@ -109,10 +109,17 @@ class Application(Gtk.Application):
         if there is more than one user, rootfs or mbr, the function will return None but it will create a listbox page for the user to select one of them
         after the user selects one of them, the get_user, get_rootfs or get_mbr function will call the row function again (see self.pending_func)
     """
+    """
+        row_init_func is a function should be called before the row pre function.
+    """
+    def row_init_func(self, pre_function):
+        self.deck.set_visible_child(self.page_loading)
+        self.update_status_page(_("Processing your request."), "content-loading-symbolic", _("We will ask you some questions after we process your request."), False, False)
+        Thread(target=pre_function).start()
+
     def on_row_reinstall_grub_activated(self, widget):
         def pre():
             self.pending_func = pre
-            self.deck.set_visible_child(self.page_loading)
             if self.get_rootfs(widget) == None:
                 return
             if self.get_mbr(widget) == None:
@@ -129,12 +136,12 @@ class Application(Gtk.Application):
         def post():
             self.update_status_page(_("GRUB Successfully Reinstalled"), "emblem-ok-symbolic", _("Great news! The GRUB boot loader has been successfully reinstalled on your system. You're all set to restart your computer and resume normal operation."), True, True)
             self.post_command = None
-        pre()
+        
+        self.row_init_func(pre)
 
     def on_row_fix_broken_activated(self, widget):
         def pre():
             self.pending_func = pre
-            self.deck.set_visible_child(self.page_loading)
             if self.get_rootfs(widget) == None:
                 return
             self.post_command = post
@@ -147,12 +154,12 @@ class Application(Gtk.Application):
         def post():
             self.update_status_page(_("Packages Repaired"), "emblem-ok-symbolic", _("Great news! The broken packages on your system have been successfully repaired."), True, True)
             self.post_command = None
-        pre()
+        
+        self.row_init_func(pre)
 
     def on_row_reset_password_activated(self, widget):
         def pre():
             self.pending_func = pre
-            self.deck.set_visible_child(self.page_loading)
             if self.get_rootfs(widget) == None:
                 return None
             if self.get_user(widget) == None:
@@ -170,17 +177,14 @@ class Application(Gtk.Application):
                 self.vte_command("env disk={} user={} pass1={} pass2={} reset-password".format(self.rootfs.name, self.user, password1, password2), False)
             else:
                 self.vte_command("env subvolume={} user={} disk={} pass1={} pass2={} reset-password".format(self.rootfs.root_subvol, self.user, self.rootfs.name, password1, password2), False)
-            self.user = None
         def post():
             self.update_status_page(_("Password Reset Completed"), "emblem-ok-symbolic", _("Your password has been successfully reset. You can now log in to your account with the new password."), True, True)
         
-        if pre() == None:
-            return
+        self.row_init_func(pre)
 
     def on_row_update_activated(self, widget):
         def pre():
             self.pending_func = pre
-            self.deck.set_visible_child(self.page_loading)
             if self.get_rootfs(widget) == None:
                 return
             self.update_status_page(_("Updating Software Packages"), "content-loading-symbolic", _("We're currently updating the software packages on your system to ensure you have the latest features and security enhancements. This process may take some time depending on the number of updates available. Please be patient."), False, False)
@@ -193,12 +197,12 @@ class Application(Gtk.Application):
         def post():
             self.update_status_page(_("Software Packages Updated"), "emblem-ok-symbolic", _("Your system's software packages have been successfully updated. You now have the latest features and security patches installed."), True, True)
             self.post_command = None
-        pre()
+
+        self.row_init_func(pre)
 
     def on_row_reinstall_activated(self, widget):
         def pre():
             self.pending_func = pre
-            self.deck.set_visible_child(self.page_loading)
             if self.get_rootfs(widget) == None:
                 return
             if self.get_mbr(widget) == None:
@@ -212,13 +216,12 @@ class Application(Gtk.Application):
             self.pending_func = None
         def post():
             self.update_status_page(_("System Reinstallation Completed"), "emblem-ok-symbolic", _("Your system has been successfully reinstalled. Everything is now fresh and ready for you."), True, True)   
-        pre()
+        
+        self.row_init_func(pre)
 
     def on_row_repair_filesystem_activated(self, widget):
         def pre():
             self.pending_func = pre
-            self.deck.set_visible_child(self.page_loading)
-
             self.update_status_page(_("Detecting Partitions"), "content-loading-symbolic", _("We're scanning your system to locate available partitions."), False, False)
             partitions = self.list_partitions()
             if len(partitions) == 0:
@@ -239,18 +242,19 @@ class Application(Gtk.Application):
             self.vte_command("env disk={} check-filesystem".format(partition_for_repair))
         def post():
             self.update_status_page(_("Filesystem Repair Successful"), "emblem-ok-symbolic", _("The filesystem has been successfully repaired. Your data should now be accessible without any issues."), True, True)
-        pre()
+
+        self.row_init_func(pre)
 
     def on_row_reset_config_activated(self, widget):
         def pre():
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
-            self.update_status_page(_("Resetting User Settings"), "content-loading-symbolic", _("We're resetting your user configuration to its default state. This will revert any custom settings back to their original values. Please note that any personalized preferences will be lost. Once complete, your system will be refreshed and ready for use."), False, False)
             if self.get_rootfs(widget) == None:
                 return
             if self.get_user(widget) == None:
                 return
             self.post_command = post
+            self.update_status_page(_("Resetting User Settings"), "content-loading-symbolic", _("We're resetting your user configuration to its default state. This will revert any custom settings back to their original values. Please note that any personalized preferences will be lost. Once complete, your system will be refreshed and ready for use."), False, False)
             if self.rootfs.root_subvol == None:
                 self.vte_command("env pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.name, self.user))
             else:
@@ -258,7 +262,8 @@ class Application(Gtk.Application):
             self.pending_func = None
         def post():
             self.update_status_page(_("Configuration Reset Completed"), "emblem-ok-symbolic", _("Great news! Your user configuration has been successfully reset to its default settings."), True, True)
-        pre()
+        
+        self.row_init_func(pre)
 
     def on_row_dump_log_activated(self, widget):
         def pre():
@@ -266,7 +271,6 @@ class Application(Gtk.Application):
             if self.get_rootfs(widget) == None:
                 return
             liveuser_home = self.run_command('grep "x:1000:" /etc/passwd | cut -f 6 -d ":"')
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Extracting System Logs"), "content-loading-symbolic", _("We're collecting important system logs and placing them in the '{}' directory as you requested. These logs contain helpful information about your system's activity and any issues it may be experiencing. Depending on how much information there is, this might take a little time. Thanks for waiting while we gather this data.".format(liveuser_home)), False, False)
             self.post_command = post
             if self.rootfs.root_subvol == None:
@@ -276,12 +280,12 @@ class Application(Gtk.Application):
             self.pending_func = None
         def post():
             self.update_status_page(_("System Logs Extracted"), "emblem-ok-symbolic", _("Great news! The system logs have been successfully extracted. This valuable information can help diagnose any issues with your system."), True, True)
-        pre()
+
+        self.row_init_func(pre)
 
     def on_row_chroot_activated(self, widget):
         def pre():
             self.pending_func = pre
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Entering Chroot Environment"), "content-loading-symbolic", _("We're accessing a special system environment called chroot at your request. This allows you to make changes as if you were working directly on your installed operating system. Please wait while we set up this environment to address your needs."), False, True)
             if self.get_rootfs(widget) == None:
                 return
@@ -298,7 +302,8 @@ class Application(Gtk.Application):
         def post():
             self.btn_close_logs.clicked()
             self.update_status_page(_("Chroot Process Successfully Concluded"), "emblem-ok-symbolic", _("The chroot process has finished successfully"), True, True)
-        pre()
+
+        self.row_init_func(pre)
 
     def update_status_page(self, title, icon_name, description, stop_spinner=False, enable_mainpage=True):
         self.status_page.set_title(title)
