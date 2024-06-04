@@ -113,8 +113,6 @@ class Application(Gtk.Application):
         def pre():
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
-            for child in self.carousel_questions.get_children():
-               self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
                 return
             if self.get_mbr(widget) == None:
@@ -137,8 +135,6 @@ class Application(Gtk.Application):
         def pre():
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
-            for child in self.carousel_questions.get_children():
-               self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
                 return
             self.post_command = post
@@ -156,8 +152,6 @@ class Application(Gtk.Application):
     def on_row_reset_password_activated(self, widget):
         def pre():
             self.pending_func = pre
-            for child in self.carousel_questions.get_children():
-               self.carousel_questions.remove(child)
             self.deck.set_visible_child(self.page_loading)
             if self.get_rootfs(widget) == None:
                 return None
@@ -187,8 +181,6 @@ class Application(Gtk.Application):
         def pre():
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
-            for child in self.carousel_questions.get_children():
-               self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
                 return
             self.update_status_page(_("Updating Software Packages"), "content-loading-symbolic", _("We're currently updating the software packages on your system to ensure you have the latest features and security enhancements. This process may take some time depending on the number of updates available. Please be patient."), False, False)
@@ -207,8 +199,6 @@ class Application(Gtk.Application):
         def pre():
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
-            for child in self.carousel_questions.get_children():
-               self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
                 return
             if self.get_mbr(widget) == None:
@@ -228,6 +218,7 @@ class Application(Gtk.Application):
         def pre():
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
+
             self.update_status_page(_("Detecting Partitions"), "content-loading-symbolic", _("We're scanning your system to locate available partitions."), False, False)
             partitions = self.list_partitions()
             if len(partitions) == 0:
@@ -255,8 +246,6 @@ class Application(Gtk.Application):
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Resetting User Settings"), "content-loading-symbolic", _("We're resetting your user configuration to its default state. This will revert any custom settings back to their original values. Please note that any personalized preferences will be lost. Once complete, your system will be refreshed and ready for use."), False, False)
-            for child in self.carousel_questions.get_children():
-               self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
                 return
             if self.get_user(widget) == None:
@@ -274,8 +263,6 @@ class Application(Gtk.Application):
     def on_row_dump_log_activated(self, widget):
         def pre():
             self.pending_func = pre
-            for child in self.carousel_questions.get_children():
-                self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
                 return
             liveuser_home = self.run_command('grep "x:1000:" /etc/passwd | cut -f 6 -d ":"')
@@ -296,8 +283,6 @@ class Application(Gtk.Application):
             self.pending_func = pre
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Entering Chroot Environment"), "content-loading-symbolic", _("We're accessing a special system environment called chroot at your request. This allows you to make changes as if you were working directly on your installed operating system. Please wait while we set up this environment to address your needs."), False, True)
-            for child in self.carousel_questions.get_children():
-                self.carousel_questions.remove(child)
             if self.get_rootfs(widget) == None:
                 return
             if self.get_user(widget) == None:
@@ -575,6 +560,9 @@ class Application(Gtk.Application):
         def on_questions_row_activated(widget):
             page.button.set_sensitive(True)
 
+        for child in self.carousel_questions.get_children():
+           self.carousel_questions.remove(child)
+
         if row_subtitles == None or len(row_subtitles) == 0:
             row_subtitles = ["" for x in row_titles]
         elif len(row_titles) != len(row_subtitles):
@@ -595,6 +583,10 @@ class Application(Gtk.Application):
 
     def new_page_input(self, label_text, btn_continue_clicked_signal):
         page = Questions_page_password_input(label_text)
+        
+        for child in self.carousel_questions.get_children():
+           self.carousel_questions.remove(child)
+
         def input_change_event(widget):
             entry_text = page.entry.get_text()
             entry_second_text = page.entry_second.get_text()
