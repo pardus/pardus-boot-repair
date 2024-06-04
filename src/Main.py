@@ -173,9 +173,9 @@ class Application(Gtk.Application):
             self.update_status_page(_("Resetting password"), "content-loading-symbolic", _("We're resetting your password to provide access to your account. This process will only take a moment. Once complete, you'll be able to log in with your new password into your Pardus system."), False, False)
             self.post_command = post
             if self.rootfs.root_subvol == None:
-                self.vte_command("env disk={} user={} pass1={} pass2={} reset-password".format(self.rootfs.name, self.user, password1, password2))
+                self.vte_command("env disk={} user={} pass1={} pass2={} reset-password".format(self.rootfs.name, self.user, password1, password2), False)
             else:
-                self.vte_command("env subvolume={} user={} disk={} pass1={} pass2={} reset-password".format(self.rootfs.root_subvol, self.user, self.rootfs.name, password1, password2))
+                self.vte_command("env subvolume={} user={} disk={} pass1={} pass2={} reset-password".format(self.rootfs.root_subvol, self.user, self.rootfs.name, password1, password2), False)
             self.user = None
         def post():
             self.update_status_page(_("Password Reset Completed"), "emblem-ok-symbolic", _("Your password has been successfully reset. You can now log in to your account with the new password."), True, True)
@@ -283,9 +283,9 @@ class Application(Gtk.Application):
             self.update_status_page(_("Extracting System Logs"), "content-loading-symbolic", _("We're collecting important system logs and placing them in the '{}' directory as you requested. These logs contain helpful information about your system's activity and any issues it may be experiencing. Depending on how much information there is, this might take a little time. Thanks for waiting while we gather this data.".format(liveuser_home)), False, False)
             self.post_command = post
             if self.rootfs.root_subvol == None:
-                self.vte_command("env disk={} dump-info-log {}".format(self.rootfs.name, liveuser_home))
+                self.vte_command("env disk={} dump-info-log {}".format(self.rootfs.name, liveuser_home), False)
             else:
-                self.vte_command("env subvolume={} disk={} dump-info-log {}".format(self.rootfs.root_subvol, self.rootfs.name, liveuser_home))
+                self.vte_command("env subvolume={} disk={} dump-info-log {}".format(self.rootfs.root_subvol, self.rootfs.name, liveuser_home), False)
             self.pending_func = None
         def post():
             self.update_status_page(_("System Logs Extracted"), "emblem-ok-symbolic", _("Great news! The system logs have been successfully extracted. This valuable information can help diagnose any issues with your system."), True, True)
@@ -305,9 +305,9 @@ class Application(Gtk.Application):
             self.btn_show_log.clicked()
             self.post_command = post
             if self.rootfs.root_subvol == None:
-                self.vte_command("env disk={} pardus-chroot /dev/{} su {} -".format(self.rootfs.name, self.rootfs.name, self.user))
+                self.vte_command("env disk={} pardus-chroot /dev/{} su {} -".format(self.rootfs.name, self.rootfs.name, self.user), False)
             else:
-                self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -".format(self.rootfs.root_subvol ,self.rootfs.name, self.user))
+                self.vte_command("env subvolume={} pardus-chroot /dev/{} su {} -".format(self.rootfs.root_subvol ,self.rootfs.name, self.user), False)
             self.user = None
             self.pending_func = None
         def post():
@@ -324,8 +324,11 @@ class Application(Gtk.Application):
         if stop_spinner:
             self.spinner_loading.stop()
 
-    def vte_command(self, command):
+    def vte_command(self, command, ask_confirmation=True):
         try:
+            if ask_confirmation and not self.ask_confirmation(_("Are you sure you want to continue? This action is irreversible and may cause data loss.")):
+                self.update_status_page(_("Operation Cancelled"), "dialog-warning-symbolic", _("The operation has been cancelled by the user."), True, True)
+                return
             env_vars = [f'{key}={value}' for key, value in os.environ.items()]
             exec = self.vte_terminal.spawn_async(
                 Vte.PtyFlags.DEFAULT, os.environ['HOME'], ["/bin/bash", "-c", command], env_vars, GLib.SpawnFlags.SEARCH_PATH, None, None, -1, None, self.vte_cb)
@@ -444,6 +447,20 @@ class Application(Gtk.Application):
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
         return pre()
+
+    def ask_confirmation(self, msg_text):
+        dialog = Gtk.MessageDialog(
+            parent=self.window,
+            modal=True,
+            destroy_with_parent=True,
+            message_type=Gtk.MessageType.QUESTION,
+            buttons=Gtk.ButtonsType.YES_NO,
+            text= msg_text
+        )
+        response = dialog.run()
+        dialog.destroy()
+
+        return response == Gtk.ResponseType.YES
 
     def get_operating_system(self,partitions):
         for part in partitions:
