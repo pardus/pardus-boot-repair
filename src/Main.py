@@ -124,14 +124,17 @@ class Application(Gtk.Application):
                 return
             if self.get_mbr(widget) == None:
                 return
-            if os.path.exists("/sys/firmware/efi/efivars") and self.get_clearEfivars(widget) == None: 
-                return
+            if os.path.exists("/sys/firmware/efi/efivars"):
+                clear_efi = self.ask_confirmation("Do you want to clear efivars?")
+            else:
+                clear_efi = 'n'
+
             self.update_status_page(_("Reinstalling GRUB Bootloader"), "content-loading-symbolic", _("We're reinstalling the GRUB boot loader to ensure your system can start up properly. This process may take a few moments. Once complete, your computer should boot into Pardus as usual."), False, False)
             self.post_command = post
             if self.rootfs.root_subvol == None:
-                self.vte_command("env disk={} mbr={} grub-reinstall".format(self.rootfs.name, self.mbr))
+                self.vte_command("env disk={} mbr={} clear_efi={} grub-reinstall".format(self.rootfs.name, self.mbr, clear_efi))
             else:
-                self.vte_command("env subvolume={} disk={} mbr={} grub-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr))
+                self.vte_command("env subvolume={} disk={} mbr={} clear_efi={} grub-reinstall".format(self.rootfs.root_subvol, self.rootfs.name, self.mbr, clear_efi))
             self.pending_func = None
         def post():
             self.update_status_page(_("GRUB Successfully Reinstalled"), "emblem-ok-symbolic", _("Great news! The GRUB boot loader has been successfully reinstalled on your system. You're all set to restart your computer and resume normal operation."), True, True)
@@ -417,23 +420,6 @@ class Application(Gtk.Application):
             self.mbr = self.mbr_page.listbox.get_selected_row().get_title()
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("MBR chosen"), "emblem-ok-symbolic", _("You've successfully selected the Master Boot Record (MBR). This selection is essential for configuring your system's boot process."), False, False)
-            if self.pending_func != None:
-                Thread(target=self.pending_func).start()
-        return pre()
-
-    def get_clearEfivars(self,widget):
-        def pre():
-            if not hasattr(self, 'clear_efivars') or self.clear_efivars == None:
-                self.clear_efipage = self.new_page_listbox(_("Are you sure you want to clear efivars?"), [_("Yes"), _("No")], None, after_userdata)
-                self.deck.set_visible_child(self.page_questions)
-                return None
-            return self.clear_efivars
-        def after_userdata(widget):
-            if self.clear_efipage.listbox.get_selected_row().get_title() == _("Yes"):
-                self.clear_efivars = 'y'
-            else:
-                self.clear_efivars = 'n'
-            self.deck.set_visible_child(self.page_loading)
             if self.pending_func != None:
                 Thread(target=self.pending_func).start()
         return pre()
