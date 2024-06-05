@@ -354,9 +354,9 @@ class Application(Gtk.Application):
         if stop_spinner:
             self.spinner_loading.stop()
 
-    def vte_command(self, command, post_func, ask_confirmation=True):
+    def vte_command(self, command, post_func, ask_user_confirm=True):
         try:
-            if ask_confirmation and not self.ask_confirmation(_("Are you sure you want to continue? This action is irreversible and may cause data loss.")):
+            if ask_user_confirm and not self.ask_confirmation(_("Are you sure you want to continue? This action is irreversible and may cause data loss.")):
                 self.update_status_page(_("Operation Cancelled"), "dialog-warning-symbolic", _(
                     "The operation has been cancelled by the user."), True, True)
                 return
