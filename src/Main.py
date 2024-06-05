@@ -136,10 +136,9 @@ class Application(Gtk.Application):
 
     def on_row_reinstall_grub_activated(self, widget):
         def pre():
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_mbr(widget, pre) == None:
                 return
-            if self.get_mbr(widget, pre) == None:
-                return
+
             if os.path.exists("/sys/firmware/efi/efivars"):
                 clear_efi = self.ask_confirmation(
                     "Do you want to clear efivars?")
@@ -148,6 +147,7 @@ class Application(Gtk.Application):
 
             self.update_status_page(_("Reinstalling GRUB Bootloader"), "content-loading-symbolic", _(
                 "We're reinstalling the GRUB boot loader to ensure your system can start up properly. This process may take a few moments. Once complete, your computer should boot into Pardus as usual."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} mbr={} clear_efi={} grub-reinstall".format(
                     self.rootfs.name, self.mbr, clear_efi), post)
@@ -165,8 +165,10 @@ class Application(Gtk.Application):
         def pre():
             if self.get_rootfs(widget, pre) == None:
                 return
+
             self.update_status_page(_("Fixing Broken Packages"), "content-loading-symbolic", _(
                 "We're resolving issues with broken packages on your system to ensure everything works. This may take some time, but we're on it. Once complete, your system should be stable and ready for use."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env disk={} fix-broken-packages".format(self.rootfs.name), post)
@@ -182,19 +184,20 @@ class Application(Gtk.Application):
 
     def on_row_reset_password_activated(self, widget):
         def pre():
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_user(widget, pre) == None:
                 return None
-            if self.get_user(widget, pre) == None:
-                return None
+
             self.password_page = self.new_page_input(
                 _("Enter new password"), after_userdata)
 
         def after_userdata(x):
             password1 = self.password_page.entry.get_text()
             password2 = self.password_page.entry_second.get_text()
+
             self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Resetting password"), "content-loading-symbolic", _(
                 "We're resetting your password to provide access to your account. This process will only take a moment. Once complete, you'll be able to log in with your new password into your Pardus system."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} user={} pass1={} pass2={} reset-password".format(
                     self.rootfs.name, self.user, password1, password2), post, False)
@@ -212,8 +215,10 @@ class Application(Gtk.Application):
         def pre():
             if self.get_rootfs(widget, pre) == None:
                 return
+
             self.update_status_page(_("Updating Software Packages"), "content-loading-symbolic", _(
                 "We're currently updating the software packages on your system to ensure you have the latest features and security enhancements. This process may take some time depending on the number of updates available. Please be patient."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env disk={} full-upgrade".format(self.rootfs.name), post)
@@ -229,12 +234,12 @@ class Application(Gtk.Application):
 
     def on_row_reinstall_activated(self, widget):
         def pre():
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_mbr(widget, pre) == None:
                 return
-            if self.get_mbr(widget, pre) == None:
-                return
+
             self.update_status_page(_("System Reinstallation"), "content-loading-symbolic", _(
                 "We're performing a clean reinstall of your system to ensure a fresh start. This process will reset your system to its original state, removing all applications."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr), post)
@@ -252,6 +257,7 @@ class Application(Gtk.Application):
         def pre():
             self.update_status_page(_("Detecting Partitions"), "content-loading-symbolic", _(
                 "We're scanning your system to locate available partitions."), False, False)
+
             partitions = self.list_partitions()
             if len(partitions) == 0:
                 self.update_status_page(_("Unable to Detect Partitions"), "dialog-error-symbolic", _(
@@ -281,12 +287,12 @@ class Application(Gtk.Application):
     def on_row_reset_config_activated(self, widget):
         def pre():
             self.deck.set_visible_child(self.page_loading)
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_user(widget, pre) == None:
                 return
-            if self.get_user(widget, pre) == None:
-                return
+
             self.update_status_page(_("Resetting User Settings"), "content-loading-symbolic", _(
                 "We're resetting your user configuration to its default state. This will revert any custom settings back to their original values. Please note that any personalized preferences will be lost. Once complete, your system will be refreshed and ready for use."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.name, self.user), post)
@@ -304,10 +310,12 @@ class Application(Gtk.Application):
         def pre():
             if self.get_rootfs(widget, pre) == None:
                 return
+
             liveuser_home = self.run_command(
                 'grep "x:1000:" /etc/passwd | cut -f 6 -d ":"')
             self.update_status_page(_("Extracting System Logs"), "content-loading-symbolic", _(
                 "We're collecting important system logs and placing them in the '{}' directory as you requested. These logs contain helpful information about your system's activity and any issues it may be experiencing. Depending on how much information there is, this might take a little time. Thanks for waiting while we gather this data.").format(liveuser_home), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env disk={} dump-info-log {}".format(self.rootfs.name, liveuser_home), post, False)
@@ -325,10 +333,10 @@ class Application(Gtk.Application):
         def pre():
             self.update_status_page(_("Entering Chroot Environment"), "content-loading-symbolic", _(
                 "We're accessing a special system environment called chroot at your request. This allows you to make changes as if you were working directly on your installed operating system. Please wait while we set up this environment to address your needs."), False, True)
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_user(widget, pre) == None:
                 return
-            if self.get_user(widget, pre) == None:
-                return
+
+            # show terminal page
             self.btn_show_log.clicked()
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} pardus-chroot /dev/{} su {} -".format(
