@@ -1,12 +1,6 @@
 # Pardus Boot Repair
 Boot repair tool for pardus.
 
-## Screenshots 
-![Main Page](images/main_page.png)
-![Advanced Options](images/advanced_options.png)
-![Running](images/running.png)
-![Finished](images/finished.png)
-![Logs](images/logs.png)
 ## Features:
 * grub repair
 * password reset
@@ -42,3 +36,12 @@ make install
 1. Boot live from media.
 1. Fetch source and install.
 1. Open terminal and run `pardus-boot-repair` as root
+
+## Screenshots
+![Main Page](assets/main_page.png)
+![Advanced Options](assets/advanced_options.png)
+![About Dialog](assets/about_dialog.png)
+![Running](assets/action_running.png)
+![Finished](assets/finished)
+![Logs](assets/logs.png)
+![Error occured](assets/error_occured.png)

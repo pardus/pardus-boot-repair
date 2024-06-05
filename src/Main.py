@@ -67,6 +67,11 @@ class Application(Gtk.Application):
         self.box_vte.add(self.vte_terminal)
         self.vte_terminal.show()
         self.vte_terminal.connect("child-exited", self.vte_exited)
+        style_context = self.window.get_style_context()
+        background_color= style_context.get_background_color(Gtk.StateFlags.NORMAL);
+        foreground_color= style_context.get_color(Gtk.StateFlags.NORMAL);
+        self.vte_terminal.set_color_background(background_color)
+        self.vte_terminal.set_color_foreground(foreground_color)
 
         self.dialog_about = self.builder.get_object("dialog_about")
         self.dialog_about.set_version(APPVERSION)
@@ -136,10 +141,9 @@ class Application(Gtk.Application):
 
     def on_row_reinstall_grub_activated(self, widget):
         def pre():
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_mbr(widget, pre) == None:
                 return
-            if self.get_mbr(widget, pre) == None:
-                return
+
             if os.path.exists("/sys/firmware/efi/efivars"):
                 clear_efi = self.ask_confirmation(
                     "Do you want to clear efivars?")
@@ -148,6 +152,7 @@ class Application(Gtk.Application):
 
             self.update_status_page(_("Reinstalling GRUB Bootloader"), "content-loading-symbolic", _(
                 "We're reinstalling the GRUB boot loader to ensure your system can start up properly. This process may take a few moments. Once complete, your computer should boot into Pardus as usual."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} mbr={} clear_efi={} grub-reinstall".format(
                     self.rootfs.name, self.mbr, clear_efi), post)
@@ -165,8 +170,10 @@ class Application(Gtk.Application):
         def pre():
             if self.get_rootfs(widget, pre) == None:
                 return
+
             self.update_status_page(_("Fixing Broken Packages"), "content-loading-symbolic", _(
                 "We're resolving issues with broken packages on your system to ensure everything works. This may take some time, but we're on it. Once complete, your system should be stable and ready for use."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env disk={} fix-broken-packages".format(self.rootfs.name), post)
@@ -182,20 +189,19 @@ class Application(Gtk.Application):
 
     def on_row_reset_password_activated(self, widget):
         def pre():
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_user(widget, pre) == None:
                 return None
-            if self.get_user(widget, pre) == None:
-                return None
+
             self.password_page = self.new_page_input(
                 _("Enter new password"), after_userdata)
-            self.deck.set_visible_child(self.page_questions)
 
         def after_userdata(x):
             password1 = self.password_page.entry.get_text()
             password2 = self.password_page.entry_second.get_text()
-            self.deck.set_visible_child(self.page_loading)
+
             self.update_status_page(_("Resetting password"), "content-loading-symbolic", _(
                 "We're resetting your password to provide access to your account. This process will only take a moment. Once complete, you'll be able to log in with your new password into your Pardus system."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} user={} pass1={} pass2={} reset-password".format(
                     self.rootfs.name, self.user, password1, password2), post, False)
@@ -213,8 +219,10 @@ class Application(Gtk.Application):
         def pre():
             if self.get_rootfs(widget, pre) == None:
                 return
+
             self.update_status_page(_("Updating Software Packages"), "content-loading-symbolic", _(
                 "We're currently updating the software packages on your system to ensure you have the latest features and security enhancements. This process may take some time depending on the number of updates available. Please be patient."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env disk={} full-upgrade".format(self.rootfs.name), post)
@@ -230,12 +238,12 @@ class Application(Gtk.Application):
 
     def on_row_reinstall_activated(self, widget):
         def pre():
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_mbr(widget, pre) == None:
                 return
-            if self.get_mbr(widget, pre) == None:
-                return
+
             self.update_status_page(_("System Reinstallation"), "content-loading-symbolic", _(
                 "We're performing a clean reinstall of your system to ensure a fresh start. This process will reset your system to its original state, removing all applications."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env disk={} mbr={} pardus-reinstall".format(self.rootfs.name, self.mbr), post)
@@ -253,6 +261,7 @@ class Application(Gtk.Application):
         def pre():
             self.update_status_page(_("Detecting Partitions"), "content-loading-symbolic", _(
                 "We're scanning your system to locate available partitions."), False, False)
+
             partitions = self.list_partitions()
             if len(partitions) == 0:
                 self.update_status_page(_("Unable to Detect Partitions"), "dialog-error-symbolic", _(
@@ -264,11 +273,9 @@ class Application(Gtk.Application):
 
             self.repair_page = self.new_page_listbox(
                 _("Choose Partition for Filesystem Repair"), partition_names, partition_os, after_userdata)
-            self.deck.set_visible_child(self.page_questions)
 
         def after_userdata(widget, userdata):
             partition_for_repair = self.repair_page.listbox.get_selected_row().get_title()
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Repairing Filesystem on {}").format(partition_for_repair), "content-loading-symbolic", _(
                 "We're currently repairing the filesystem on the selected partition. This process may take some time, depending on the size and severity of the issues found. Please be patient while we work to restore the partition's functionality."), False, False)
             self.vte_command(
@@ -282,13 +289,12 @@ class Application(Gtk.Application):
 
     def on_row_reset_config_activated(self, widget):
         def pre():
-            self.deck.set_visible_child(self.page_loading)
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_user(widget, pre) == None:
                 return
-            if self.get_user(widget, pre) == None:
-                return
+
             self.update_status_page(_("Resetting User Settings"), "content-loading-symbolic", _(
                 "We're resetting your user configuration to its default state. This will revert any custom settings back to their original values. Please note that any personalized preferences will be lost. Once complete, your system will be refreshed and ready for use."), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env pardus-chroot /dev/{} su {} -c 'cd ; rm -rvf .dbus .cache .local .config'".format(self.rootfs.name, self.user), post)
@@ -306,10 +312,12 @@ class Application(Gtk.Application):
         def pre():
             if self.get_rootfs(widget, pre) == None:
                 return
+
             liveuser_home = self.run_command(
                 'grep "x:1000:" /etc/passwd | cut -f 6 -d ":"')
             self.update_status_page(_("Extracting System Logs"), "content-loading-symbolic", _(
                 "We're collecting important system logs and placing them in the '{}' directory as you requested. These logs contain helpful information about your system's activity and any issues it may be experiencing. Depending on how much information there is, this might take a little time. Thanks for waiting while we gather this data.").format(liveuser_home), False, False)
+
             if self.rootfs.root_subvol == None:
                 self.vte_command(
                     "env disk={} dump-info-log {}".format(self.rootfs.name, liveuser_home), post, False)
@@ -327,10 +335,10 @@ class Application(Gtk.Application):
         def pre():
             self.update_status_page(_("Entering Chroot Environment"), "content-loading-symbolic", _(
                 "We're accessing a special system environment called chroot at your request. This allows you to make changes as if you were working directly on your installed operating system. Please wait while we set up this environment to address your needs."), False, True)
-            if self.get_rootfs(widget, pre) == None:
+            if self.get_rootfs(widget, pre) == None or self.get_user(widget, pre) == None:
                 return
-            if self.get_user(widget, pre) == None:
-                return
+
+            # show terminal page
             self.btn_show_log.clicked()
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} pardus-chroot /dev/{} su {} -".format(
@@ -341,7 +349,6 @@ class Application(Gtk.Application):
             self.user = None
 
         def post():
-            self.btn_close_logs.clicked()
             self.update_status_page(_("Chroot Process Successfully Concluded"), "emblem-ok-symbolic", _(
                 "The chroot process has finished successfully"), True, True)
 
@@ -353,12 +360,13 @@ class Application(Gtk.Application):
         self.status_page.set_description(description)
         self.btn_go_mainpage.set_sensitive(enable_mainpage)
         self.spinner_loading.start()
+        self.btn_close_logs.clicked()
         if stop_spinner:
             self.spinner_loading.stop()
 
-    def vte_command(self, command, post_func, ask_confirmation=True):
+    def vte_command(self, command, post_func, ask_user_confirm=True):
         try:
-            if ask_confirmation and not self.ask_confirmation(_("Are you sure you want to continue? This action is irreversible and may cause data loss.")):
+            if ask_user_confirm and not self.ask_confirmation(_("Are you sure you want to continue? This action is irreversible and may cause data loss.")):
                 self.update_status_page(_("Operation Cancelled"), "dialog-warning-symbolic", _(
                     "The operation has been cancelled by the user."), True, True)
                 return
@@ -372,21 +380,18 @@ class Application(Gtk.Application):
         except Exception as e:
             # write error to stderr
             sys.stderr.write(str(e) + "\n")
-            self.btn_close_logs.clicked()
             self.update_status_page(
                 _("An error occured"), "dialog-error-symbolic", str(e), True, True)
 
     def vte_cb(self, Terminal, pid, error):
         Terminal.reset(True, True)
         if error != None or pid == -1:
-            self.btn_close_logs.clicked()
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", _(
                 "An error occurred before the command has been executed"), True, True)
             return
 
     def vte_exited(self, widget, status, post_func):
         exit_status = os.waitstatus_to_exitcode(status)
-        self.btn_close_logs.clicked()
         if exit_status != 0:
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", _(
                 "An error occured while executing the command. Please check the logs"), True, True)
@@ -422,7 +427,6 @@ class Application(Gtk.Application):
                         part.operating_system for part in self.rootfs_list]
                     self.rootfs_page = self.new_page_listbox(
                         _("Select a root filesystem"), partition_names, partition_os, post, pending_func)
-                    self.deck.set_visible_child(self.page_questions)
                     return None
                 self.rootfs = self.rootfs_list[0]
             return self.rootfs
@@ -431,7 +435,6 @@ class Application(Gtk.Application):
             selected = self.rootfs_page.listbox.get_selected_row().get_title()
             self.rootfs = next(
                 (x for x in self.rootfs_list if x.name == selected), None)
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _(
                 "You've selected the root filesystem for further action."), False, False)
             if pending_func != None:
@@ -450,14 +453,12 @@ class Application(Gtk.Application):
                 elif len(users) > 1:
                     self.users_page = self.new_page_listbox(
                         _("Select a user"), users, None, after_userdata, pending_func)
-                    self.deck.set_visible_child(self.page_questions)
                     return None
                 self.user = users[0]
             return self.user
 
         def after_userdata(widget, pending_func):
             self.user = self.users_page.listbox.get_selected_row().get_title()
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("User Chosen"), "emblem-ok-symbolic", _(
                 "You've selected a user for further action. This step is important for making changes specific to the chosen user."), False, False)
             if pending_func != None:
@@ -475,14 +476,12 @@ class Application(Gtk.Application):
                 elif len(mbrs) > 1:
                     self.mbr_page = self.new_page_listbox(
                         _("Select the Master Boot Record (MBR)"), mbrs, None, after_userdata, pending_func)
-                    self.deck.set_visible_child(self.page_questions)
                     return None
                 self.mbr = mbrs[0]
             return self.mbr
 
         def after_userdata(widget, pending_func):
             self.mbr = self.mbr_page.listbox.get_selected_row().get_title()
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("MBR chosen"), "emblem-ok-symbolic", _(
                 "You've successfully selected the Master Boot Record (MBR). This selection is essential for configuring your system's boot process."), False, False)
             if pending_func != None:
@@ -624,6 +623,9 @@ class Application(Gtk.Application):
         def on_questions_row_activated(widget):
             page.button.set_sensitive(True)
 
+        def on_button_next_clicked(widget):
+            self.deck.set_visible_child(self.page_loading)
+
         for child in self.carousel_questions.get_children():
             self.carousel_questions.remove(child)
 
@@ -633,6 +635,7 @@ class Application(Gtk.Application):
             raise ValueError(
                 "row_titles and row_subtitles must have the same length")
 
+        page.button.connect('clicked', on_button_next_clicked)
         page.button.connect(
             'clicked', btn_next_clicked_signal, btn_next_userdata)
         for title, subtitle in zip(row_titles, row_subtitles):
@@ -644,7 +647,9 @@ class Application(Gtk.Application):
             row.set_property('activatable', True)
             row.connect("activated", on_questions_row_activated)
             page.listbox.insert(row, -1)
+
         self.carousel_questions.insert(page, -1)
+        self.deck.set_visible_child(self.page_questions)
         return page
 
     def new_page_input(self, label_text, btn_continue_clicked_signal):
@@ -662,11 +667,16 @@ class Application(Gtk.Application):
             if entry_text == entry_second_text and entry_text != "":
                 page.warn_entry.set_visible(False)
                 page.button.set_sensitive(True)
+        
+        def on_button_next_clicked(widget):
+            self.deck.set_visible_child(self.page_loading)
 
         page.entry.connect("changed", input_change_event)
         page.entry_second.connect("changed", input_change_event)
+        page.button.connect('clicked', on_button_next_clicked)
         page.button.connect('clicked', btn_continue_clicked_signal)
         self.carousel_questions.insert(page, -1)
+        self.deck.set_visible_child(self.page_questions)
         return page
 
 
@@ -776,5 +786,13 @@ class Partition(object):
         self.operating_system = None
 
 
+if os.geteuid() != 0:        
+        Gtk.MessageDialog(
+            message_type=Gtk.MessageType.ERROR,
+            buttons=Gtk.ButtonsType.CLOSE,
+            text=_("This application requires root privileges to run. Please run it as root.")
+        ).run()
+        sys.exit(1)
+    
 app = Application()
 app.run(sys.argv)
