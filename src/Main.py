@@ -786,5 +786,13 @@ class Partition(object):
         self.operating_system = None
 
 
+if os.geteuid() != 0:        
+        Gtk.MessageDialog(
+            message_type=Gtk.MessageType.ERROR,
+            buttons=Gtk.ButtonsType.CLOSE,
+            text=_("This application requires root privileges to run. Please run it as root.")
+        ).run()
+        sys.exit(1)
+    
 app = Application()
 app.run(sys.argv)
