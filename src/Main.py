@@ -67,6 +67,11 @@ class Application(Gtk.Application):
         self.box_vte.add(self.vte_terminal)
         self.vte_terminal.show()
         self.vte_terminal.connect("child-exited", self.vte_exited)
+        style_context = self.window.get_style_context()
+        background_color= style_context.get_background_color(Gtk.StateFlags.NORMAL);
+        foreground_color= style_context.get_color(Gtk.StateFlags.NORMAL);
+        self.vte_terminal.set_color_background(background_color)
+        self.vte_terminal.set_color_foreground(foreground_color)
 
         self.dialog_about = self.builder.get_object("dialog_about")
         self.dialog_about.set_version(APPVERSION)
