@@ -188,7 +188,6 @@ class Application(Gtk.Application):
                 return None
             self.password_page = self.new_page_input(
                 _("Enter new password"), after_userdata)
-            self.deck.set_visible_child(self.page_questions)
 
         def after_userdata(x):
             password1 = self.password_page.entry.get_text()
@@ -264,7 +263,6 @@ class Application(Gtk.Application):
 
             self.repair_page = self.new_page_listbox(
                 _("Choose Partition for Filesystem Repair"), partition_names, partition_os, after_userdata)
-            self.deck.set_visible_child(self.page_questions)
 
         def after_userdata(widget, userdata):
             partition_for_repair = self.repair_page.listbox.get_selected_row().get_title()
@@ -422,7 +420,6 @@ class Application(Gtk.Application):
                         part.operating_system for part in self.rootfs_list]
                     self.rootfs_page = self.new_page_listbox(
                         _("Select a root filesystem"), partition_names, partition_os, post, pending_func)
-                    self.deck.set_visible_child(self.page_questions)
                     return None
                 self.rootfs = self.rootfs_list[0]
             return self.rootfs
@@ -450,7 +447,6 @@ class Application(Gtk.Application):
                 elif len(users) > 1:
                     self.users_page = self.new_page_listbox(
                         _("Select a user"), users, None, after_userdata, pending_func)
-                    self.deck.set_visible_child(self.page_questions)
                     return None
                 self.user = users[0]
             return self.user
@@ -475,7 +471,6 @@ class Application(Gtk.Application):
                 elif len(mbrs) > 1:
                     self.mbr_page = self.new_page_listbox(
                         _("Select the Master Boot Record (MBR)"), mbrs, None, after_userdata, pending_func)
-                    self.deck.set_visible_child(self.page_questions)
                     return None
                 self.mbr = mbrs[0]
             return self.mbr
@@ -644,7 +639,9 @@ class Application(Gtk.Application):
             row.set_property('activatable', True)
             row.connect("activated", on_questions_row_activated)
             page.listbox.insert(row, -1)
+
         self.carousel_questions.insert(page, -1)
+        self.deck.set_visible_child(self.page_questions)
         return page
 
     def new_page_input(self, label_text, btn_continue_clicked_signal):
@@ -667,6 +664,7 @@ class Application(Gtk.Application):
         page.entry_second.connect("changed", input_change_event)
         page.button.connect('clicked', btn_continue_clicked_signal)
         self.carousel_questions.insert(page, -1)
+        self.deck.set_visible_child(self.page_questions)
         return page
 
 
