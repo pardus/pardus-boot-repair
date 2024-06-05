@@ -339,7 +339,6 @@ class Application(Gtk.Application):
             self.user = None
 
         def post():
-            self.btn_close_logs.clicked()
             self.update_status_page(_("Chroot Process Successfully Concluded"), "emblem-ok-symbolic", _(
                 "The chroot process has finished successfully"), True, True)
 
@@ -351,6 +350,7 @@ class Application(Gtk.Application):
         self.status_page.set_description(description)
         self.btn_go_mainpage.set_sensitive(enable_mainpage)
         self.spinner_loading.start()
+        self.btn_close_logs.clicked()
         if stop_spinner:
             self.spinner_loading.stop()
 
@@ -370,21 +370,18 @@ class Application(Gtk.Application):
         except Exception as e:
             # write error to stderr
             sys.stderr.write(str(e) + "\n")
-            self.btn_close_logs.clicked()
             self.update_status_page(
                 _("An error occured"), "dialog-error-symbolic", str(e), True, True)
 
     def vte_cb(self, Terminal, pid, error):
         Terminal.reset(True, True)
         if error != None or pid == -1:
-            self.btn_close_logs.clicked()
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", _(
                 "An error occurred before the command has been executed"), True, True)
             return
 
     def vte_exited(self, widget, status, post_func):
         exit_status = os.waitstatus_to_exitcode(status)
-        self.btn_close_logs.clicked()
         if exit_status != 0:
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", _(
                 "An error occured while executing the command. Please check the logs"), True, True)
