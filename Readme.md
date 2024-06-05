@@ -39,7 +39,7 @@ make install
 
 ## Screenshots
 ![Main Page](assets/main_page.png)
-![Advanced Options](images/advanced_options.png)
+![Advanced Options](assets/advanced_options.png)
 ![About Dialog](assets/about_dialog.png)
 ![Running](assets/action_running.png)
 ![Finished](assets/finished)
