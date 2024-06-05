@@ -194,7 +194,6 @@ class Application(Gtk.Application):
             password1 = self.password_page.entry.get_text()
             password2 = self.password_page.entry_second.get_text()
 
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Resetting password"), "content-loading-symbolic", _(
                 "We're resetting your password to provide access to your account. This process will only take a moment. Once complete, you'll be able to log in with your new password into your Pardus system."), False, False)
 
@@ -272,7 +271,6 @@ class Application(Gtk.Application):
 
         def after_userdata(widget, userdata):
             partition_for_repair = self.repair_page.listbox.get_selected_row().get_title()
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Repairing Filesystem on {}").format(partition_for_repair), "content-loading-symbolic", _(
                 "We're currently repairing the filesystem on the selected partition. This process may take some time, depending on the size and severity of the issues found. Please be patient while we work to restore the partition's functionality."), False, False)
             self.vte_command(
@@ -286,7 +284,6 @@ class Application(Gtk.Application):
 
     def on_row_reset_config_activated(self, widget):
         def pre():
-            self.deck.set_visible_child(self.page_loading)
             if self.get_rootfs(widget, pre) == None or self.get_user(widget, pre) == None:
                 return
 
@@ -433,7 +430,6 @@ class Application(Gtk.Application):
             selected = self.rootfs_page.listbox.get_selected_row().get_title()
             self.rootfs = next(
                 (x for x in self.rootfs_list if x.name == selected), None)
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _(
                 "You've selected the root filesystem for further action."), False, False)
             if pending_func != None:
@@ -458,7 +454,6 @@ class Application(Gtk.Application):
 
         def after_userdata(widget, pending_func):
             self.user = self.users_page.listbox.get_selected_row().get_title()
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("User Chosen"), "emblem-ok-symbolic", _(
                 "You've selected a user for further action. This step is important for making changes specific to the chosen user."), False, False)
             if pending_func != None:
@@ -482,7 +477,6 @@ class Application(Gtk.Application):
 
         def after_userdata(widget, pending_func):
             self.mbr = self.mbr_page.listbox.get_selected_row().get_title()
-            self.deck.set_visible_child(self.page_loading)
             self.update_status_page(_("MBR chosen"), "emblem-ok-symbolic", _(
                 "You've successfully selected the Master Boot Record (MBR). This selection is essential for configuring your system's boot process."), False, False)
             if pending_func != None:
@@ -624,6 +618,9 @@ class Application(Gtk.Application):
         def on_questions_row_activated(widget):
             page.button.set_sensitive(True)
 
+        def on_button_next_clicked(widget):
+            self.deck.set_visible_child(self.page_loading)
+
         for child in self.carousel_questions.get_children():
             self.carousel_questions.remove(child)
 
@@ -633,6 +630,7 @@ class Application(Gtk.Application):
             raise ValueError(
                 "row_titles and row_subtitles must have the same length")
 
+        page.button.connect('clicked', on_button_next_clicked)
         page.button.connect(
             'clicked', btn_next_clicked_signal, btn_next_userdata)
         for title, subtitle in zip(row_titles, row_subtitles):
@@ -664,9 +662,13 @@ class Application(Gtk.Application):
             if entry_text == entry_second_text and entry_text != "":
                 page.warn_entry.set_visible(False)
                 page.button.set_sensitive(True)
+        
+        def on_button_next_clicked(widget):
+            self.deck.set_visible_child(self.page_loading)
 
         page.entry.connect("changed", input_change_event)
         page.entry_second.connect("changed", input_change_event)
+        page.button.connect('clicked', on_button_next_clicked)
         page.button.connect('clicked', btn_continue_clicked_signal)
         self.carousel_questions.insert(page, -1)
         self.deck.set_visible_child(self.page_questions)
