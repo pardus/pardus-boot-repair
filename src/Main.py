@@ -578,6 +578,8 @@ class Application(Gtk.Application):
             for x in ["FSTYPE", "UUID", "SIZE", "LABEL", "MOUNTPOINT"]:
                 output = self.run_command(
                     'lsblk -no {} {}'.format(x, partition.path))
+                if output == None:
+                    continue
                 partition.__setattr__(x.lower(), output.strip())
             partitions.append(partition)
 
