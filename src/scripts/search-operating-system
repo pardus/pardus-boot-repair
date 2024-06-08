@@ -34,3 +34,5 @@ for part in $parts; do
     fi
     umount -lf -R $tmpdir 2>/dev/null
 done
+
+exit 0
