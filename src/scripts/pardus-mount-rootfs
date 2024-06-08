@@ -25,7 +25,7 @@ done
 umount -lf /dev/$disk 2>/dev/null  || true
 fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n')"
 
-if [[ $fs == 'crypto_LUKS' ]] ||  [[ $fs == 'crypto' ]]; then
+if $(cryptsetup isLuks /dev/$disk); then
     LUKS_NAME="luks-$(date +%d-%m-%y_%H-%M-%S)"
     cryptsetup open /dev/$disk $LUKS_NAME
     disk="/mapper/$LUKS_NAME"
