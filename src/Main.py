@@ -437,7 +437,10 @@ class Application(Gtk.Application):
             if rootfs.is_luks:
                 self.unlock_luks(rootfs, pending_func)
                 return
-            
+            if rootfs.is_lvm:
+                self.mount_lvm(rootfs, pending_func)
+                return
+
             self.rootfs = rootfs    
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _(
                 "You've selected the root filesystem for further action."), False, False)
@@ -522,7 +525,8 @@ class Application(Gtk.Application):
                 continue
 
             if part.fstype == "crypto_LUKS":
-                if self.run_command('lsblk -rno TYPE {}'.format(part.path)).strip().split()[1] == "crypt":
+                prt_Types = self.run_command('lsblk -rno TYPE {}'.format(part.path)).strip().split()
+                if len(prt_Types) > 1 and prt_Types[1] == "crypt":
                    part.name = self.run_command('lsblk -rno NAME {}'.format(part.path)).strip().split()[1]
                    part.path = "/dev/mapper/{}".format(part.name)
                    part.fstype = self.run_command('lsblk -rno FSTYPE {}'.format(part.path)).strip().split()[0]
@@ -530,6 +534,11 @@ class Application(Gtk.Application):
                     part.is_luks = True
                     rootfs.append(part)
                     continue
+
+            if part.fstype == "LVM2_member":
+                part.is_lvm = True
+                rootfs.append(part)
+                continue
 
             TEMPDIR = self.run_command('mktemp -d')
             if part.mountpoint != "":
