@@ -623,7 +623,7 @@ class Application(Gtk.Application):
                 return None
             elif len(LV_NAMES) > 1:
                 self.lv_page = self.new_page_listbox(
-                    _("Select a Logical Volume"), self.rootfs, None, after_lvm_selection, (lvm_part, pending_func))
+                    _("Select a Logical Volume"), LV_NAMES, None, after_lvm_selection, (lvm_part, pending_func))
                 return None
 
             after_lvm_selection(None, (vg_name, lvm_part, pending_func), LV_NAMES[0])
@@ -659,7 +659,7 @@ class Application(Gtk.Application):
                 partition.path = "/dev/" + part
                 for x in ["FSTYPE", "UUID", "SIZE", "LABEL", "MOUNTPOINT"]:
                     output = self.run_command(
-                        'lsblk -no {} {}'.format(x, partition.path))
+                        'lsblk -no {} {}'.format(x, partition.path)).split("\n")[0]
                     if output == None:
                         continue
                     partition.__setattr__(x.lower(), output.strip())
