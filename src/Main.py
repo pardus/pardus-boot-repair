@@ -522,9 +522,14 @@ class Application(Gtk.Application):
                 continue
 
             if part.fstype == "crypto_LUKS":
-                part.is_luks = True
-                rootfs.append(part)
-                continue
+                if self.run_command('lsblk -rno TYPE {}'.format(part.path)).strip().split()[1] == "crypt":
+                   part.name = self.run_command('lsblk -rno NAME {}'.format(part.path)).strip().split()[1]
+                   part.path = "/dev/mapper/{}".format(part.name)
+                   part.fstype = self.run_command('lsblk -rno FSTYPE {}'.format(part.path)).strip().split()[0]
+                else:    
+                    part.is_luks = True
+                    rootfs.append(part)
+                    continue
 
             TEMPDIR = self.run_command('mktemp -d')
             if part.mountpoint != "":
