@@ -26,10 +26,15 @@ umount -lf /dev/$disk 2>/dev/null  || true
 fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n')"
 
 if $(cryptsetup isLuks /dev/$disk); then
-    LUKS_NAME="luks-$(date +%d-%m-%y_%H-%M-%S)"
-    cryptsetup open /dev/$disk $LUKS_NAME
-    disk="/mapper/$LUKS_NAME"
-    fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n' | head -n 1)"
+    if [[ $(lsblk -r -o NAME,TYPE /dev/$disk | grep crypt | awk '{print $1 }') == "" ]]; then 
+        LUKS_NAME="luks-$(date +%d-%m-%y_%H-%M-%S)"
+        cryptsetup open /dev/$disk $LUKS_NAME
+        disk="/mapper/$LUKS_NAME"
+        fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n' | head -n 1)"
+    else
+        disk="mapper/$(lsblk -r -o NAME,TYPE /dev/$disk | grep crypt | awk '{print $1 }')"
+        fs="$(lsblk -rno FSTYPE /dev/$disk | head -n 1)"
+    fi
 fi
 
 if [[ $fs == 'LVM2_member' ]]; then
