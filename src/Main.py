@@ -574,12 +574,66 @@ class Application(Gtk.Application):
             part.path = "/dev/mapper/luks-{}".format(part.name)
             part.name = "/mapper/luks-{}".format(part.name)
             part.fstype = self.run_command('lsblk -no FSTYPE {}'.format(part.path)).strip()
-            if part.fstype != "LVM2_member" or part.fstype != "crypto_LUKS":
+            if part.fstype == "LVM2_member": 
+                part.is_lvm = True
+                self.mount_lvm(part, pending_func)
+                return
+            if part.fstype == "crypto_LUKS":
                 return
             self.rootfs = part
             if pending_func != None:
                 Thread(target=pending_func).start()
         pre()
+
+    def mount_lvm(self, lvm_part, pending_func):
+        def pre():
+            vg_names = self.run_command(
+                "vgdisplay --colon | awk -F: '{print $1}'").split("\n")
+            if len(vg_names) == 0:
+                self.update_status_page(_("No Volume Groups Detected"), "dialog-error-symbolic", _(
+                    "We couldn't find any volume groups on your system. This could indicate an issue with your LVM configuration. Please ensure that your LVM setup is correct."), True, True)
+                return None
+            elif len(vg_names) > 1:
+                for vg in vg_names:
+                    vg = vg.strip()
+                self.vg_page = self.new_page_listbox(
+                    _("Select a Volume Group"), vg_names, None, after_userdata, (lvm_part, pending_func))
+                return None
+            after_userdata(None, (lvm_part, pending_func), vg_names[0])
+
+        def after_userdata(widget, userdata, vg_name=None):
+            lvm_part, pending_func = userdata
+            if vg_name == None:
+                vg_name = self.vg_page.listbox.get_selected_row().get_title()
+            self.run_command("vgchange -ay {}".format(vg_name))
+
+            LV_NAMES = []
+            for name in self.run_command("lvdisplay --colon | awk -F: '{print $1}'").split("\n"):
+                name = name.split("/")[-1].strip()
+                LV_NAMES.append(name)
+
+            if len(LV_NAMES) == 0:
+                self.update_status_page(_("No Logical Volumes Detected"), "dialog-error-symbolic", _(
+                    "We couldn't find any logical volumes on your system. This could indicate an issue with your LVM configuration. Please ensure that your LVM setup is correct."), True, True)
+                return None
+            elif len(LV_NAMES) > 1:
+                self.lv_page = self.new_page_listbox(
+                    _("Select a Logical Volume"), self.rootfs, None, after_lvm_selection, (lvm_part, pending_func))
+                return None
+
+            after_lvm_selection(None, (vg_name, lvm_part, pending_func), LV_NAMES[0])
+
+        def after_lvm_selection(widget, userdata, lv_name=None):
+            vg_name, lvm_part, pending_func = userdata
+            if lv_name == None:
+                lv_name = self.lv_page.listbox.get_selected_row().get_title()
+
+            lvm_part.path = "/dev/{}/{}".format(vg_name, lv_name)
+            lvm_part.name = "{}/{}".format(vg_name, lv_name)
+            self.rootfs = lvm_part
+            if pending_func != None:
+                Thread(target=pending_func).start()
+        Thread(target=pre).start()
 
     def list_partitions(self):
         partitions = []
@@ -809,7 +863,7 @@ class Partition(object):
         self.mountpoint = None
         self.operating_system = None
         self.is_luks = False
-
+        self.is_lvm = False
 
 if os.geteuid() != 0:        
         Gtk.MessageDialog(
