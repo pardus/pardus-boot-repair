@@ -590,7 +590,13 @@ class Application(Gtk.Application):
 
             self.update_status_page(_("Unlocking Encrypted Device"), "content-loading-symbolic", _(
                 "We're unlocking the encrypted device to access the data. This process may take a moment. Please wait while we unlock the device."), False, False)
-            self.run_command('echo {} | cryptsetup luksOpen {} luks-{}'.format(password, part.path, part.name)) 
+
+            output, exit_code = self.run_command('echo {} | cryptsetup luksOpen {} luks-{}'.format(password, part.path, part.name), True)
+            if exit_code != 0:
+                self.update_status_page(_("An error occured"), "dialog-error-symbolic", _(
+                    "An error occurred while unlocking the encrypted device. Please check the password and try again."), True, True)
+                return
+
             part.path = "/dev/mapper/luks-{}".format(part.name)
             part.name = "/mapper/luks-{}".format(part.name)
             part.fstype = self.run_command('lsblk -no FSTYPE {}'.format(part.path)).strip()
