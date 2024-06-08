@@ -24,6 +24,14 @@ done
 
 umount -lf /dev/$disk 2>/dev/null  || true
 fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n')"
+
+if [[ $fs == 'crypto_LUKS' ]] ||  [[ $fs == 'crypto' ]]; then
+    LUKS_NAME="luks-$(date +%d-%m-%y_%H-%M-%S)"
+    cryptsetup open /dev/$disk $LUKS_NAME
+    disk="/mapper/$LUKS_NAME"
+    fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n' | head -n 1)"
+fi
+
 mount /dev/$disk "$DESTDIR"
 
 # btrfs subvolumes
