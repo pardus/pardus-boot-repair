@@ -508,7 +508,6 @@ class Application(Gtk.Application):
         return partitions
 
     def detect_rootfs(self):
-        pardus_rootfs = []
         rootfs = []
         partitions = self.list_partitions()
         self.update_status_page(_("Searching for Root Filesystem"), "content-loading-symbolic", _(
@@ -521,29 +520,21 @@ class Application(Gtk.Application):
                 self.run_command("umount -lf {}".format(part.mountpoint))
 
             self.run_command('mount {} {}'.format(part.path, TEMPDIR))
-            if os.path.exists(TEMPDIR + "/etc/os-release"):
+            if os.path.exists(TEMPDIR + "/var/lib/dpkg/"):
                 part.is_rootfs = True
                 rootfs.append(part)
-                with open(TEMPDIR + "/etc/os-release") as f:
-                    for line in f:
-                        if "pardus" in line:
-                            part.is_pardus_rootfs = True
-                            pardus_rootfs.append(part)
-                            break
+
             if part.fstype == "btrfs" and not os.path.exists(TEMPDIR + "/etc/os-release"):
-                subvol, part.is_rootfs, part.is_pardus_rootfs = self.detect_btrfs_rootfs_subvolume(
+                subvol, part.is_rootfs = self.detect_btrfs_rootfs_subvolume(
                     TEMPDIR)
                 if subvol != None:
                     part.root_subvol = subvol
-                if part.is_pardus_rootfs:
-                    pardus_rootfs.append(part)
                 if part.is_rootfs:
                     rootfs.append(part)
 
             self.run_command('umount -l ' + TEMPDIR)
             self.run_command('rmdir ' + TEMPDIR)
-        if len(pardus_rootfs) > 0:
-            return pardus_rootfs
+
         return rootfs
 
     def detect_btrfs_rootfs_subvolume(self, mountdir):
@@ -552,16 +543,10 @@ class Application(Gtk.Application):
         output = self.run_command(
             "btrfs subvolume list " + mountdir + " | awk '{print $9}'")
         for subvol in output.split("\n"):
-            if os.path.exists("{}/{}/etc/os-release".format(mountdir, subvol)):
+            if os.path.exists("{}/{}/var/lib/dpkg/".format(mountdir, subvol)):
                 is_rootfs = True
-                is_pardus_rootfs = False
-                with open("{}/{}/etc/os-release".format(mountdir, subvol)) as f:
-                    for line in f:
-                        if "pardus" in line:
-                            is_pardus_rootfs = True
-                            break
-                return subvol, is_rootfs, is_pardus_rootfs
-        return None, False, False
+                return subvol, is_rootfs
+        return None, False
 
     def list_partitions(self):
         partitions = []
@@ -787,7 +772,6 @@ class Partition(object):
         self.size = 0
         self.label = None
         self.is_rootfs = False
-        self.is_pardus_rootfs = False
         self.root_subvol = None
         self.mountpoint = None
         self.operating_system = None
