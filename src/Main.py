@@ -401,10 +401,16 @@ class Application(Gtk.Application):
             return
         Thread(target=post_func).start()
 
-    def run_command(self, command: str):
+    def run_command(self, command: str, return_exitcode=False):
         try:
-            output = subprocess.check_output(
-                ["/bin/bash", "-c", command]).decode("utf-8").strip()
+            proc = subprocess.Popen(
+                ["/bin/bash", "-c", command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            output, err = proc.communicate()
+            output = output.decode("utf-8").strip()
+            exit_code = proc.returncode
+
+            if return_exitcode:
+                return output, exit_code
             return output
         except Exception as e:
             sys.stderr.write(str(e) + "\n")
