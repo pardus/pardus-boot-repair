@@ -432,8 +432,13 @@ class Application(Gtk.Application):
 
         def post(widget, pending_func):
             selected = self.rootfs_page.listbox.get_selected_row().get_title()
-            self.rootfs = next(
+            rootfs = next(
                 (x for x in self.rootfs_list if x.name == selected), None)
+            if rootfs.is_luks:
+                self.unlock_luks(rootfs, pending_func)
+                return
+            
+            self.rootfs = rootfs    
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _(
                 "You've selected the root filesystem for further action."), False, False)
             if pending_func != None:
@@ -515,6 +520,12 @@ class Application(Gtk.Application):
         for part in partitions:
             if part.mountpoint == "/":
                 continue
+
+            if part.fstype == "crypto_LUKS":
+                part.is_luks = True
+                rootfs.append(part)
+                continue
+
             TEMPDIR = self.run_command('mktemp -d')
             if part.mountpoint != "":
                 self.run_command("umount -lf {}".format(part.mountpoint))
@@ -547,6 +558,28 @@ class Application(Gtk.Application):
                 is_rootfs = True
                 return subvol, is_rootfs
         return None, False
+
+    def unlock_luks(self, luks_part, pending_func= None):
+        def pre():
+            self.luks_page = self.new_page_input(
+                _("Enter LUKS Password"), after_userdata, (luks_part, pending_func))
+        
+        def after_userdata(widget, userdata):
+            password = self.luks_page.entry.get_text()
+            part, pending_func = userdata
+
+            self.update_status_page(_("Unlocking Encrypted Device"), "content-loading-symbolic", _(
+                "We're unlocking the encrypted device to access the data. This process may take a moment. Please wait while we unlock the device."), False, False)
+            self.run_command('echo {} | cryptsetup luksOpen {} luks-{}'.format(password, part.path, part.name)) 
+            part.path = "/dev/mapper/luks-{}".format(part.name)
+            part.name = "/mapper/luks-{}".format(part.name)
+            part.fstype = self.run_command('lsblk -no FSTYPE {}'.format(part.path)).strip()
+            if part.fstype != "LVM2_member" or part.fstype != "crypto_LUKS":
+                return
+            self.rootfs = part
+            if pending_func != None:
+                Thread(target=pending_func).start()
+        pre()
 
     def list_partitions(self):
         partitions = []
@@ -644,7 +677,7 @@ class Application(Gtk.Application):
         self.deck.set_visible_child(self.page_questions)
         return page
 
-    def new_page_input(self, label_text, btn_continue_clicked_signal):
+    def new_page_input(self, label_text, btn_continue_clicked_signal, btn_next_userdata=None):
         page = Questions_page_password_input(label_text)
 
         for child in self.carousel_questions.get_children():
@@ -666,7 +699,7 @@ class Application(Gtk.Application):
         page.entry.connect("changed", input_change_event)
         page.entry_second.connect("changed", input_change_event)
         page.button.connect('clicked', on_button_next_clicked)
-        page.button.connect('clicked', btn_continue_clicked_signal)
+        page.button.connect('clicked', btn_continue_clicked_signal, btn_next_userdata)
         self.carousel_questions.insert(page, -1)
         self.deck.set_visible_child(self.page_questions)
         return page
@@ -775,6 +808,7 @@ class Partition(object):
         self.root_subvol = None
         self.mountpoint = None
         self.operating_system = None
+        self.is_luks = False
 
 
 if os.geteuid() != 0:        
