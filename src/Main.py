@@ -546,27 +546,33 @@ class Application(Gtk.Application):
                 rootfs.append(part)
                 continue
 
-            TEMPDIR = self.run_command('mktemp -d')
-            if part.mountpoint != "":
-                self.run_command("umount -lf {}".format(part.mountpoint))
-
-            self.run_command('mount {} {}'.format(part.path, TEMPDIR))
-            if os.path.exists(TEMPDIR + "/var/lib/dpkg/"):
-                part.is_rootfs = True
+            part = self.check_if_rootfs(part)
+            if part.is_rootfs:
                 rootfs.append(part)
 
-            if part.fstype == "btrfs" and not os.path.exists(TEMPDIR + "/etc/os-release"):
-                subvol, part.is_rootfs = self.detect_btrfs_rootfs_subvolume(
-                    TEMPDIR)
-                if subvol != None:
-                    part.root_subvol = subvol
-                if part.is_rootfs:
-                    rootfs.append(part)
-
-            self.run_command('umount -l ' + TEMPDIR)
-            self.run_command('rmdir ' + TEMPDIR)
-
         return rootfs
+
+    def check_if_rootfs(self, part):
+        TEMPDIR = self.run_command('mktemp -d')
+        part.is_rootfs = False
+
+        if part.mountpoint != "":
+            self.run_command("umount -lf {}".format(part.mountpoint))
+
+        self.run_command('mount {} {}'.format(part.path, TEMPDIR))
+        if os.path.exists(TEMPDIR + "/var/lib/dpkg/"):
+            part.is_rootfs = True
+
+        if part.fstype == "btrfs" and not os.path.exists(TEMPDIR + "/etc/os-release"):
+            subvol, part.is_rootfs = self.detect_btrfs_rootfs_subvolume(
+                TEMPDIR)
+            if subvol != None:
+                part.root_subvol = subvol
+
+        self.run_command('umount -l ' + TEMPDIR)
+        self.run_command('rmdir ' + TEMPDIR)
+
+        return part
 
     def detect_btrfs_rootfs_subvolume(self, mountdir):
         self.update_status_page(_("Searching for Btrfs Root Filesystem Subvolume"), "content-loading-symbolic", _(
