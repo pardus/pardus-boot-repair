@@ -434,6 +434,13 @@ class Application(Gtk.Application):
                         _("Select a root filesystem"), partition_names, partition_os, post, pending_func)
                     return None
                 self.rootfs = self.rootfs_list[0]
+
+                if self.rootfs.is_luks:
+                    self.unlock_luks(self.rootfs, pending_func)
+                    return
+                if self.rootfs.is_lvm:
+                    self.mount_lvm(self.rootfs, pending_func)
+                    return
             return self.rootfs
 
         def post(widget, pending_func):
@@ -606,13 +613,19 @@ class Application(Gtk.Application):
             part.path = "/dev/mapper/luks-{}".format(part.name)
             part.name = "/mapper/luks-{}".format(part.name)
             part.fstype = self.run_command('lsblk -no FSTYPE {}'.format(part.path)).strip()
-            if part.fstype == "LVM2_member": 
+            if part.fstype == "LVM2_member":
                 part.is_lvm = True
                 self.mount_lvm(part, pending_func)
                 return
             if part.fstype == "crypto_LUKS":
                 return
-            self.rootfs = part
+
+            part = self.check_if_rootfs(part)
+            if part.is_rootfs:
+                self.rootfs = part
+            else:
+                self.rootfs = None
+
             if pending_func != None:
                 Thread(target=pending_func).start()
         pre()
@@ -662,7 +675,13 @@ class Application(Gtk.Application):
 
             lvm_part.path = "/dev/{}/{}".format(vg_name, lv_name)
             lvm_part.name = "{}/{}".format(vg_name, lv_name)
-            self.rootfs = lvm_part
+
+            lvm_part = self.check_if_rootfs(lvm_part)
+            if lvm_part.is_rootfs:
+                self.rootfs = lvm_part
+            else:
+                self.rootfs = None
+
             if pending_func != None:
                 Thread(target=pending_func).start()
         Thread(target=pre).start()
