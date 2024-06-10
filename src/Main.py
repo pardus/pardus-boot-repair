@@ -48,6 +48,10 @@ class Application(Gtk.Application):
         self.carousel_questions = self.builder.get_object("carousel_questions")
         self.button_questions_mainpage = self.builder.get_object(
             "button_mainpage1")
+        self.button_questions_continue = self.builder.get_object(
+            "button_questions_continue")
+        self.titlebar_page_questions = self.builder.get_object(
+            "titlebar_page_questions")
 
         # loading page
         self.btn_go_mainpage = self.builder.get_object(
@@ -759,13 +763,18 @@ class Application(Gtk.Application):
         return mbrs
 
     def new_page_listbox(self, label_text, row_titles, row_subtitles, btn_next_clicked_signal, btn_next_userdata=None):
-        page = Questions_page_listbox(label_text)
+        page = Questions_page_listbox()
+        self.titlebar_page_questions.set_title(label_text)
+        self.button_questions_continue.set_sensitive(False)
 
         def on_questions_row_activated(widget):
-            page.button.set_sensitive(True)
+            self.button_questions_continue.set_sensitive(True)
 
-        def on_button_next_clicked(widget):
-            self.deck.set_visible_child(self.page_loading)
+        def on_button_next_clicked(widget, userdata):
+            Thread(target=self.deck.set_visible_child, args=(self.page_loading,)).start()
+            btn_signal, btn_userdata = userdata
+            Thread(target=btn_signal, args=(widget, btn_userdata)).start()
+            self.button_questions_continue.disconnect_by_func(on_button_next_clicked)
 
         for child in self.carousel_questions.get_children():
             self.carousel_questions.remove(child)
@@ -776,9 +785,8 @@ class Application(Gtk.Application):
             raise ValueError(
                 "row_titles and row_subtitles must have the same length")
 
-        page.button.connect('clicked', on_button_next_clicked)
-        page.button.connect(
-            'clicked', btn_next_clicked_signal, btn_next_userdata)
+        self.button_questions_continue.connect(
+            'clicked', on_button_next_clicked, (btn_next_clicked_signal, btn_next_userdata))
         for title, subtitle in zip(row_titles, row_subtitles):
             row = Handy.ActionRow()
             row.set_title(title)
@@ -794,7 +802,9 @@ class Application(Gtk.Application):
         return page
 
     def new_page_input(self, label_text, btn_continue_clicked_signal, btn_next_userdata=None):
-        page = Questions_page_password_input(label_text)
+        page = Questions_page_password_input()
+        self.titlebar_page_questions.set_title(label_text)
+        self.button_questions_continue.set_sensitive(False)
 
         for child in self.carousel_questions.get_children():
             self.carousel_questions.remove(child)
@@ -804,18 +814,20 @@ class Application(Gtk.Application):
             entry_second_text = page.entry_second.get_text()
             if entry_text != entry_second_text and (entry_text != "" and entry_second_text != ""):
                 page.warn_entry.set_visible(True)
-                page.button.set_sensitive(False)
+                self.button_questions_continue.set_sensitive(False)
             if entry_text == entry_second_text and entry_text != "":
                 page.warn_entry.set_visible(False)
-                page.button.set_sensitive(True)
+                self.button_questions_continue.set_sensitive(True)
         
-        def on_button_next_clicked(widget):
-            self.deck.set_visible_child(self.page_loading)
+        def on_button_next_clicked(widget, userdata):
+            Thread(target=self.deck.set_visible_child, args=(self.page_loading,)).start()
+            btn_signal, btn_userdata = userdata
+            Thread(target=btn_signal, args=(widget, btn_userdata)).start()
+            self.button_questions_continue.disconnect_by_func(on_button_next_clicked)
 
         page.entry.connect("changed", input_change_event)
         page.entry_second.connect("changed", input_change_event)
-        page.button.connect('clicked', on_button_next_clicked)
-        page.button.connect('clicked', btn_continue_clicked_signal, btn_next_userdata)
+        self.button_questions_continue.connect('clicked', on_button_next_clicked, (btn_continue_clicked_signal, btn_next_userdata))
         self.carousel_questions.insert(page, -1)
         self.deck.set_visible_child(self.page_questions)
         return page
@@ -837,12 +849,8 @@ class Page(Gtk.Box):
 
 
 class Questions_page_listbox(Page):
-    def __init__(self, label_text):
+    def __init__(self):
         super().__init__()
-        self.label = Gtk.Label()
-        self.label.set_text(label_text)
-        self.label.set_visible(True)
-        self.add(self.label)
 
         self.listbox = Gtk.ListBox()
         self.listbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
@@ -853,28 +861,11 @@ class Questions_page_listbox(Page):
         self.listbox.set_hexpand(True)
         self.add(self.listbox)
 
-        self.button = Gtk.Button()
-        self.button.set_label(_("Continue"))
-        self.button.set_visible(True)
-        self.button.set_sensitive(False)
-        self.button.set_hexpand(True)
-        self.button.set_vexpand(False)
-        self.button.set_halign(Gtk.Align.FILL)
-        self.button.set_valign(Gtk.Align.END)
-        self.button.set_image(Gtk.Image.new_from_icon_name(
-            "go-next-symbolic", Gtk.IconSize.BUTTON))
-        self.button.set_always_show_image(True)
-        self.button.set_image_position(Gtk.PositionType.RIGHT)
-        self.add(self.button)
 
 
 class Questions_page_password_input(Page):
-    def __init__(self, label_text):
+    def __init__(self):
         super().__init__()
-        self.label = Gtk.Label()
-        self.label.set_text(label_text)
-        self.label.set_visible(True)
-        self.add(self.label)
 
         self.entry = Gtk.Entry()
         self.entry.set_visible(True)
@@ -896,20 +887,6 @@ class Questions_page_password_input(Page):
         self.warn_entry.get_style_context().add_class('error')
         self.warn_entry.set_visible(False)
         self.add(self.warn_entry)
-
-        self.button = Gtk.Button()
-        self.button.set_label(_("Continue"))
-        self.button.set_visible(True)
-        self.button.set_sensitive(False)
-        self.button.set_hexpand(True)
-        self.button.set_vexpand(True)
-        self.button.set_halign(Gtk.Align.FILL)
-        self.button.set_valign(Gtk.Align.END)
-        self.button.set_image(Gtk.Image.new_from_icon_name(
-            "go-next-symbolic", Gtk.IconSize.BUTTON))
-        self.button.set_always_show_image(True)
-        self.button.set_image_position(Gtk.PositionType.RIGHT)
-        self.add(self.button)
 
 
 class Partition(object):
