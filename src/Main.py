@@ -632,8 +632,7 @@ class Application(Gtk.Application):
 
     def mount_lvm(self, lvm_part, pending_func):
         def pre():
-            vg_names = self.run_command(
-                "vgdisplay --colon | awk -F: '{print $1}'").split("\n")
+            vg_names = self.run_command("pvs -o vg_name --noheadings --select pv_name={}".format(lvm_part.path)).split("\n")
             if len(vg_names) == 0:
                 self.update_status_page(_("No Volume Groups Detected"), "dialog-error-symbolic", _(
                     "We couldn't find any volume groups on your system. This could indicate an issue with your LVM configuration. Please ensure that your LVM setup is correct."), True, True)
@@ -653,9 +652,11 @@ class Application(Gtk.Application):
             self.run_command("vgchange -ay {}".format(vg_name))
 
             LV_NAMES = []
-            for name in self.run_command("lvdisplay --colon | awk -F: '{print $1}'").split("\n"):
-                name = name.split("/")[-1].strip()
-                LV_NAMES.append(name)
+            for lv in self.run_command("lvs -o lv_name --noheadings --select vg_name={}".format(vg_name)).split("\n"):
+                lv = lv.strip()
+                if lv == "":
+                    continue
+                LV_NAMES.append(lv)
 
             if len(LV_NAMES) == 0:
                 self.update_status_page(_("No Logical Volumes Detected"), "dialog-error-symbolic", _(
