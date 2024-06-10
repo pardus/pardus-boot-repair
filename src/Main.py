@@ -605,8 +605,19 @@ class Application(Gtk.Application):
 
             output, exit_code = self.run_command('echo {} | cryptsetup luksOpen {} luks-{}'.format(password, part.path, part.name), True)
             if exit_code != 0:
-                self.update_status_page(_("An error occured"), "dialog-error-symbolic", _(
-                    "An error occurred while unlocking the encrypted device. Please check the password and try again."), True, True)
+                dialog = Gtk.MessageDialog(
+                    parent=self.window,
+                    modal=True,
+                    destroy_with_parent=True,
+                    message_type=Gtk.MessageType.ERROR,
+                    buttons=Gtk.ButtonsType.OK,
+                    text=_("An error occurred while unlocking the encrypted device. Please check the password and try again.")
+                )                
+                self.rootfs = None
+                if pending_func != None:
+                    Thread(target=pending_func).start()
+                dialog.run()
+                dialog.destroy()
                 return
 
             part.path = "/dev/mapper/luks-{}".format(part.name)
