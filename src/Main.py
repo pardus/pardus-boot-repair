@@ -445,16 +445,15 @@ class Application(Gtk.Application):
 
         def post(widget, pending_func):
             selected = self.rootfs_page.listbox.get_selected_row().get_title()
-            rootfs = next(
+            self.rootfs = next(
                 (x for x in self.rootfs_list if x.name == selected), None)
-            if rootfs.is_luks:
-                self.unlock_luks(rootfs, pending_func)
+            if self.rootfs.is_luks:
+                self.unlock_luks(self.rootfs, pending_func)
                 return
-            if rootfs.is_lvm:
-                self.mount_lvm(rootfs, pending_func)
+            if self.rootfs.is_lvm:
+                self.mount_lvm(self.rootfs, pending_func)
                 return
 
-            self.rootfs = rootfs    
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _(
                 "You've selected the root filesystem for further action."), False, False)
             if pending_func != None:
@@ -706,7 +705,7 @@ class Application(Gtk.Application):
                 partition.path = "/dev/" + part
                 for x in ["FSTYPE", "UUID", "SIZE", "LABEL", "MOUNTPOINT"]:
                     output = self.run_command(
-                        'lsblk -no {} {}'.format(x, partition.path)).split("\n")[0]
+                        'lsblk -rno {} {}'.format(x, partition.path)).split("\n")[0]
                     if output == None:
                         continue
                     partition.__setattr__(x.lower(), output.strip())
