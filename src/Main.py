@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys
 import os
-import glob
 import re
 import gi
 import subprocess
@@ -567,19 +566,27 @@ class Application(Gtk.Application):
     def list_partitions(self):
         partitions = []
 
-        for part in glob.glob('/sys/block/*/*', ):
-            if part.startswith(('loop', 'sr', 'zram')) or re.search(r'[0-9]$', part) == None:
+        for block in os.listdir('/sys/block/'):
+            if block.startswith(('loop', 'sr', 'zram')):
                 continue
-            part = os.path.basename(part)
 
-            partition = Partition()
-            partition.name = part
-            partition.path = "/dev/" + part
-            for x in ["FSTYPE", "UUID", "SIZE", "LABEL", "MOUNTPOINT"]:
-                output = self.run_command(
-                    'lsblk -no {} {}'.format(x, partition.path))
-                partition.__setattr__(x.lower(), output.strip())
-            partitions.append(partition)
+            if os.path.exists('/sys/block/{}/removable'.format(block)) and open('/sys/block/{}/removable'.format(block)).read().strip() == "1":
+                continue
+
+            for part in os.listdir('/sys/block/{}/'.format(block), ):
+                if re.search(r'[0-9]$', part) == None:
+                    continue
+
+                partition = Partition()
+                partition.name = part
+                partition.path = "/dev/" + part
+                for x in ["FSTYPE", "UUID", "SIZE", "LABEL", "MOUNTPOINT"]:
+                    output = self.run_command(
+                        'lsblk -no {} {}'.format(x, partition.path))
+                    if output == None:
+                        continue
+                    partition.__setattr__(x.lower(), output.strip())
+                partitions.append(partition)
 
         partitions = self.get_operating_system(partitions)
         partitions.sort(key=lambda part: part.name)
