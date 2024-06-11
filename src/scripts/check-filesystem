@@ -6,7 +6,7 @@ while [[ ! -b /dev/$disk ]] ; do
 done
 fs=$(blkid | grep /dev/$disk | sed "s/.*TYPE=\"//g;s/\".*//g")
 
-source /usr/bin/pardus-mount-luks-lvm
+source /usr/bin/pardus-open-luks-lvm
 
 if [[ "$fs" == "ext4" ]] ; then
     yes "" | fsck.ext4 -f -y /dev/$disk

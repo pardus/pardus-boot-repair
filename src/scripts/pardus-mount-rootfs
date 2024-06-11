@@ -25,7 +25,7 @@ done
 umount -lf /dev/$disk 2>/dev/null  || true
 fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n')"
 
-source /usr/bin/pardus-mount-luks-lvm
+source /usr/bin/pardus-open-luks-lvm
 
 mount /dev/$disk "$DESTDIR"
 
