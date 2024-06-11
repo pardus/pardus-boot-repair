@@ -2,7 +2,7 @@
 while [[ ! -b /dev/$disk ]] ; do
     echo $(ls /sys/block/* | grep "[0-9]$")
     echo -n "partition >>> "
-    read part
+    read disk
 done
 type=$(blkid | grep /dev/$disk | sed "s/.*TYPE=\"//g;s/\".*//g")
 if [[ "$type" == "ext4" ]] ; then
