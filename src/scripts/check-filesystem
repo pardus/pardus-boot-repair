@@ -4,10 +4,13 @@ while [[ ! -b /dev/$disk ]] ; do
     echo -n "partition >>> "
     read disk
 done
-type=$(blkid | grep /dev/$disk | sed "s/.*TYPE=\"//g;s/\".*//g")
-if [[ "$type" == "ext4" ]] ; then
+fs=$(blkid | grep /dev/$disk | sed "s/.*TYPE=\"//g;s/\".*//g")
+
+source /usr/bin/pardus-mount-luks-lvm
+
+if [[ "$fs" == "ext4" ]] ; then
     yes "" | fsck.ext4 -f -y /dev/$disk
 
 else
-    yes "" | fsck.$type /dev/$disk
+    yes "" | fsck.$fs /dev/$disk
 fi
