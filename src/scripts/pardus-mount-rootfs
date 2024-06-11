@@ -30,7 +30,7 @@ if $(cryptsetup isLuks /dev/$disk); then
         LUKS_NAME="luks-$(date +%d-%m-%y_%H-%M-%S)"
         cryptsetup open /dev/$disk $LUKS_NAME
         disk="/mapper/$LUKS_NAME"
-        fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n' | head -n 1)"
+        fs="$(lsblk -rno FSTYPE /dev/$disk | head -n 1)"
     else
         disk="mapper/$(lsblk -r -o NAME,TYPE /dev/$disk | grep crypt | awk '{print $1 }')"
         fs="$(lsblk -rno FSTYPE /dev/$disk | head -n 1)"
@@ -81,9 +81,8 @@ if [[ $fs == 'LVM2_member' ]]; then
     else
       LV_NAME=${LV_NAMES[0]}
     fi
-    # LV_NAME=$(echo $LV_NAME | sed "s/.*\/$VG_NAME\///")
     disk="$VG_NAME/$LV_NAME"
-    fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n')"
+    fs="$(lsblk -rno FSTYPE /dev/$disk | head -n 1)"
 fi
 
 mount /dev/$disk "$DESTDIR"
