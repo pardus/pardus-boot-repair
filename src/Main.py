@@ -48,6 +48,10 @@ class Application(Gtk.Application):
         self.carousel_questions = self.builder.get_object("carousel_questions")
         self.button_questions_mainpage = self.builder.get_object(
             "button_mainpage1")
+        self.button_questions_continue = self.builder.get_object(
+            "button_questions_continue")
+        self.titlebar_page_questions = self.builder.get_object(
+            "titlebar_page_questions")
 
         # loading page
         self.btn_go_mainpage = self.builder.get_object(
@@ -401,10 +405,16 @@ class Application(Gtk.Application):
             return
         Thread(target=post_func).start()
 
-    def run_command(self, command: str):
+    def run_command(self, command: str, return_exitcode=False):
         try:
-            output = subprocess.check_output(
-                ["/bin/bash", "-c", command]).decode("utf-8").strip()
+            proc = subprocess.Popen(
+                ["/bin/bash", "-c", command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            output, err = proc.communicate()
+            output = output.decode("utf-8").strip()
+            exit_code = proc.returncode
+
+            if return_exitcode:
+                return output, exit_code
             return output
         except Exception as e:
             sys.stderr.write(str(e) + "\n")
@@ -416,7 +426,7 @@ class Application(Gtk.Application):
         def pre():
             if not hasattr(self, 'rootfs') or self.rootfs == None:
                 self.rootfs_list = self.detect_rootfs()
-                if len(self.rootfs_list) == 0:
+                if self.rootfs_list == None or len(self.rootfs_list) == 0:
                     self.update_status_page(_("Root Filesystem Missing"), "dialog-error-symbolic", _(
                         "We couldn't locate the root filesystem on your system. This could be due to a disk failure, misconfiguration, or other issues. Please ensure that your disk is properly connected and configured."), True, True)
                     return None
@@ -428,12 +438,26 @@ class Application(Gtk.Application):
                         _("Select a root filesystem"), partition_names, partition_os, post, pending_func)
                     return None
                 self.rootfs = self.rootfs_list[0]
+
+                if self.rootfs.is_luks:
+                    self.unlock_luks(self.rootfs, pending_func)
+                    return
+                if self.rootfs.is_lvm:
+                    self.mount_lvm(self.rootfs, pending_func)
+                    return
             return self.rootfs
 
         def post(widget, pending_func):
             selected = self.rootfs_page.listbox.get_selected_row().get_title()
             self.rootfs = next(
                 (x for x in self.rootfs_list if x.name == selected), None)
+            if self.rootfs.is_luks:
+                self.unlock_luks(self.rootfs, pending_func)
+                return
+            if self.rootfs.is_lvm:
+                self.mount_lvm(self.rootfs, pending_func)
+                return
+
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _(
                 "You've selected the root filesystem for further action."), False, False)
             if pending_func != None:
@@ -508,7 +532,6 @@ class Application(Gtk.Application):
         return partitions
 
     def detect_rootfs(self):
-        pardus_rootfs = []
         rootfs = []
         partitions = self.list_partitions()
         self.update_status_page(_("Searching for Root Filesystem"), "content-loading-symbolic", _(
@@ -516,35 +539,50 @@ class Application(Gtk.Application):
         for part in partitions:
             if part.mountpoint == "/":
                 continue
-            TEMPDIR = self.run_command('mktemp -d')
-            if part.mountpoint != "":
-                self.run_command("umount -lf {}".format(part.mountpoint))
 
-            self.run_command('mount {} {}'.format(part.path, TEMPDIR))
-            if os.path.exists(TEMPDIR + "/etc/os-release"):
-                part.is_rootfs = True
-                rootfs.append(part)
-                with open(TEMPDIR + "/etc/os-release") as f:
-                    for line in f:
-                        if "pardus" in line:
-                            part.is_pardus_rootfs = True
-                            pardus_rootfs.append(part)
-                            break
-            if part.fstype == "btrfs" and not os.path.exists(TEMPDIR + "/etc/os-release"):
-                subvol, part.is_rootfs, part.is_pardus_rootfs = self.detect_btrfs_rootfs_subvolume(
-                    TEMPDIR)
-                if subvol != None:
-                    part.root_subvol = subvol
-                if part.is_pardus_rootfs:
-                    pardus_rootfs.append(part)
-                if part.is_rootfs:
+            if part.fstype == "crypto_LUKS":
+                prt_Types = self.run_command('lsblk -rno TYPE {}'.format(part.path)).strip().split()
+                if len(prt_Types) > 1 and prt_Types[1] == "crypt":
+                   part.name = self.run_command('lsblk -rno NAME {}'.format(part.path)).strip().split()[1]
+                   part.path = "/dev/mapper/{}".format(part.name)
+                   part.fstype = self.run_command('lsblk -rno FSTYPE {}'.format(part.path)).strip().split()[0]
+                else:    
+                    part.is_luks = True
                     rootfs.append(part)
+                    continue
 
-            self.run_command('umount -l ' + TEMPDIR)
-            self.run_command('rmdir ' + TEMPDIR)
-        if len(pardus_rootfs) > 0:
-            return pardus_rootfs
+            if part.fstype == "LVM2_member":
+                part.is_lvm = True
+                rootfs.append(part)
+                continue
+
+            part = self.check_if_rootfs(part)
+            if part.is_rootfs:
+                rootfs.append(part)
+
         return rootfs
+
+    def check_if_rootfs(self, part):
+        TEMPDIR = self.run_command('mktemp -d')
+        part.is_rootfs = False
+
+        if part.mountpoint != "":
+            self.run_command("umount -lf {}".format(part.mountpoint))
+
+        self.run_command('mount {} {}'.format(part.path, TEMPDIR))
+        if os.path.exists(TEMPDIR + "/var/lib/dpkg/"):
+            part.is_rootfs = True
+
+        if part.fstype == "btrfs" and not os.path.exists(TEMPDIR + "/etc/os-release"):
+            subvol, part.is_rootfs = self.detect_btrfs_rootfs_subvolume(
+                TEMPDIR)
+            if subvol != None:
+                part.root_subvol = subvol
+
+        self.run_command('umount -l ' + TEMPDIR)
+        self.run_command('rmdir ' + TEMPDIR)
+
+        return part
 
     def detect_btrfs_rootfs_subvolume(self, mountdir):
         self.update_status_page(_("Searching for Btrfs Root Filesystem Subvolume"), "content-loading-symbolic", _(
@@ -552,16 +590,116 @@ class Application(Gtk.Application):
         output = self.run_command(
             "btrfs subvolume list " + mountdir + " | awk '{print $9}'")
         for subvol in output.split("\n"):
-            if os.path.exists("{}/{}/etc/os-release".format(mountdir, subvol)):
+            if os.path.exists("{}/{}/var/lib/dpkg/".format(mountdir, subvol)):
                 is_rootfs = True
-                is_pardus_rootfs = False
-                with open("{}/{}/etc/os-release".format(mountdir, subvol)) as f:
-                    for line in f:
-                        if "pardus" in line:
-                            is_pardus_rootfs = True
-                            break
-                return subvol, is_rootfs, is_pardus_rootfs
-        return None, False, False
+                return subvol, is_rootfs
+        return None, False
+
+    def unlock_luks(self, luks_part, pending_func= None):
+        def pre():
+            self.luks_page = self.new_page_input(
+                _("Enter LUKS Password"), after_userdata, (luks_part, pending_func))
+        
+        def after_userdata(widget, userdata):
+            password = self.luks_page.entry.get_text()
+            part, pending_func = userdata
+
+            self.update_status_page(_("Unlocking Encrypted Device"), "content-loading-symbolic", _(
+                "We're unlocking the encrypted device to access the data. This process may take a moment. Please wait while we unlock the device."), False, False)
+
+            output, exit_code = self.run_command('echo {} | cryptsetup luksOpen {} luks-{}'.format(password, part.path, part.name), True)
+            if exit_code != 0:
+                dialog = Gtk.MessageDialog(
+                    parent=self.window,
+                    modal=True,
+                    destroy_with_parent=True,
+                    message_type=Gtk.MessageType.ERROR,
+                    buttons=Gtk.ButtonsType.OK,
+                    text=_("An error occurred while unlocking the encrypted device. Please check the password and try again.")
+                )                
+                self.rootfs = None
+                if pending_func != None:
+                    Thread(target=pending_func).start()
+                dialog.run()
+                dialog.destroy()
+                return
+
+            part.path = "/dev/mapper/luks-{}".format(part.name)
+            part.name = "/mapper/luks-{}".format(part.name)
+            part.fstype = self.run_command('lsblk -no FSTYPE {}'.format(part.path)).strip()
+            if part.fstype == "LVM2_member":
+                part.is_lvm = True
+                self.mount_lvm(part, pending_func)
+                return
+            if part.fstype == "crypto_LUKS":
+                return
+
+            part = self.check_if_rootfs(part)
+            if part.is_rootfs:
+                self.rootfs = part
+            else:
+                self.rootfs = None
+
+            if pending_func != None:
+                Thread(target=pending_func).start()
+        pre()
+
+    def mount_lvm(self, lvm_part, pending_func):
+        def pre():
+            vg_names = self.run_command("pvs -o vg_name --noheadings --select pv_name={}".format(lvm_part.path)).split("\n")
+            if len(vg_names) == 0:
+                self.update_status_page(_("No Volume Groups Detected"), "dialog-error-symbolic", _(
+                    "We couldn't find any volume groups on your system. This could indicate an issue with your LVM configuration. Please ensure that your LVM setup is correct."), True, True)
+                return None
+            elif len(vg_names) > 1:
+                for vg in vg_names:
+                    vg = vg.strip()
+                self.vg_page = self.new_page_listbox(
+                    _("Select a Volume Group"), vg_names, None, after_userdata, (lvm_part, pending_func))
+                return None
+            after_userdata(None, (lvm_part, pending_func), vg_names[0])
+
+        def after_userdata(widget, userdata, vg_name=None):
+            lvm_part, pending_func = userdata
+            if vg_name == None:
+                vg_name = self.vg_page.listbox.get_selected_row().get_title()
+            self.run_command("vgchange -ay {}".format(vg_name))
+
+            LV_NAMES = []
+            for lv in self.run_command("lvs -o lv_name --noheadings --select vg_name={}".format(vg_name)).split("\n"):
+                lv = lv.strip()
+                if lv == "":
+                    continue
+                LV_NAMES.append(lv)
+
+            if len(LV_NAMES) == 0:
+                self.update_status_page(_("No Logical Volumes Detected"), "dialog-error-symbolic", _(
+                    "We couldn't find any logical volumes on your system. This could indicate an issue with your LVM configuration. Please ensure that your LVM setup is correct."), True, True)
+                return None
+            elif len(LV_NAMES) > 1:
+                self.lv_page = self.new_page_listbox(
+                    _("Select a Logical Volume"), LV_NAMES, None, after_lvm_selection, (vg_name, lvm_part, pending_func))
+                return None
+
+            after_lvm_selection(None, (vg_name, lvm_part, pending_func), LV_NAMES[0])
+
+        def after_lvm_selection(widget, userdata, lv_name=None):
+            vg_name, lvm_part, pending_func = userdata
+            if lv_name == None:
+                lv_name = self.lv_page.listbox.get_selected_row().get_title()
+
+            lvm_part.path = "/dev/{}/{}".format(vg_name, lv_name)
+            lvm_part.name = "{}/{}".format(vg_name, lv_name)
+
+            lvm_part = self.check_if_rootfs(lvm_part)
+            if lvm_part.is_rootfs:
+                self.rootfs = lvm_part
+            else:
+                self.rootfs = None
+
+            if pending_func != None:
+                Thread(target=pending_func).start()
+        Thread(target=pre).start()
 
     def list_partitions(self):
         partitions = []
@@ -582,7 +720,7 @@ class Application(Gtk.Application):
                 partition.path = "/dev/" + part
                 for x in ["FSTYPE", "UUID", "SIZE", "LABEL", "MOUNTPOINT"]:
                     output = self.run_command(
-                        'lsblk -no {} {}'.format(x, partition.path))
+                        'lsblk -rno {} {}'.format(x, partition.path)).split("\n")[0]
                     if output == None:
                         continue
                     partition.__setattr__(x.lower(), output.strip())
@@ -625,13 +763,18 @@ class Application(Gtk.Application):
         return mbrs
 
     def new_page_listbox(self, label_text, row_titles, row_subtitles, btn_next_clicked_signal, btn_next_userdata=None):
-        page = Questions_page_listbox(label_text)
+        page = Questions_page_listbox()
+        self.titlebar_page_questions.set_title(label_text)
+        self.button_questions_continue.set_sensitive(False)
 
         def on_questions_row_activated(widget):
-            page.button.set_sensitive(True)
+            self.button_questions_continue.set_sensitive(True)
 
-        def on_button_next_clicked(widget):
-            self.deck.set_visible_child(self.page_loading)
+        def on_button_next_clicked(widget, userdata):
+            Thread(target=self.deck.set_visible_child, args=(self.page_loading,)).start()
+            btn_signal, btn_userdata = userdata
+            Thread(target=btn_signal, args=(widget, btn_userdata)).start()
+            self.button_questions_continue.disconnect_by_func(on_button_next_clicked)
 
         for child in self.carousel_questions.get_children():
             self.carousel_questions.remove(child)
@@ -642,9 +785,8 @@ class Application(Gtk.Application):
             raise ValueError(
                 "row_titles and row_subtitles must have the same length")
 
-        page.button.connect('clicked', on_button_next_clicked)
-        page.button.connect(
-            'clicked', btn_next_clicked_signal, btn_next_userdata)
+        self.button_questions_continue.connect(
+            'clicked', on_button_next_clicked, (btn_next_clicked_signal, btn_next_userdata))
         for title, subtitle in zip(row_titles, row_subtitles):
             row = Handy.ActionRow()
             row.set_title(title)
@@ -659,8 +801,10 @@ class Application(Gtk.Application):
         self.deck.set_visible_child(self.page_questions)
         return page
 
-    def new_page_input(self, label_text, btn_continue_clicked_signal):
-        page = Questions_page_password_input(label_text)
+    def new_page_input(self, label_text, btn_continue_clicked_signal, btn_next_userdata=None):
+        page = Questions_page_password_input()
+        self.titlebar_page_questions.set_title(label_text)
+        self.button_questions_continue.set_sensitive(False)
 
         for child in self.carousel_questions.get_children():
             self.carousel_questions.remove(child)
@@ -670,18 +814,20 @@ class Application(Gtk.Application):
             entry_second_text = page.entry_second.get_text()
             if entry_text != entry_second_text and (entry_text != "" and entry_second_text != ""):
                 page.warn_entry.set_visible(True)
-                page.button.set_sensitive(False)
+                self.button_questions_continue.set_sensitive(False)
             if entry_text == entry_second_text and entry_text != "":
                 page.warn_entry.set_visible(False)
-                page.button.set_sensitive(True)
+                self.button_questions_continue.set_sensitive(True)
         
-        def on_button_next_clicked(widget):
-            self.deck.set_visible_child(self.page_loading)
+        def on_button_next_clicked(widget, userdata):
+            Thread(target=self.deck.set_visible_child, args=(self.page_loading,)).start()
+            btn_signal, btn_userdata = userdata
+            Thread(target=btn_signal, args=(widget, btn_userdata)).start()
+            self.button_questions_continue.disconnect_by_func(on_button_next_clicked)
 
         page.entry.connect("changed", input_change_event)
         page.entry_second.connect("changed", input_change_event)
-        page.button.connect('clicked', on_button_next_clicked)
-        page.button.connect('clicked', btn_continue_clicked_signal)
+        self.button_questions_continue.connect('clicked', on_button_next_clicked, (btn_continue_clicked_signal, btn_next_userdata))
         self.carousel_questions.insert(page, -1)
         self.deck.set_visible_child(self.page_questions)
         return page
@@ -703,12 +849,8 @@ class Page(Gtk.Box):
 
 
 class Questions_page_listbox(Page):
-    def __init__(self, label_text):
+    def __init__(self):
         super().__init__()
-        self.label = Gtk.Label()
-        self.label.set_text(label_text)
-        self.label.set_visible(True)
-        self.add(self.label)
 
         self.listbox = Gtk.ListBox()
         self.listbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
@@ -719,28 +861,11 @@ class Questions_page_listbox(Page):
         self.listbox.set_hexpand(True)
         self.add(self.listbox)
 
-        self.button = Gtk.Button()
-        self.button.set_label(_("Continue"))
-        self.button.set_visible(True)
-        self.button.set_sensitive(False)
-        self.button.set_hexpand(True)
-        self.button.set_vexpand(False)
-        self.button.set_halign(Gtk.Align.FILL)
-        self.button.set_valign(Gtk.Align.END)
-        self.button.set_image(Gtk.Image.new_from_icon_name(
-            "go-next-symbolic", Gtk.IconSize.BUTTON))
-        self.button.set_always_show_image(True)
-        self.button.set_image_position(Gtk.PositionType.RIGHT)
-        self.add(self.button)
 
 
 class Questions_page_password_input(Page):
-    def __init__(self, label_text):
+    def __init__(self):
         super().__init__()
-        self.label = Gtk.Label()
-        self.label.set_text(label_text)
-        self.label.set_visible(True)
-        self.add(self.label)
 
         self.entry = Gtk.Entry()
         self.entry.set_visible(True)
@@ -763,20 +888,6 @@ class Questions_page_password_input(Page):
         self.warn_entry.set_visible(False)
         self.add(self.warn_entry)
 
-        self.button = Gtk.Button()
-        self.button.set_label(_("Continue"))
-        self.button.set_visible(True)
-        self.button.set_sensitive(False)
-        self.button.set_hexpand(True)
-        self.button.set_vexpand(True)
-        self.button.set_halign(Gtk.Align.FILL)
-        self.button.set_valign(Gtk.Align.END)
-        self.button.set_image(Gtk.Image.new_from_icon_name(
-            "go-next-symbolic", Gtk.IconSize.BUTTON))
-        self.button.set_always_show_image(True)
-        self.button.set_image_position(Gtk.PositionType.RIGHT)
-        self.add(self.button)
-
 
 class Partition(object):
     def __init__(self):
@@ -787,11 +898,11 @@ class Partition(object):
         self.size = 0
         self.label = None
         self.is_rootfs = False
-        self.is_pardus_rootfs = False
         self.root_subvol = None
         self.mountpoint = None
         self.operating_system = None
-
+        self.is_luks = False
+        self.is_lvm = False
 
 if os.geteuid() != 0:        
         Gtk.MessageDialog(

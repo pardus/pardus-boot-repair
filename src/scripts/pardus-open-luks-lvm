@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root"
+    exit 1
+fi
+
+if [[ $(ls /sys/block/* | grep "[0-9]$" | wc -l) -eq 0 ]]; then
+    echo "No block devices found"
+    exit 1
+fi
+
+# check if $DESTDIR is a valid directory
+if [[ ! -d $DESTDIR ]]; then
+    DESTDIR=$(mktemp -d)
+fi
+
+while [[ ! -b /dev/$disk ]]; do
+    echo $(ls /sys/block/* | grep "[0-9]$")
+    echo -n "Rootfs partition >>> "
+    read disk
+done
+
+if [[ -z $fs ]]; then
+    fs=""
+fi
+
+if $(cryptsetup isLuks /dev/$disk); then
+    if [[ $(lsblk -r -o NAME,TYPE /dev/$disk | grep crypt | awk '{print $1 }') == "" ]]; then 
+        LUKS_NAME="luks-$(date +%d-%m-%y_%H-%M-%S)"
+        cryptsetup open /dev/$disk $LUKS_NAME
+        disk="/mapper/$LUKS_NAME"
+        fs="$(lsblk -rno FSTYPE /dev/$disk | head -n 1)"
+    else
+        disk="mapper/$(lsblk -r -o NAME,TYPE /dev/$disk | grep crypt | awk '{print $1 }')"
+        fs="$(lsblk -rno FSTYPE /dev/$disk | head -n 1)"
+    fi
+fi
+
+if [[ $fs == 'LVM2_member' ]]; then
+    # detect volume groups
+    VG_NAMES=($(vgdisplay --colon | awk -F: '{print $1}' | xargs))
+    if [ ${#VG_NAMES[@]} -eq 0 ]; then
+      echo "No volume groups found."
+      exit 1
+    elif [ ${#VG_NAMES[@]} -gt 1 ]; then
+      while true; do
+        echo "Multiple volume groups found, please select one of:"
+        echo ${VG_NAMES[@]}
+        read -p "volume group >>> " VG_NAME
+        if [[ ${VG_NAMES[@]} =~ $VG_NAME ]]; then
+          break
+        else
+          echo "Invalid input. Please enter a valid number."
+        fi
+      done
+    else
+      VG_NAME=${VG_NAMES[0]}
+    fi
+    vgchange -ay $VG_NAME
+
+    # Find the logical volumes
+    LV_NAMES=($(lvdisplay --colon | grep ":$VG_NAME:" | awk -F: '{print $1}'))
+    for lv in ${!LV_NAMES[@]}; do
+        LV_NAMES[$lv]=$(echo ${LV_NAMES[$lv]} | sed "s/.*\/$VG_NAME\///")
+    done
+    if [ ${#LV_NAMES[@]} -eq 0 ]; then
+      echo "No logical volumes found."
+      exit 1
+    elif [ ${#LV_NAMES[@]} -gt 1 ]; then
+      while true; do
+        echo "Multiple logical volumes found, please select one of:"
+        echo "${!LV_NAMES[@]}"
+        read -p "logical volume >>> " LV_NAME
+        if [[ ${!LV_NAMES[@]} =~ $LV_NAME ]]; then
+          break
+        else
+          echo "Invalid input. Please enter a valid number."
+        fi
+      done
+    else
+      LV_NAME=${LV_NAMES[0]}
+    fi
+    disk="$VG_NAME/$LV_NAME"
+    fs="$(lsblk -rno FSTYPE /dev/$disk | head -n 1)"
+fi
