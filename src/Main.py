@@ -265,28 +265,45 @@ class Application(Gtk.Application):
             self.update_status_page(_("Detecting Partitions"), "content-loading-symbolic", _(
                 "We're scanning your system to locate available partitions."), False, False)
 
-            partitions = self.list_partitions()
-            if len(partitions) == 0:
+            self.partitions = self.list_partitions()
+            if len(self.partitions) == 0:
                 self.update_status_page(_("Unable to Detect Partitions"), "dialog-error-symbolic", _(
                     "We couldn't find any partitions on your system. This could indicate a problem with your disk or partition table. Please double-check your disk connections and configuration."), True, True)
                 return
 
-            partition_names = [part.name for part in partitions]
-            partition_os = [part.operating_system for part in partitions]
+            partition_names = [part.name for part in self.partitions]
+            partition_os = [part.operating_system for part in self.partitions]
 
             self.repair_page = self.new_page_listbox(
                 _("Choose Partition for Filesystem Repair"), partition_names, partition_os, after_userdata)
 
-        def after_userdata(widget, userdata):
-            partition_for_repair = self.repair_page.listbox.get_selected_row().get_title()
-            self.update_status_page(_("Repairing Filesystem on {}").format(partition_for_repair), "content-loading-symbolic", _(
+        def after_userdata(widget=None, userdata=None, partition=None):
+            if partition == None:
+                selected = self.repair_page.listbox.get_selected_row().get_title()
+                part = next((x for x in self.partitions if x.name == selected), None)
+                return process_partition(after_userdata, part)
+            else:
+                part = partition
+
+            self.update_status_page(_("Repairing Filesystem on {}").format(part.path), "content-loading-symbolic", _(
                 "We're currently repairing the filesystem on the selected partition. This process may take some time, depending on the size and severity of the issues found. Please be patient while we work to restore the partition's functionality."), False, False)
             self.vte_command(
-                "env disk={} check-filesystem".format(partition_for_repair), post)
+                "env disk={} check-filesystem".format(part.name), post)
 
         def post():
             self.update_status_page(_("Filesystem Repair Successful"), "emblem-ok-symbolic", _(
                 "The filesystem has been successfully repaired. Your data should now be accessible without any issues."), True, True)
+
+        def process_partition(pending_func, part):
+            if part.is_luks:
+                self.unlock_luks(part, process_partition, pending_func)
+                return None
+            if part.is_lvm:
+                self.mount_lvm(part, process_partition, pending_func)
+                return None
+
+            if pending_func != None:
+                Thread(target=pending_func, args=(None, None, part)).start()
 
         self.row_init_func(pre)
 
