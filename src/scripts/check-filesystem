@@ -4,7 +4,7 @@ while [[ ! -b /dev/$disk ]] ; do
     echo -n "partition >>> "
     read disk
 done
-fs=$(blkid | grep /dev/$disk | sed "s/.*TYPE=\"//g;s/\".*//g")
+fs="$(lsblk -rno FSTYPE /dev/$disk | head -n 1)"
 
 source /usr/bin/pardus-open-luks-lvm
 
