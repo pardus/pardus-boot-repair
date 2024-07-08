@@ -47,9 +47,9 @@ fi
 
 chroot "$DESTDIR" grub-mkconfig -o /boot/grub/grub.cfg
 if [[ -d /sys/firmware/efi/ ]] ; then
-    while umount -lf ""$DESTDIR"/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
+    while umount -lf "\"$DESTDIR\"/sys/firmware/efi/efivars" 2>/dev/null ; do : ;done
 fi
 for dir in dev/pts dev sys proc ; do
-    while umount -lf ""$DESTDIR"/$dir" 2>/dev/null; do : ;done
+    while umount -lf "\"$DESTDIR\"/$dir" 2>/dev/null; do : ;done
 done
 umount -lf "$DESTDIR"  2>/dev/null
