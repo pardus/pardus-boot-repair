@@ -84,6 +84,23 @@ class Application(Gtk.Application):
         self.window.set_application(self)
         self.window.present()
 
+    def on_window_destroy_event(self, widget, event):
+        if self.deck.get_visible_child() == self.page_loading and self.spinner_loading.get_property("active") == True:
+            dialog = Gtk.MessageDialog(
+                parent=self.window,
+                modal=True,
+                destroy_with_parent=True,
+                message_type=Gtk.MessageType.ERROR,
+                buttons=Gtk.ButtonsType.OK,
+                text=_("You can't close the application while an operation is in progress. Please wait until the operation is completed.")
+            )
+            dialog.run()
+            dialog.destroy()
+            # return True will prevent the window from closing
+            return True
+        # This will allow the window to close
+        return
+
     def on_button_mainpage_clicked(self, widget):
         self.deck.set_visible_child(self.page_main)
 
