@@ -6,6 +6,7 @@ SHARE_DIR := $(DESTDIR)$(PREFIX)/share/pardus/pardus-boot-repair
 ICON_DIR := $(DESTDIR)$(PREFIX)/share/icons
 POLKIT_DIR := $(DESTDIR)$(PREFIX)/share/polkit-1/actions
 LOCALE_DIR := $(DESTDIR)$(PREFIX)/share/locale
+DESKTOP_DIR := $(DESTDIR)$(PREFIX)/share/applications
 
 .PHONY: all build install buildmo pot gresource clean run
 
@@ -20,7 +21,9 @@ install: gresource
 	install -d $(ICON_DIR)
 	install src/data/images/pardus-boot-repair.svg $(ICON_DIR)
 	install -d $(POLKIT_DIR)
+	install -d $(DESKTOP_DIR)
 	install src/data/tr.org.pardus-boot-repair.policy $(POLKIT_DIR)
+	install src/data/tr.org.pardus-boot-repair.desktop $(DESKTOP_DIR)
 
 	@for file in $(wildcard po/*.po); do \
 		lang=$$(basename $$file .po); \
