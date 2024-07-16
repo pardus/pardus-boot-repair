@@ -1,3 +1,185 @@
+pardus-boot-repair (1.0.0) unstable; urgency=medium
+
+  [ vilez ]
+  * refactor: style: feat: new ui with gtk3 and change file layout
+  * style: page navigation
+  * feat: base for pages
+  * feat: python base for UI actions
+  * feat: ui: reinstall grub
+  * feat: ui: reset password
+  * feat: ui: fix broken packages
+  * feat: ui: update system
+  * feat: ui: reinstall system
+  * feat: ui: repair filesystem
+  * feat: ui: reset config
+  * feat: ui: dump logs
+  * feat: ui: chroot shell
+  * chore: update dependencies
+  * fix: avoid waiting in ui when command execution is finished
+  * BREAKING CHANGE: replace pardus-boot-repair script file
+  * feat: detect efi part from fstab and do not ask the user for it
+  * chore: use for loop
+  * feat: improve handling of pending_func
+  * fix: ask before clearing efivars
+  * feat: scripts: new script for mount rootfs (with btrfs support)
+  * feat: scripts: mount btrfs subvols and filesystems from fstab in pardus-mount-rootfs script
+  * feat: scripts: use pardus-mount-rootfs instead of trying to detect rootfs in every script
+  * chore: scripts: update shebang
+  * feat: scripts: update prompt message for target directory in dump-info-log script
+  * fix: scripts: pardus-chroot: dont ask for the rootfs multiple times
+  * feat: ui: Btrfs support
+  * fix: scripts: reset-password: check user if its empty, not pass1
+  * fix: fix umount btrfs error by remove duplicate code and replace rm -rf with rmdir
+  * fix: ui: fix typo
+  * fix: ui: fix mainpage button on questions page
+  * fix: makefile: variable typo
+  * feat: makefile: replace /usr with PREFIX variable
+  * feat: ui: update actions status messages
+  * feat: ui: status page: update icons
+  * feat: boot-repair: run app with pkexec
+  * fix: update policy
+  * fix: Disconnect button_next signal after password reset
+  * fix: Disconnect button_next signal after repair filesystem
+  * fix: fix gettext
+  * build: makefile: rewrite makefiles
+  * fix: scripts: dump logs: dont mount the rootfs twice
+  * style: ui: update row titles and subtitles
+  * feat!: translation: Re-init translation BREAKING CHANGE: all old po files have been removed.
+  * fix: fix typo
+  * chore: update translations
+  * fix: Update label for close logs button to "Hide logs"
+  * feat: turkish translations
+  * feat: gplv3 license
+
+  [ Edip ]
+  * chore: Update LICENSE
+
+  [ vilez ]
+  * chore: add gitignore (from https://github.com/github/gitignore)
+  * feat: update translation
+  * build: deb package: update make deps
+  * chore: update README
+  * fix: Drop button_next from Appwindow.ui, add button per page instead
+  * fix: makefile: fix rm command
+  * fix: fix translation on chroot page
+  * fix: always ask for user
+  * chore: update translations
+  * fix: fix message after system reinstallation
+
+  [ vilez0 ]
+  * chore: scripts: use full path when executing pardus-mount-rootfs
+  * fix: main: fix get_user
+  *  refactor: scripts: mount-rootfs: read fstab for btrfs subvolumes on every partition
+  * fix: scripts: mount-rootfs: fix block device search pattern
+
+  [ vilez ]
+  * fix: scripts: mount-rootfs: follow symbolic links when copying /etc/resolv.conf
+  * fix: trigger grub-reinstall instead of pardus-reinstall
+  * chore: fix variable name
+  * fix: send environment variables when spawning vte terminal
+  * fix: show error if vte command exit code is not 0
+  * fix: clear terminal before executing new command
+  * chore: move show log button into headerbar
+  * fix: scripts: pardus-chroot: exit script with chroot command status code
+  * feat: add pardus TUBITAK footer
+  * fix: set vte_terminal to expand horizontally and vertically
+  * chore: use vte_terminal.reset instead of manual clear
+  * feat: add about dialog (ported from pardus-software)
+  * feat: use symbolic icons everywhere
+  * fix: fix variable typo
+  * feat: scripts: search-operating-system: allow to pass partitions from env
+  * fix: fix some command doesnt execute on 2+ rootfs
+  * fix: fix get_rootfs on 2+ root filesystems
+  * feat: ui: Add operating system name as subtitle in rootfs select page
+  * fix: ui: mark footer label as untranslatable
+  * fix: fix typo
+  * chore: update pot file
+  * chore: update turkish translations
+  * fix: ask for user before reset config
+  * refactor: list-mbrs: use os.path.listdir instead of ls command and dont append mbrs smaller than 512Mb
+  * fix: fix application crash when running chroot multiple times
+  * chore: close logs page after status vte_command exited
+  * fix: dont execute ls command for listing directories
+  * feat: ask for user confirmation on dangerous actions
+  * refactor: remove redundant code for removing all childrens from carousel_questions before every action
+  * refactor: remove redundant code and execute pre() functions in a new thread
+  * fix: fix clearing efivars during GRUB reinstallation feat: replace efivars page with a confirmation dialog
+  * fix: place vte terminal inside a scrolled window to prevent some overflow bugs
+  * refactor: get rid of self.pending_func
+  * refactor: get rid of self.post_command
+  * fix: fix translations in log page and repair filesystem page
+  * feat: Add copy logs functionality
+  * style: format code
+  * chore: update pot file
+  * chore: update turkish translations
+  * refactor: Remove redundant code
+  * feat: show status page when status page content changes
+  * refactor: Update vte_command parameter name for clarity
+  * refactor: simplify pre-checks in row functions
+  * refactor: Refactor code to remove redundant deck.set_visible_child() calls
+  * style: set vte_terminal colors based on window colors
+  * fix: remove spacing from page loading, so that the meaningless space on vte_terminal also disappears
+  * style: update margin for footer label
+  * chore: update app screenshots and rename images folder to assets
+  * chore: update Readme.md
+  * build: gh-actions: initial
+  * fix: readme: update image path of advanced_options.png
+  * fix: Add root privilege check before running the application
+  * chore: update pot file
+  * chore: Update turkish translations
+  * fix: Handle empty or None output when retrieving partition information
+  * refactor: dont list removable devices in partitions list
+  * feat: initial luks support
+  * feat: initial LVM support
+  * refactor: Update pardus-mount-rootfs script to use cryptsetup isLuks function for checking if the filesystem is LUKS encrypted
+  * fix: set exit status on search-operating-system script
+  * fix: handle rootfs_list if it is None
+  * refactor: Improve root filesystem detection logic and remove unnecessary code
+  * feat: initial luks support in ui
+  * feat: initial lvm support in ui
+  * feat: mount-rootfs: check if luks disk is already decrypted before decrypting
+  * feat: main: check if crypto part is already decrypted before trying to decrypt it
+  * fix: main: Improve lsblk command output parsing in list_partitions
+  * fix: variable typo
+  * feat: improve lvm supprot
+  * refactor: use subprocess.Popen instead of .checkoutput for better handling process exit code
+  * feat: show error if "cryptsetup luksOpen" exits with non-zero status (most of time it is when password incorrect)
+  * refactor: extract rootfs checker from detect_rootfs to a seperate function
+  * feat: check if lvm or luks partition is root before assigning it to self.rootfs
+  * refactor: replace vdisplay and lvdisplay with pvs and lvs
+  * fix: improve handling rootfs and partitions properties
+  * refactor: show  dialog if wrong password given  when unlocking encrypted device
+  * style: redesign questions page
+  * chore: update translations
+  * chore: update turkish translations
+  * refactor: scripts: mount-rootfs: better luks and lvm fs handling
+  * refactor: scripts: split lvm and luks from mount-rootfs script to another script
+  * fix: scripts: check-filesystem: fix variable name
+  * feat: scripts: check-filesystem: support lvm and luks
+  * fix: scripts: mount-luks-lvm: add shebang
+  * refactor: rename pardus-mount-luks-lvm to pardus-open-luks-lvm because the script itself doesnt mount any filesystem
+  * refactor: get rid of self.rootfs in mount_lvm and unlock_luks(assigning rootfs in get_rootfs function)
+  * fix: assign partition.is_luks and .is_lvm from list_partitions
+  * refactor: scripts: check-filesystem: use lsblk instead of blkid for  filesystem determination
+  * feat: support luks and lvm in repair filesystem action
+
+  [ Hugo Carvalho ]
+  * Add Portuguese translations
+
+  [ vilez ]
+  * fix: fix quotes typo
+  * fix: prevent the user from closing the window during an operation
+  * chore: update translations
+
+  [ Hugo Carvalho ]
+  * Update Portuguese translations
+
+  [ Ali Riza KESKIN ]
+  * fix apgument issue
+  * fix desktop file location
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Tue, 16 Jul 2024 15:42:01 +0300
+
 pardus-boot-repair (0.5.2) unstable; urgency=medium
 
   [ Ali Rıza KESKİN ]
