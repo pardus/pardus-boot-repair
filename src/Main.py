@@ -215,7 +215,7 @@ class Application(Gtk.Application):
             self.password_page = self.new_page_input(
                 _("Enter new password"), after_userdata)
 
-        def after_userdata(x):
+        def after_userdata(*args, **kwargs):
             password1 = self.password_page.entry.get_text()
             password2 = self.password_page.entry_second.get_text()
 
