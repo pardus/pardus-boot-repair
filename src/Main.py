@@ -14,7 +14,7 @@ from gi.repository import Gtk, Handy, Gdk, Gio, GLib, Vte
 gettext.install("pardus-boot-repair", "/usr/share/locale/")
 Handy.init()
 
-APPVERSION = "0.5.2"
+APPVERSION = "1.0.0"
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
 
 resource = Gio.resource_load(

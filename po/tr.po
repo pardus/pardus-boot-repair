@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-08 19:10+0300\n"
-"PO-Revision-Date: 2024-07-08 19:13+0300\n"
+"PO-Revision-Date: 2024-07-19 23:23+0300\n"
 "Last-Translator: Edip Hzr <edip@medip.dev>\n"
-"Language-Team: Turkish <>\n"
+"Language-Team: Turkish\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 42.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 46.1\n"
 
 #: src/data/ui/AppWindow.ui:106
 msgid "Pardus Boot Repair"
@@ -130,7 +130,7 @@ msgstr "Sürdür"
 
 #: src/data/ui/AppWindow.ui:593
 msgid "Helps to repair broken systems"
-msgstr "Bozuk paketleri onarmaya yardımcı olur."
+msgstr "Bozuk sistemlerin onarılmasına yardımcı olur"
 
 #: src/data/ui/AppWindow.ui:595
 msgid "Website"
