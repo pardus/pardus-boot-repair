@@ -8,6 +8,6 @@ Homepage: https://pardus.org.tr
 
 Package: pardus-boot-repair
 Architecture: all
-Depends: ${misc:Depends}, libc6, live-boot, zip, libhandy-1-0, libvte-2.91-0
+Depends: ${misc:Depends}, libc6, live-boot, zip, libhandy-1-0, libvte-2.91-0, gir1.2-handy-1
 Description: Pardus boot repair
  Pardus boot repair tool
