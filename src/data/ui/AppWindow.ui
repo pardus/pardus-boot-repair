@@ -246,7 +246,7 @@
                     <property name="can-focus">False</property>
                     <property name="margin-top">5</property>
                     <property name="margin-bottom">5</property>
-                    <property name="label">TÜBİTAK BİLGEM | 2024</property>
+                    <property name="label">© TÜBİTAK BİLGEM</property>
                     <style>
                       <class name="footer"/>
                     </style>
