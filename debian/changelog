@@ -1,3 +1,21 @@
+pardus-boot-repair (1.0.1) unstable; urgency=medium
+
+  [ Ali Riza KESKIN ]
+  * ulakbim -> bilgem
+  * update bilgem
+
+  [ Edip Hzr ]
+  * fix: correct wrong translation
+  * fix: update app version to 1.0.0
+
+  [ Edip ]
+  * fix: fix typo
+
+  [ Fatih Altun ]
+  * Update static appversion
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 28 Nov 2024 16:36:03 +0300
+
 pardus-boot-repair (1.0.0) unstable; urgency=medium
 
   [ vilez ]
