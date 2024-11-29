@@ -36,6 +36,7 @@ class Application(Gtk.Application):
             "/tr/org/pardus/boot-repair/ui/AppWindow.ui")
         self.builder.connect_signals(self)
         self.window = self.builder.get_object("window_main")
+        self.window.set_size_request(600, 400)  
         self.deck = self.builder.get_object("deck_main")
 
         # pages
