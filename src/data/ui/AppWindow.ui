@@ -596,9 +596,9 @@
     <property name="license" translatable="yes">This program comes with absolutely no warranty.
 See the &lt;a href="https://www.gnu.org/licenses/gpl-3.0.html"&gt;GNU General Public License, version 3 or later&lt;/a&gt; for details.</property>
     <property name="authors">Ali Rıza Keskin
-Edip H. &lt;edip@medip.dev&gt;</property>
+Edip Hazouri &lt;edip@medip.dev&gt;</property>
     <property name="translator-credits" translatable="yes" comments="Name Surname &lt;example@examplemail.com&gt;">translator-credits</property>
-    <property name="artists">Edip H. &lt;edip@medip.dev&gt;</property>
+    <property name="artists">Edip Hazouri &lt;edip@medip.dev&gt;</property>
     <property name="logo-icon-name">pardus-boot-repair</property>
     <property name="wrap-license">True</property>
     <property name="license-type">gpl-3-0</property>

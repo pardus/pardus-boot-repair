@@ -149,7 +149,7 @@ msgstr ""
 #. Name Surname <example@examplemail.com>
 #: src/data/ui/AppWindow.ui:600
 msgid "translator-credits"
-msgstr "Edip H. <edip@medip.dev>"
+msgstr "Edip Hazouri <edip@medip.dev>"
 
 #: src/Main.py:95
 msgid ""
