@@ -757,8 +757,8 @@ class Application(Gtk.Application):
                     if output == None:
                         continue
                     partition.__setattr__(x.lower(), output.strip())
-                    partition.is_luks = (partition.fstype == "crypto_LUKS")
-                    partition.is_lvm = (partition.fstype == "LVM2_member")
+                partition.is_luks = (partition.fstype == "crypto_LUKS")
+                partition.is_lvm = (partition.fstype == "LVM2_member")
          
                 partitions.append(partition)
 
