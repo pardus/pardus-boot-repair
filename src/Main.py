@@ -461,25 +461,26 @@ class Application(Gtk.Application):
         def pre():
             if hasattr(self, 'rootfs') and self.rootfs != None:
                 return self.rootfs
-            self.rootfs_list = self.detect_rootfs()
-            if self.rootfs_list == None or len(self.rootfs_list) == 0:
+            global partitions
+            partitions = self.list_partitions()
+            if partitions == None or len(partitions) == 0:
                 self.update_status_page(_("Root Filesystem Missing"), "dialog-error-symbolic", _(
                     "We couldn't locate the root filesystem on your system. This could be due to a disk failure, misconfiguration, or other issues. Please ensure that your disk is properly connected and configured."), True, True)
                 return None
-            elif len(self.rootfs_list) > 1:
-                partition_names = [part.name for part in self.rootfs_list]
+            elif len(partitions) > 1:
+                partition_names = [part.name for part in partitions]
                 partition_os = [
-                    part.operating_system for part in self.rootfs_list]
+                    part.operating_system for part in partitions]
                 self.rootfs_page = self.new_page_listbox(
                     _("Select a root filesystem"), partition_names, partition_os, post, pending_func)
                 return None
-            process_partition(pending_func, self.rootfs_list[0])
+            process_partition(pending_func, partitions[0])
             return None
 
         def post(widget, pending_func):
             selected = self.rootfs_page.listbox.get_selected_row().get_title()
             rootfs = next(
-                (x for x in self.rootfs_list if x.name == selected), None)
+                (part for part in partitions if part.name == selected), None)
             process_partition(pending_func, rootfs)
 
         def process_partition(pending_func, part):
@@ -495,7 +496,10 @@ class Application(Gtk.Application):
             if part.is_rootfs:
                 self.rootfs = part
             else:
+                self.update_status_page(_("Invalid Partition Selected"), "dialog-error-symbolic", _(
+                    "The selected partition is not a root filesystem. Please select a valid root filesystem."), True, True)
                 self.rootfs = None
+                return None
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _(
                 "You've selected the root filesystem for further action."), False, False)
             if pending_func != None:
@@ -568,37 +572,6 @@ class Application(Gtk.Application):
             part.operating_system = self.run_command(
                 'env parts={} search-operating-system'.format(part.name)).split(":")[0].replace('"', '').strip()
         return partitions
-
-    def detect_rootfs(self):
-        rootfs = []
-        partitions = self.list_partitions()
-        self.update_status_page(_("Searching for Root Filesystem"), "content-loading-symbolic", _(
-            "We're searching for the root filesystem on your system. This is essential for proper system operation. Please wait while we locate the root filesystem. Thank you for your patience."), False, False)
-        for part in partitions:
-            if part.mountpoint == "/":
-                continue
-
-            if part.fstype == "crypto_LUKS":
-                prt_Types = self.run_command('lsblk -rno TYPE {}'.format(part.path)).strip().split()
-                if len(prt_Types) > 1 and prt_Types[1] == "crypt":
-                   part.name = self.run_command('lsblk -rno NAME {}'.format(part.path)).strip().split()[1]
-                   part.path = "/dev/mapper/{}".format(part.name)
-                   part.fstype = self.run_command('lsblk -rno FSTYPE {}'.format(part.path)).strip().split()[0]
-                else:    
-                    part.is_luks = True
-                    rootfs.append(part)
-                    continue
-
-            if part.fstype == "LVM2_member":
-                part.is_lvm = True
-                rootfs.append(part)
-                continue
-
-            part = self.check_if_rootfs(part)
-            if part.is_rootfs:
-                rootfs.append(part)
-
-        return rootfs
 
     def check_if_rootfs(self, part):
         TEMPDIR = self.run_command('mktemp -d')
@@ -747,7 +720,6 @@ class Application(Gtk.Application):
             for part in os.listdir('/sys/block/{}/'.format(block), ):
                 if re.search(r'[0-9]$', part) == None:
                     continue
-
                 partition = Partition()
                 partition.name = part
                 partition.path = "/dev/" + part
@@ -759,7 +731,18 @@ class Application(Gtk.Application):
                     partition.__setattr__(x.lower(), output.strip())
                 partition.is_luks = (partition.fstype == "crypto_LUKS")
                 partition.is_lvm = (partition.fstype == "LVM2_member")
-         
+
+                if partition.mountpoint == "/":
+                    continue
+                if partition.is_luks:
+                    prt_Types = self.run_command('lsblk -rno TYPE {}'.format(partition.path)).strip().split()
+
+                    if len(prt_Types) > 1 and prt_Types[1] == "crypt":
+                       partition.name = self.run_command('lsblk -rno NAME {}'.format(partition.path)).strip().split()[1]
+                       partition.path = "/dev/mapper/{}".format(partition.name)
+                       partition.fstype = self.run_command('lsblk -rno FSTYPE {}'.format(partition.path)).strip().split()[0]
+                       partition.is_luks = (partition.fstype == "crypto_LUKS")
+                       partition.is_lvm = (partition.fstype == "LVM2_member")
                 partitions.append(partition)
 
         partitions = self.get_operating_system(partitions)
