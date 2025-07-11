@@ -165,8 +165,8 @@ class Application(Gtk.Application):
                 return
 
             if os.path.exists("/sys/firmware/efi/efivars"):
-                clear_efi = self.ask_confirmation(
-                    "Do you want to clear efivars?")
+                clear_efi = self.ask_confirmation(_(
+                    "Do you want to clear efivars?"))
             else:
                 clear_efi = 'n'
 
