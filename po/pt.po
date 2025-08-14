@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 19:10+0300\n"
+"POT-Creation-Date: 2025-07-11 18:23+0300\n"
 "PO-Revision-Date: 2024-07-16 01:05+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: \n"
@@ -156,7 +156,7 @@ msgstr ""
 msgid "translator-credits"
 msgstr "Hugo Carvalho <hugokarvalho@hotmail.com>"
 
-#: src/Main.py:95
+#: src/Main.py:96
 msgid ""
 "You can't close the application while an operation is in progress. Please "
 "wait until the operation is completed."
@@ -164,20 +164,31 @@ msgstr ""
 "Não é possível fechar a aplicação enquanto estiver a decorrer uma operação. "
 "Aguarde até que a operação seja concluída."
 
-#: src/Main.py:158
+#: src/Main.py:159
 msgid "Processing your request."
 msgstr "A processar o seu pedido."
 
-#: src/Main.py:159
+#: src/Main.py:160
 msgid "We will ask you some questions after we process your request."
 msgstr ""
 "Depois de processarmos o seu pedido, colocar-lhe-emos algumas questões."
 
-#: src/Main.py:173
+#: src/Main.py:170
+msgid "Do you want to clear efivars?"
+msgstr ""
+
+#: src/Main.py:175
+msgid ""
+"On some systems, the BIOS may not detect grub until installed as a removable "
+"device. Do you want to install grub as a removable device? You should only "
+"say yes if you cannot boot into the system after installation."
+msgstr ""
+
+#: src/Main.py:177
 msgid "Reinstalling GRUB Bootloader"
 msgstr "A reinstalar o carregador de arranque GRUB"
 
-#: src/Main.py:174
+#: src/Main.py:178
 msgid ""
 "We're reinstalling the GRUB boot loader to ensure your system can start up "
 "properly. This process may take a few moments. Once complete, your computer "
@@ -188,11 +199,11 @@ msgstr ""
 "momentos. Uma vez concluído, seu computador deve inicializar no Pardus como "
 "de costume."
 
-#: src/Main.py:184
+#: src/Main.py:188
 msgid "GRUB Successfully Reinstalled"
 msgstr "GRUB reinstalado com sucesso"
 
-#: src/Main.py:185
+#: src/Main.py:189
 msgid ""
 "Great news! The GRUB boot loader has been successfully reinstalled on your "
 "system. You're all set to restart your computer and resume normal operation."
@@ -201,11 +212,11 @@ msgstr ""
 "no seu sistema. Está tudo pronto para reiniciar o seu computador e retomar o "
 "funcionamento normal."
 
-#: src/Main.py:194
+#: src/Main.py:198
 msgid "Fixing Broken Packages"
 msgstr "A corrigir pacotes corrompidos"
 
-#: src/Main.py:195
+#: src/Main.py:199
 msgid ""
 "We're resolving issues with broken packages on your system to ensure "
 "everything works. This may take some time, but we're on it. Once complete, "
@@ -216,11 +227,11 @@ msgstr ""
 "tratar disso. Uma vez concluído, o seu sistema deverá estar estável e pronto "
 "a ser utilizado."
 
-#: src/Main.py:205
+#: src/Main.py:209
 msgid "Packages Repaired"
 msgstr "Pacotes reparados"
 
-#: src/Main.py:206
+#: src/Main.py:210
 msgid ""
 "Great news! The broken packages on your system have been successfully "
 "repaired."
@@ -228,15 +239,15 @@ msgstr ""
 "Ótimas notícias! Os pacotes corrompidos no seu sistema foram reparados com "
 "sucesso."
 
-#: src/Main.py:216
+#: src/Main.py:220
 msgid "Enter new password"
 msgstr "Introduza a nova palavra-passe"
 
-#: src/Main.py:222
+#: src/Main.py:226
 msgid "Resetting password"
 msgstr "A repor palavra-passe"
 
-#: src/Main.py:223
+#: src/Main.py:227
 msgid ""
 "We're resetting your password to provide access to your account. This "
 "process will only take a moment. Once complete, you'll be able to log in "
@@ -246,11 +257,11 @@ msgstr ""
 "processo demora apenas um momento. Uma vez concluído, poderá iniciar sessão "
 "com a sua nova palavra-passe no seu sistema Pardus."
 
-#: src/Main.py:233
+#: src/Main.py:237
 msgid "Password Reset Completed"
 msgstr "Reposição de palavra-passe concluída"
 
-#: src/Main.py:234
+#: src/Main.py:238
 msgid ""
 "Your password has been successfully reset. You can now log in to your "
 "account with the new password."
@@ -258,11 +269,11 @@ msgstr ""
 "A sua palavra-passe foi reposta com sucesso. Pode agora iniciar sessão na "
 "sua conta com a nova palavra-passe."
 
-#: src/Main.py:243
+#: src/Main.py:247
 msgid "Updating Software Packages"
 msgstr "A atualizar pacotes de software"
 
-#: src/Main.py:244
+#: src/Main.py:248
 msgid ""
 "We're currently updating the software packages on your system to ensure you "
 "have the latest features and security enhancements. This process may take "
@@ -273,11 +284,11 @@ msgstr ""
 "recentes. Este processo pode demorar algum tempo, dependendo do número de "
 "atualizações disponíveis. Seja paciente."
 
-#: src/Main.py:254
+#: src/Main.py:258
 msgid "Software Packages Updated"
 msgstr "Pacotes de software atualizados"
 
-#: src/Main.py:255
+#: src/Main.py:259
 msgid ""
 "Your system's software packages have been successfully updated. You now have "
 "the latest features and security patches installed."
@@ -286,11 +297,11 @@ msgstr ""
 "agora instaladas as funcionalidades e as correções de segurança mais "
 "recentes."
 
-#: src/Main.py:264
+#: src/Main.py:268
 msgid "System Reinstallation"
 msgstr "Reinstalação do sistema"
 
-#: src/Main.py:265
+#: src/Main.py:269
 msgid ""
 "We're performing a clean reinstall of your system to ensure a fresh start. "
 "This process will reset your system to its original state, removing all "
@@ -300,11 +311,11 @@ msgstr ""
 "novo começo. Este processo irá repor o seu sistema no seu estado original, "
 "removendo todas as aplicações."
 
-#: src/Main.py:275
+#: src/Main.py:279
 msgid "System Reinstallation Completed"
 msgstr "Reinstalação do sistema concluída"
 
-#: src/Main.py:276
+#: src/Main.py:280
 msgid ""
 "Your system has been successfully reinstalled. Everything is now fresh and "
 "ready for you."
@@ -312,19 +323,19 @@ msgstr ""
 "O seu sistema foi reinstalado com sucesso. Tudo está agora novo e pronto "
 "para si."
 
-#: src/Main.py:282
+#: src/Main.py:286
 msgid "Detecting Partitions"
 msgstr "A detetar partições"
 
-#: src/Main.py:283
+#: src/Main.py:287
 msgid "We're scanning your system to locate available partitions."
 msgstr "Estamos a analisar o seu sistema para localizar partições disponíveis."
 
-#: src/Main.py:287
+#: src/Main.py:291
 msgid "Unable to Detect Partitions"
 msgstr "Não foi possível detetar partições"
 
-#: src/Main.py:288
+#: src/Main.py:292
 msgid ""
 "We couldn't find any partitions on your system. This could indicate a "
 "problem with your disk or partition table. Please double-check your disk "
@@ -334,15 +345,15 @@ msgstr ""
 "indicar um problema com o seu disco ou tabela de partições. Verifique "
 "novamente as ligações e a configuração do disco."
 
-#: src/Main.py:295
+#: src/Main.py:299
 msgid "Choose Partition for Filesystem Repair"
 msgstr "Escolher a partição para reparação do sistema de ficheiros"
 
-#: src/Main.py:305
+#: src/Main.py:309
 msgid "Repairing Filesystem on {}"
 msgstr "A reparar o sistema de ficheiros em {}"
 
-#: src/Main.py:306
+#: src/Main.py:310
 msgid ""
 "We're currently repairing the filesystem on the selected partition. This "
 "process may take some time, depending on the size and severity of the issues "
@@ -354,11 +365,11 @@ msgstr ""
 "dos problemas encontrados. Seja paciente enquanto trabalhamos para restaurar "
 "a funcionalidade da partição."
 
-#: src/Main.py:311
+#: src/Main.py:315
 msgid "Filesystem Repair Successful"
 msgstr "Reparação do sistema de ficheiros bem sucedida"
 
-#: src/Main.py:312
+#: src/Main.py:316
 msgid ""
 "The filesystem has been successfully repaired. Your data should now be "
 "accessible without any issues."
@@ -366,11 +377,11 @@ msgstr ""
 "O sistema de ficheiros foi reparado com sucesso. Os seus dados devem agora "
 "estar acessíveis sem quaisquer problemas."
 
-#: src/Main.py:332
+#: src/Main.py:336
 msgid "Resetting User Settings"
 msgstr "A repor as definições do utilizador"
 
-#: src/Main.py:333
+#: src/Main.py:337
 msgid ""
 "We're resetting your user configuration to its default state. This will "
 "revert any custom settings back to their original values. Please note that "
@@ -383,11 +394,11 @@ msgstr ""
 "perdidas. Uma vez concluído, o seu sistema será atualizado e estará pronto a "
 "ser utilizado."
 
-#: src/Main.py:343
+#: src/Main.py:347
 msgid "Configuration Reset Completed"
 msgstr "Reposição da configuração concluída"
 
-#: src/Main.py:344
+#: src/Main.py:348
 msgid ""
 "Great news! Your user configuration has been successfully reset to its "
 "default settings."
@@ -395,11 +406,11 @@ msgstr ""
 "Ótimas notícias! A sua configuração de utilizador foi reposta com sucesso "
 "nas predefinições."
 
-#: src/Main.py:355
+#: src/Main.py:359
 msgid "Extracting System Logs"
 msgstr "A extrair registos do sistema"
 
-#: src/Main.py:356
+#: src/Main.py:360
 msgid ""
 "We're collecting important system logs and placing them in the '{}' "
 "directory as you requested. These logs contain helpful information about "
@@ -413,11 +424,11 @@ msgstr ""
 "Dependendo da quantidade de informação existente, isto pode demorar algum "
 "tempo. Obrigado por aguardar enquanto reunimos esses dados."
 
-#: src/Main.py:366
+#: src/Main.py:370
 msgid "System Logs Extracted"
 msgstr "Registos do sistema extraídos"
 
-#: src/Main.py:367
+#: src/Main.py:371
 msgid ""
 "Great news! The system logs have been successfully extracted. This valuable "
 "information can help diagnose any issues with your system."
@@ -426,11 +437,11 @@ msgstr ""
 "informação valiosa pode ajudar a diagnosticar quaisquer problemas com o seu "
 "sistema."
 
-#: src/Main.py:373
+#: src/Main.py:377
 msgid "Entering Chroot Environment"
 msgstr "Entrando no ambiente chroot"
 
-#: src/Main.py:374
+#: src/Main.py:378
 msgid ""
 "We're accessing a special system environment called chroot at your request. "
 "This allows you to make changes as if you were working directly on your "
@@ -442,15 +453,15 @@ msgstr ""
 "diretamente no seu sistema operativo instalado. Aguarde enquanto "
 "configuramos este ambiente para atender às suas necessidades."
 
-#: src/Main.py:389
+#: src/Main.py:393
 msgid "Chroot Process Successfully Concluded"
 msgstr "Processo chroot concluído com sucesso"
 
-#: src/Main.py:390
+#: src/Main.py:394
 msgid "The chroot process has finished successfully"
 msgstr "O processo de chroot foi concluído com sucesso"
 
-#: src/Main.py:406
+#: src/Main.py:410
 msgid ""
 "Are you sure you want to continue? This action is irreversible and may cause "
 "data loss."
@@ -458,36 +469,36 @@ msgstr ""
 "Tem a certeza de que pretende continuar? Esta ação é irreversível e pode "
 "causar perda de dados."
 
-#: src/Main.py:407
+#: src/Main.py:411
 msgid "Operation Cancelled"
 msgstr "Operação cancelada"
 
-#: src/Main.py:408
+#: src/Main.py:412
 msgid "The operation has been cancelled by the user."
 msgstr "A operação foi cancelada pelo utilizador."
 
-#: src/Main.py:421 src/Main.py:426 src/Main.py:433 src/Main.py:437
-#: src/Main.py:456
+#: src/Main.py:425 src/Main.py:430 src/Main.py:437 src/Main.py:441
+#: src/Main.py:460
 msgid "An error occured"
 msgstr "Ocorreu um erro"
 
-#: src/Main.py:427
+#: src/Main.py:431
 msgid "An error occurred before the command has been executed"
 msgstr "Ocorreu um erro antes de o comando ter sido executado"
 
-#: src/Main.py:434
+#: src/Main.py:438
 msgid "An error occured while executing the command. Please check the logs"
 msgstr "Ocorreu um erro durante a execução do comando. Verifique os registos"
 
-#: src/Main.py:438
+#: src/Main.py:442
 msgid "An error occurred after the command has been executed."
 msgstr "Ocorreu um erro depois de o comando ter sido executado."
 
-#: src/Main.py:465
+#: src/Main.py:470
 msgid "Root Filesystem Missing"
 msgstr "Sistema de ficheiros root em falta"
 
-#: src/Main.py:466
+#: src/Main.py:471
 msgid ""
 "We couldn't locate the root filesystem on your system. This could be due to "
 "a disk failure, misconfiguration, or other issues. Please ensure that your "
@@ -498,23 +509,33 @@ msgstr ""
 "problemas. Certifique-se de que o seu disco está corretamente ligado e "
 "configurado."
 
-#: src/Main.py:473
+#: src/Main.py:478
 msgid "Select a root filesystem"
 msgstr "Selecionar um sistema de ficheiros root"
 
-#: src/Main.py:498
+#: src/Main.py:502
+msgid "Invalid Partition Selected"
+msgstr ""
+
+#: src/Main.py:503
+msgid ""
+"The selected partition is not a root filesystem. Please select a valid root "
+"filesystem."
+msgstr ""
+
+#: src/Main.py:506
 msgid "Root Filesystem Chosen"
 msgstr "Sistema de ficheiros root escolhido"
 
-#: src/Main.py:499
+#: src/Main.py:507
 msgid "You've selected the root filesystem for further action."
 msgstr "Selecionou o sistema de ficheiros root para ações futuras."
 
-#: src/Main.py:510
+#: src/Main.py:518
 msgid "No Users Detected"
 msgstr "Nenhum utilizador detetado"
 
-#: src/Main.py:511
+#: src/Main.py:519
 msgid ""
 "We couldn't find any users on your system. This could indicate an issue with "
 "user accounts or system configuration. Please ensure that users are properly "
@@ -525,15 +546,15 @@ msgstr ""
 "sistema. Certifique-se de que os utilizadores estão corretamente "
 "configurados."
 
-#: src/Main.py:515
+#: src/Main.py:523
 msgid "Select a user"
 msgstr "Selecionar um utilizador"
 
-#: src/Main.py:522
+#: src/Main.py:530
 msgid "User Chosen"
 msgstr "Utilizador escolhido"
 
-#: src/Main.py:523
+#: src/Main.py:531
 msgid ""
 "You've selected a user for further action. This step is important for making "
 "changes specific to the chosen user."
@@ -541,11 +562,11 @@ msgstr ""
 "Selecionou um utilizador para ações futuras. Este passo é importante para "
 "efetuar alterações específicas ao utilizador selecionado."
 
-#: src/Main.py:533
+#: src/Main.py:541
 msgid "Master Boot Record (MBR) Missing"
 msgstr "Master Boot Record (MBR) em falta"
 
-#: src/Main.py:534
+#: src/Main.py:542
 msgid ""
 "We couldn't locate the Master Boot Record (MBR) on your system. This "
 "critical component is necessary for booting your system. Please check your "
@@ -555,15 +576,15 @@ msgstr ""
 "componente crítico é necessário para arrancar o seu sistema. Verifique as "
 "ligações e a configuração do disco."
 
-#: src/Main.py:538
+#: src/Main.py:546
 msgid "Select the Master Boot Record (MBR)"
 msgstr "Selecionar o Master Boot Record (MBR)"
 
-#: src/Main.py:545
+#: src/Main.py:553
 msgid "MBR chosen"
 msgstr "MBR escolhido"
 
-#: src/Main.py:546
+#: src/Main.py:554
 msgid ""
 "You've successfully selected the Master Boot Record (MBR). This selection is "
 "essential for configuring your system's boot process."
@@ -571,25 +592,11 @@ msgstr ""
 "Seleccionou com sucesso o Master Boot Record (MBR). Esta seleção é essencial "
 "para configurar o processo de arranque do seu sistema."
 
-#: src/Main.py:574
-msgid "Searching for Root Filesystem"
-msgstr "A procurar o sistema de ficheiros root"
-
-#: src/Main.py:575
-msgid ""
-"We're searching for the root filesystem on your system. This is essential "
-"for proper system operation. Please wait while we locate the root "
-"filesystem. Thank you for your patience."
-msgstr ""
-"Estamos a procurar o sistema de ficheiros root no seu sistema. Isto é "
-"essencial para o funcionamento correto do sistema. Aguarde enquanto "
-"localizamos o sistema de ficheiros root. Obrigado pela sua paciência."
-
-#: src/Main.py:625
+#: src/Main.py:602
 msgid "Searching for Btrfs Root Filesystem Subvolume"
 msgstr "A pesquisar o subvolume do sistema de ficheiros root Btrfs"
 
-#: src/Main.py:626
+#: src/Main.py:603
 msgid ""
 "We're searching for the Btrfs root filesystem subvolume on your system. This "
 "is essential for proper system operation. Please wait while we locate the "
@@ -600,15 +607,15 @@ msgstr ""
 "enquanto localizamos o subvolume do sistema de ficheiros root Btrfs. "
 "Obrigado pela sua paciência."
 
-#: src/Main.py:638
+#: src/Main.py:615
 msgid "Enter LUKS Password"
 msgstr "Introduzir a palavra-passe LUKS"
 
-#: src/Main.py:644
+#: src/Main.py:621
 msgid "Unlocking Encrypted Device"
 msgstr "Desbloquear dispositivo encriptado"
 
-#: src/Main.py:645
+#: src/Main.py:622
 msgid ""
 "We're unlocking the encrypted device to access the data. This process may "
 "take a moment. Please wait while we unlock the device."
@@ -616,7 +623,7 @@ msgstr ""
 "Estamos a desbloquear o dispositivo encriptado para aceder aos dados. Este "
 "processo pode demorar um pouco. Aguarde enquanto desbloqueamos o dispositivo."
 
-#: src/Main.py:655
+#: src/Main.py:632
 msgid ""
 "An error occurred while unlocking the encrypted device. Please check the "
 "password and try again."
@@ -624,11 +631,11 @@ msgstr ""
 "Ocorreu um erro ao desbloquear o dispositivo encriptado. Verifique a palavra-"
 "passe e tente novamente."
 
-#: src/Main.py:685
+#: src/Main.py:662
 msgid "No Volume Groups Detected"
 msgstr "Não foram detetados grupos de volumes"
 
-#: src/Main.py:686
+#: src/Main.py:663
 msgid ""
 "We couldn't find any volume groups on your system. This could indicate an "
 "issue with your LVM configuration. Please ensure that your LVM setup is "
@@ -638,15 +645,15 @@ msgstr ""
 "indicar um problema com a sua configuração LVM. Certifique-se de que a sua "
 "configuração LVM está correta."
 
-#: src/Main.py:692
+#: src/Main.py:669
 msgid "Select a Volume Group"
 msgstr "Selecionar um grupo de volumes"
 
-#: src/Main.py:710
+#: src/Main.py:687
 msgid "No Logical Volumes Detected"
 msgstr "Não foram detetados volumes lógicos"
 
-#: src/Main.py:711
+#: src/Main.py:688
 msgid ""
 "We couldn't find any logical volumes on your system. This could indicate an "
 "issue with your LVM configuration. Please ensure that your LVM setup is "
@@ -656,25 +663,37 @@ msgstr ""
 "indicar um problema com a sua configuração LVM. Certifique-se de que a sua "
 "configuração LVM está correta."
 
-#: src/Main.py:715
+#: src/Main.py:692
 msgid "Select a Logical Volume"
 msgstr "Selecionar um volume lógico"
 
-#: src/Main.py:909
+#: src/Main.py:896
 msgid "Enter password"
 msgstr "Introduzir a palavra-passe"
 
-#: src/Main.py:916
+#: src/Main.py:903
 msgid "Re-enter password"
 msgstr "Reintroduzir a palavra-passe"
 
-#: src/Main.py:920
+#: src/Main.py:907
 msgid "Passwords do not match"
 msgstr "As palavras-passe não coincidem"
 
-#: src/Main.py:946
+#: src/Main.py:933
 msgid ""
 "This application requires root privileges to run. Please run it as root."
 msgstr ""
 "Esta aplicação requer privilégios de root para ser executada. Execute-a como "
 "root."
+
+#~ msgid "Searching for Root Filesystem"
+#~ msgstr "A procurar o sistema de ficheiros root"
+
+#~ msgid ""
+#~ "We're searching for the root filesystem on your system. This is essential "
+#~ "for proper system operation. Please wait while we locate the root "
+#~ "filesystem. Thank you for your patience."
+#~ msgstr ""
+#~ "Estamos a procurar o sistema de ficheiros root no seu sistema. Isto é "
+#~ "essencial para o funcionamento correto do sistema. Aguarde enquanto "
+#~ "localizamos o sistema de ficheiros root. Obrigado pela sua paciência."

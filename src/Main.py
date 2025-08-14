@@ -165,19 +165,22 @@ class Application(Gtk.Application):
                 return
 
             if os.path.exists("/sys/firmware/efi/efivars"):
-                clear_efi = self.ask_confirmation(
-                    "Do you want to clear efivars?")
+                clear_efi = self.ask_confirmation(_(
+                    "Do you want to clear efivars?"))
             else:
                 clear_efi = 'n'
+
+            removable= self.ask_confirmation(
+                _("On some systems, the BIOS may not detect grub until installed as a removable device. Do you want to install grub as a removable device? You should only say yes if you cannot boot into the system after installation."))
 
             self.update_status_page(_("Reinstalling GRUB Bootloader"), "content-loading-symbolic", _(
                 "We're reinstalling the GRUB boot loader to ensure your system can start up properly. This process may take a few moments. Once complete, your computer should boot into Pardus as usual."), False, False)
 
             if self.rootfs.root_subvol == None:
-                self.vte_command("env disk={} mbr={} clear_efi={} grub-reinstall".format(
-                    self.rootfs.name, self.mbr, clear_efi), post)
+                self.vte_command("env disk={} mbr={} clear_efi={} removable={} grub-reinstall".format(
+                    self.rootfs.name, self.mbr, clear_efi, removable), post)
             else:
-                self.vte_command("env subvolume={} disk={} mbr={} clear_efi={} grub-reinstall".format(
+                self.vte_command("env subvolume={} disk={} mbr={} clear_efi={} removable={} grub-reinstall".format(
                     self.rootfs.root_subvol, self.rootfs.name, self.mbr, clear_efi), post)
 
         def post():
