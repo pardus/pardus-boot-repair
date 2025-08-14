@@ -11,6 +11,8 @@ source /usr/bin/pardus-open-luks-lvm
 if [[ "$fs" == "ext4" ]] ; then
     yes "" | fsck.ext4 -f -y /dev/$disk
 
+elif [[ "$fs" == "btrfs" ]] ; then
+    yes "" | btrfs check --force --repair /dev/$disk
 else
     yes "" | fsck.$fs /dev/$disk
 fi
