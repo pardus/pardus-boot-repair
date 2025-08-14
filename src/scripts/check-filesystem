@@ -14,5 +14,5 @@ if [[ "$fs" == "ext4" ]] ; then
 elif [[ "$fs" == "btrfs" ]] ; then
     yes "" | btrfs check --force --repair /dev/$disk
 else
-    yes "" | fsck.$fs /dev/$disk
+    fsck.$fs /dev/$disk
 fi
