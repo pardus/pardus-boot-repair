@@ -465,6 +465,8 @@ class Application(Gtk.Application):
                 return self.rootfs
             self.rootfs_list = self.detect_rootfs()
             if self.rootfs_list == None or len(self.rootfs_list) == 0:
+                self.rootfs_list = self.list_partitions()
+            if self.rootfs_list == None or len(self.rootfs_list) == 0:
                 self.update_status_page(_("Root Filesystem Missing"), "dialog-error-symbolic", _(
                     "We couldn't locate the root filesystem on your system. This could be due to a disk failure, misconfiguration, or other issues. Please ensure that your disk is properly connected and configured."), True, True)
                 return None
