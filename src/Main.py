@@ -8,7 +8,6 @@ import gettext
 gi.require_version("Gtk", "3.0")
 gi.require_version("Handy", "1")
 gi.require_version("Vte", "2.91")
-from threading import Thread
 from gi.repository import Gtk, Handy, Gdk, Gio, GLib, Vte
 
 gettext.install("pardus-boot-repair", "/usr/share/locale/")
@@ -157,7 +156,7 @@ class Application(Gtk.Application):
         self.deck.set_visible_child(self.page_loading)
         self.update_status_page(_("Processing your request."), "content-loading-symbolic", _(
             "We will ask you some questions after we process your request."), False, False)
-        Thread(target=pre_function).start()
+        pre_function()
 
     def on_row_reinstall_grub_activated(self, widget):
         def pre():
@@ -181,7 +180,7 @@ class Application(Gtk.Application):
                     self.rootfs.name, self.mbr, clear_efi, removable), post)
             else:
                 self.vte_command("env subvolume={} disk={} mbr={} clear_efi={} removable={} grub-reinstall".format(
-                    self.rootfs.root_subvol, self.rootfs.name, self.mbr, clear_efi), post)
+                    self.rootfs.root_subvol, self.rootfs.name, self.mbr, clear_efi, removable), post)
 
         def post():
             self.update_status_page(_("GRUB Successfully Reinstalled"), "emblem-ok-symbolic", _(
@@ -323,7 +322,7 @@ class Application(Gtk.Application):
                 return None
 
             if pending_func != None:
-                Thread(target=pending_func, args=(None, None, part)).start()
+                pending_func(None, None, part)
 
         self.row_init_func(pre)
 
@@ -440,7 +439,7 @@ class Application(Gtk.Application):
             self.update_status_page(_("An error occured"), "dialog-error-symbolic", _(
                 "An error occurred after the command has been executed."), True, True)
             return
-        Thread(target=post_func).start()
+        post_func()
 
     def run_command(self, command: str, return_exitcode=False):
         try:
@@ -503,7 +502,7 @@ class Application(Gtk.Application):
             self.update_status_page(_("Root Filesystem Chosen"), "emblem-ok-symbolic", _(
                 "You've selected the root filesystem for further action."), False, False)
             if pending_func != None:
-                Thread(target=pending_func).start()
+                pending_func()
 
         return pre()
 
@@ -527,7 +526,7 @@ class Application(Gtk.Application):
             self.update_status_page(_("User Chosen"), "emblem-ok-symbolic", _(
                 "You've selected a user for further action. This step is important for making changes specific to the chosen user."), False, False)
             if pending_func != None:
-                Thread(target=pending_func).start()
+                pending_func()
         return pre()
 
     def get_mbr(self, widget, pending_func):
@@ -550,7 +549,7 @@ class Application(Gtk.Application):
             self.update_status_page(_("MBR chosen"), "emblem-ok-symbolic", _(
                 "You've successfully selected the Master Boot Record (MBR). This selection is essential for configuring your system's boot process."), False, False)
             if pending_func != None:
-                Thread(target=pending_func).start()
+                pending_func()
         return pre()
 
     def ask_confirmation(self, msg_text):
@@ -661,7 +660,7 @@ class Application(Gtk.Application):
                 )                
                 self.rootfs = None
                 if pending_func != None:
-                    Thread(target=pending_func).start()
+                    pending_func()
                 dialog.run()
                 dialog.destroy()
                 return
@@ -677,9 +676,9 @@ class Application(Gtk.Application):
             if part.fstype == "crypto_LUKS":
                 return
             if handler_func != None:
-                Thread(target=handler_func, args=(pending_func, part)).start()
+                handler_func(pending_func, part)
             elif pending_func != None:
-                Thread(target=pending_func).start()
+                pending_func()
         pre()
 
     def mount_lvm(self, part, handler_func=None, pending_func=None):
@@ -733,10 +732,10 @@ class Application(Gtk.Application):
 
 
             if handler_func != None:
-                Thread(target=handler_func, args=(pending_func, part)).start()
+                handler_func(pending_func, part)
             elif pending_func != None:
-                Thread(target=pending_func).start()
-        Thread(target=pre).start()
+                pending_func()
+        pre()
 
     def list_partitions(self):
         partitions = []
@@ -811,9 +810,9 @@ class Application(Gtk.Application):
             self.button_questions_continue.set_sensitive(True)
 
         def on_button_next_clicked(widget, userdata):
-            Thread(target=self.deck.set_visible_child, args=(self.page_loading,)).start()
+            self.deck.set_visible_child(self.page_loading,)
             btn_signal, btn_userdata = userdata
-            Thread(target=btn_signal, args=(widget, btn_userdata)).start()
+            btn_signal(widget, btn_userdata)
             self.button_questions_continue.disconnect_by_func(on_button_next_clicked)
 
         for child in self.carousel_questions.get_children():
@@ -860,9 +859,9 @@ class Application(Gtk.Application):
                 self.button_questions_continue.set_sensitive(True)
         
         def on_button_next_clicked(widget, userdata):
-            Thread(target=self.deck.set_visible_child, args=(self.page_loading,)).start()
+            self.deck.set_visible_child(self.page_loading,)
             btn_signal, btn_userdata = userdata
-            Thread(target=btn_signal, args=(widget, btn_userdata)).start()
+            btn_signal(widget, btn_userdata)
             self.button_questions_continue.disconnect_by_func(on_button_next_clicked)
 
         page.entry.connect("changed", input_change_event)
