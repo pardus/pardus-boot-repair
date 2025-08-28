@@ -1,22 +1,21 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# Hugo Carvalho <hugokarvalho@hotmail.com>, 2024.
+# Portuguese translation for Pardus Boot Repair.
+# Copyright (C) 2024
+# This file is distributed under the same license as the pardus-boot-repair package.
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2024, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-11 18:23+0300\n"
-"PO-Revision-Date: 2024-07-16 01:05+0100\n"
+"PO-Revision-Date: 2025-08-28 22:58+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
-"Language-Team: \n"
+"Language-Team: Portuguese\n"
 "Language: pt_PT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.6\n"
 
 #: src/data/ui/AppWindow.ui:106
 msgid "Pardus Boot Repair"
@@ -175,7 +174,7 @@ msgstr ""
 
 #: src/Main.py:170
 msgid "Do you want to clear efivars?"
-msgstr ""
+msgstr "Pretende limpar o efivars?"
 
 #: src/Main.py:175
 msgid ""
@@ -183,6 +182,10 @@ msgid ""
 "device. Do you want to install grub as a removable device? You should only "
 "say yes if you cannot boot into the system after installation."
 msgstr ""
+"Em alguns sistemas, o BIOS pode não detetar o grub até que ele seja "
+"instalado como um dispositivo removível. Pretende instalar o grub como um "
+"dispositivo removível? Só deve responder sim se não conseguir arrancar o "
+"sistema após a instalação."
 
 #: src/Main.py:177
 msgid "Reinstalling GRUB Bootloader"
@@ -515,13 +518,15 @@ msgstr "Selecionar um sistema de ficheiros root"
 
 #: src/Main.py:502
 msgid "Invalid Partition Selected"
-msgstr ""
+msgstr "Partição inválida selecionada"
 
 #: src/Main.py:503
 msgid ""
 "The selected partition is not a root filesystem. Please select a valid root "
 "filesystem."
 msgstr ""
+"A partição selecionada não é um sistema de ficheiros root. Selecione um "
+"sistema de ficheiros root válido."
 
 #: src/Main.py:506
 msgid "Root Filesystem Chosen"
@@ -685,15 +690,3 @@ msgid ""
 msgstr ""
 "Esta aplicação requer privilégios de root para ser executada. Execute-a como "
 "root."
-
-#~ msgid "Searching for Root Filesystem"
-#~ msgstr "A procurar o sistema de ficheiros root"
-
-#~ msgid ""
-#~ "We're searching for the root filesystem on your system. This is essential "
-#~ "for proper system operation. Please wait while we locate the root "
-#~ "filesystem. Thank you for your patience."
-#~ msgstr ""
-#~ "Estamos a procurar o sistema de ficheiros root no seu sistema. Isto é "
-#~ "essencial para o funcionamento correto do sistema. Aguarde enquanto "
-#~ "localizamos o sistema de ficheiros root. Obrigado pela sua paciência."
