@@ -1,3 +1,9 @@
+pardus-boot-repair (1.0.3) unstable; urgency=medium
+
+  * Fix desktop file as temporary
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 29 Sep 2025 20:10:01 +0300
+
 pardus-boot-repair (1.0.2) unstable; urgency=medium
 
   [ Edip Hazuri ]
