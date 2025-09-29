@@ -1,3 +1,18 @@
+pardus-boot-repair (1.0.2) unstable; urgency=medium
+
+  [ Edip Hazuri ]
+  * feat: grub: ask for removable parameter
+  * fix: make efivars confirmation lable
+  * chore: update translations
+
+  [ aliriza ]
+  * add fallback mechanism for rootfs detection failture
+  * btrfs support added in check_filesystem
+  * remove threading
+  * promt filesystem check fix
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Mon, 29 Sep 2025 16:42:29 +0300
+
 pardus-boot-repair (1.0.1) unstable; urgency=medium
 
   [ Ali Riza KESKIN ]
