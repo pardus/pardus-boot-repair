@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 mkdir -p /source /target
 mount /dev/loop0 /source
 while [[ ! -b /dev/$mbr ]] ; do
@@ -6,14 +7,17 @@ while [[ ! -b /dev/$mbr ]] ; do
     echo -n "Grub disk >>> "
     read mbr
 done
+export DESTDIR=/target
 source /usr/bin/pardus-mount-rootfs
+
+old="/target/pardus.old"
+new="/target"
 
 if [[ -d $old ]] ; then
     rm -rf "$old"
 fi
-mkdir -p /target/pardus.old
-old="/target/pardus.old"
-new="/target"
+mkdir -p "$old"
+
 mv $new/* $old/ || true
 cp -prvf /source/* /target/
 sync
