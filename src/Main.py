@@ -120,11 +120,11 @@ class Application(Gtk.Application):
         self.btn_copy_logs.set_visible(False)
 
     def on_button_copy_logs_clicked(self, widget):
-        alltext, attrlist = self.vte_terminal.get_text_range(
+        text = self.vte_terminal.get_text_range(
             0, 0, self.vte_terminal.get_scrollback_lines(), self.vte_terminal.get_column_count())
 
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        clipboard.set_text(alltext.strip(), -1)
+        clipboard.set_text(str(text).strip(), -1)
         clipboard.store()
 
     def on_row_advanced_options_activated(self, widget):
