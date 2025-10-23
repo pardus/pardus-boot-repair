@@ -28,6 +28,7 @@ class Application(Gtk.Application):
             application_id="tr.org.pardus.boot-repair",
             **kwargs
         )
+        GLib.set_prgname("tr.org.pardus-boot-repair")
 
         # main
         self.builder = Gtk.Builder()

@@ -13,3 +13,4 @@ Icon=pardus-boot-repair
 Terminal=false
 Type=Application
 Categories=System;X-Pardus-Apps;
+StartupWMClass="tr.org.pardus-boot-repair"
