@@ -1,3 +1,13 @@
+pardus-boot-repair (1.0.4) unstable; urgency=medium
+
+  [ Ali Riza KESKIN ]
+  * fix reinstall script
+  * convert string vte terminal text before copy
+  * fix deprecated function
+  * fix gnome wayland icon issue
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 24 Oct 2025 14:38:56 +0300
+
 pardus-boot-repair (1.0.3) unstable; urgency=medium
 
   * Fix desktop file as temporary
