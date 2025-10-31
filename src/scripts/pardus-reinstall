@@ -29,13 +29,15 @@ for user in $(grep $old/etc/passwd -e ":x:[0-9][0-9][0-9][0-9]:[0-9][0-9][0-9][0
         chroot $new usermod -a -G "$group" "$user" || true
     done
 done
-mv $old/home/* $new/home/ || true
+rmdir $new/home
+mv $old/home/ $new/home/ || true
 cat $old/etc/default/keyboard > $new/etc/default/keyboard
 cat $old/etc/timezone > $new/etc/timezone
 cat $old/etc/default/locale > $new/etc/default/locale
 cat $old/etc/locale.gen > $new/etc/locale.gen
 cat $old/etc/hostname > $new/etc/hostname
 cat $old/etc/hosts > $new/etc/hosts
+cat $opt/etc/apt/sources.list > $new/etc/apt/sources.list
 chroot $new locale-gen
 chroot $new apt purge live-* -yq
 bash /usr/lib/live-installer/scripts/fetch-pkg-debian.sh || true
