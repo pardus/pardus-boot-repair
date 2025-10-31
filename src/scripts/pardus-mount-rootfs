@@ -26,7 +26,7 @@ umount -lf /dev/$disk 2>/dev/null  || true
 fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n')"
 
 source /usr/bin/pardus-open-luks-lvm
-
+set -e
 mount /dev/$disk "$DESTDIR"
 
 # btrfs subvolumes

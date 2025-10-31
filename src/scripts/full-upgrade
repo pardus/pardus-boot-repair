@@ -2,13 +2,14 @@
 set +e
 DESTDIR=$(mktemp -d)
 source /usr/bin/pardus-mount-rootfs
-
 [[ ! -d "$DESTDIR"/var/lib/dpkg ]] && exit 1
 cat /etc/apt/sources.list > "$DESTDIR"/etc/apt/sources.list
 rm -rf "$DESTDIR"/etc/apt/sources.list.d
 mkdir -p "$DESTDIR"/etc/apt/sources.list.d
 rm -rf "$DESTDIR"/var/lib/apt/lists/*
 export DEBIAN_FRONTEND=noninteractive
+
+set -e
 chroot "$DESTDIR" apt-get update -y
 chroot "$DESTDIR" apt-get install -f -o Dpkg::Options::="--force-confnew" -y
 chroot "$DESTDIR" apt-get full-upgrade -o Dpkg::Options::="--force-confnew" -y

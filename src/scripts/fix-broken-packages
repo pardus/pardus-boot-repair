@@ -3,7 +3,7 @@ set +e
 DESTDIR=$(mktemp -d)
 
 source /usr/bin/pardus-mount-rootfs
-
+set -e
 [[ ! -d "$DESTDIR"/var/lib/dpkg ]] && exit 1
 rm -rf "$DESTDIR"/etc/apt/sources.list.d
 mkdir -p "$DESTDIR"/etc/apt/sources.list.d

@@ -39,6 +39,8 @@ for kernel in $(ls "$DESTDIR"/lib/modules) ; do
 done
 chroot "$DESTDIR" apt update || true
 chroot "$DESTDIR" apt install --reinstall ${legacy:+grub-pc-bin} ${efi64:+grub-efi-amd64-bin} ${efi32:+grub-efi-ia32-bin} grub-common -yq || true
+
+set -e
 chroot "$DESTDIR" grub-install --force /dev/$mbr $removable_arg
 
 # EFI hack for hardcoded winzort bootloader bioses.
