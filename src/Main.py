@@ -174,9 +174,9 @@ class Application(Gtk.Application):
                 clear_efi = self.ask_confirmation(_(
                     "Do you want to clear efivars?"))
             else:
-                clear_efi = 'n'
+                clear_efi = False
 
-            removable= self.ask_confirmation(
+            removable = self.ask_confirmation(
                 _("On some systems, the BIOS may not detect grub until installed as a removable device. Do you want to install grub as a removable device? You should only say yes if you cannot boot into the system after installation."))
 
             self.update_status_page(_("Reinstalling GRUB Bootloader"), "content-loading-symbolic", _(
@@ -184,10 +184,17 @@ class Application(Gtk.Application):
 
             if self.rootfs.root_subvol == None:
                 self.vte_command("env disk={} mbr={} clear_efi={} removable={} grub-reinstall".format(
-                    self.rootfs.name, self.mbr, clear_efi, removable), post)
+                    self.rootfs.name,
+                    self.mbr,
+                    "y" if clear_efi else "N",
+                    "y" if removable else "N"), post)
             else:
                 self.vte_command("env subvolume={} disk={} mbr={} clear_efi={} removable={} grub-reinstall".format(
-                    self.rootfs.root_subvol, self.rootfs.name, self.mbr, clear_efi, removable), post)
+                    self.rootfs.root_subvol,
+                    self.rootfs.name,
+                    self.mbr,
+                    "y" if clear_efi else "N",
+                    "y" if removable else "N"), post)
 
         def post():
             self.update_status_page(_("GRUB Successfully Reinstalled"), "emblem-ok-symbolic", _(
