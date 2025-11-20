@@ -1,3 +1,12 @@
+pardus-boot-repair (1.0.5) unstable; urgency=medium
+
+  [ Ali Riza KESKIN ]
+  * fix script fail checks
+  * fix btrfs /@home reinstall issue
+  * fix clear_efi and removable ask
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 20 Nov 2025 16:12:52 +0300
+
 pardus-boot-repair (1.0.4) unstable; urgency=medium
 
   [ Ali Riza KESKIN ]
