@@ -654,7 +654,7 @@ class Application(Gtk.Application):
         def pre():
             self.luks_page = self.new_page_input(
                 _("Enter LUKS Password"), after_userdata, (part, handler_func, pending_func))
-        
+
         def after_userdata(widget, userdata):
             password = self.luks_page.entry.get_text()
             part, handler_func, pending_func = userdata
@@ -662,8 +662,9 @@ class Application(Gtk.Application):
             self.update_status_page(_("Unlocking Encrypted Device"), "content-loading-symbolic", _(
                 "We're unlocking the encrypted device to access the data. This process may take a moment. Please wait while we unlock the device."), False, False)
 
-            output, exit_code = self.run_command('echo {} | cryptsetup luksOpen {} luks-{}'.format(password, part.path, part.name), True)
-            if exit_code != 0:
+            p = subprocess.Popen(["cryptsetup", "luksOpen", part.path, f"luks-{part.name}"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            p.communicate(f"{password}\n".encode("utf-8"))
+            if p.returncode != 0:
                 dialog = Gtk.MessageDialog(
                     parent=self.window,
                     modal=True,
@@ -671,7 +672,7 @@ class Application(Gtk.Application):
                     message_type=Gtk.MessageType.ERROR,
                     buttons=Gtk.ButtonsType.OK,
                     text=_("An error occurred while unlocking the encrypted device. Please check the password and try again.")
-                )                
+                )
                 self.rootfs = None
                 if pending_func != None:
                     pending_func()
