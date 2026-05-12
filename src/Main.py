@@ -831,7 +831,7 @@ class Application(Gtk.Application):
                 cryptsetup luksClose "$m" 2>/dev/null || true
             done
             vgchange -ay
-            lvchange -ay
+            lvchange -ay $(lvs --noheadings -o lv_path) 2>/dev/null || true
         """)
 
     def new_page_listbox(self, label_text, row_titles, row_subtitles, btn_next_clicked_signal, btn_next_userdata=None):
