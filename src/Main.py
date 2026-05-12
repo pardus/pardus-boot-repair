@@ -759,6 +759,7 @@ class Application(Gtk.Application):
         pre()
 
     def list_partitions(self):
+        self.reset_lvm_luks()
         partitions = []
 
         for block in os.listdir('/sys/block/'):
@@ -821,6 +822,17 @@ class Application(Gtk.Application):
                 continue
             mbrs.append(mbr)
         return mbrs
+
+    def reset_lvm_luks(self):
+        self.run_command("""
+            for m in $(ls /dev/mapper | grep -v '^control$'); do
+                cryptsetup luksClose "$m" 2>/dev/null || true
+            done
+            lvchange -an $(lvs --noheadings -o lv_path) 2>/dev/null || true
+            vgchange -an $(vgs --noheadings -o vg_name) 2>/dev/null || true
+            vgchange -ay
+            lvchange -ay
+        """)
 
     def new_page_listbox(self, label_text, row_titles, row_subtitles, btn_next_clicked_signal, btn_next_userdata=None):
         page = Questions_page_listbox()
