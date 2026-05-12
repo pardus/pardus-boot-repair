@@ -1,3 +1,10 @@
+pardus-boot-repair (1.0.7) UNRELEASED; urgency=medium
+
+  * lvm related security issues fixed.
+  * operating system search improvements.
+
+ -- Ali Riza KESKIN <aliriza.keskin@pardus.org.tr>  Tue, 12 May 2026 16:26:31 +0300
+
 pardus-boot-repair (1.0.6) unstable; urgency=medium
 
   [ Ali Riza KESKIN ]
