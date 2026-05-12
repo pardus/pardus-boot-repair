@@ -37,14 +37,11 @@ def search_operating_system():
     parts = []
     for block in os.listdir("/sys/block/"):
         if not block[-1].isnumeric():
+            for part in os.listdir(f"/sys/block/{block}"):
+                if part[-1].isnumeric():
+                    parts.append(part)
             continue
-        if "loop" in block:
-            continue
-        if "zram" in block:
-            continue
-        if "fd" in block:
-            continue
-        if "sr" in block:
+        if block.startswith(('loop', 'sr', 'zram', 'fd')):
             continue
         parts.append(block)
     # scan

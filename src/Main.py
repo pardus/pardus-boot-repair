@@ -10,6 +10,9 @@ gi.require_version("Handy", "1")
 gi.require_version("Vte", "2.91")
 from gi.repository import Gtk, Handy, Gdk, Gio, GLib, Vte
 
+from importlib.machinery import SourceFileLoader
+search_operating_system = SourceFileLoader("search_operating_systems", "/usr/bin/search-operating-system").load_module()
+
 gettext.install("pardus-boot-repair", "/usr/share/locale/")
 Handy.init()
 
@@ -581,9 +584,12 @@ class Application(Gtk.Application):
         return response == Gtk.ResponseType.YES
 
     def get_operating_system(self, partitions):
+        found_oses=search_operating_system.search_operating_system()
         for part in partitions:
-            part.operating_system = self.run_command(
-                'env parts={} search-operating-system'.format(part.name)).split(":")[0].replace('"', '').strip()
+            for found_os in found_oses:
+                if found_os["part"] == f"/dev/{part.name}":
+                    part.operating_system = (found_os["os"] or found_os["label"] or "Unknown")
+
         return partitions
 
     def detect_rootfs(self):
@@ -756,7 +762,7 @@ class Application(Gtk.Application):
         partitions = []
 
         for block in os.listdir('/sys/block/'):
-            if block.startswith(('loop', 'sr', 'zram')):
+            if block.startswith(('loop', 'sr', 'zram', 'fd')):
                 continue
 
             if os.path.exists('/sys/block/{}/removable'.format(block)) and open('/sys/block/{}/removable'.format(block)).read().strip() == "1":
