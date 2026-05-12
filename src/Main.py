@@ -825,6 +825,7 @@ class Application(Gtk.Application):
 
     def reset_lvm_luks(self):
         self.run_command("""
+            umount -R -f /media/*/*
             lvchange -an $(lvs --noheadings -o lv_path) 2>/dev/null || true
             vgchange -an $(vgs --noheadings -o vg_name) 2>/dev/null || true
             for m in $(ls /dev/mapper | grep -v '^control$'); do
