@@ -1,38 +1,80 @@
-#!/usr/bin/env bash
-grep "boot=live" "/proc/cmdline" &>/dev/null || exit 1
-if [ -z $parts ]; then
-    parts=$(ls /sys/block/* | grep "[0-9]$" | grep -v "loop") $(ls /dev/dm-* | cut -f 3 -d "/")
-fi
+#!/usr/bin/env python3
+import os
+import subprocess
+import uuid
 
-for part in $parts; do
-    tmpdir=$(mktemp -d)
-    umount -lf /dev/$part 2>/dev/null
-    type=$(blkid -o value -s TYPE /dev/$part)
-    timeout 3 mount -o defaults,ro /dev/$part $tmpdir 2>/dev/null
-    for device in $(ls /dev/disk/by-label/) ; do
-        if [[ "$(basename $(readlink /dev/disk/by-label/$device))" == "$part" ]] ; then
-            label="$device"
-        fi
-    done
-    if [[ -f "$tmpdir/etc/os-release" ]] ; then
-        distro=$(cat $tmpdir/etc/os-release | grep "^NAME" | sed "s/.*=//g")
-        echo "$distro: /dev/$part"
-    elif [[ -f "$tmpdir/Windows/System32/ntoskrnl.exe" ]] ; then
-        echo "Windows: /dev/$part"
-    elif [[ -f $tmpdir/EFI/Microsoft/Boot/bootmgfw.efi ]] ; then
-        echo "Windows-EFI: /dev/$part"
-    elif [[ -f $tmpdir/EFI/pardus/grubx64.efi ]] ; then
-        echo "Pardus-EFI: /dev/$part"
-    elif [[ -f $tmpdir/EFI/ ]] ; then
-        echo "EFI: /dev/$part"
-    elif [[ "$label" != "" ]] ; then
-        echo "$label: /dev/$part"
-    elif [[ "$type" != "" ]] ; then
-        echo "$type: /dev/$part"
-    else
-        echo "unknown: /dev/$part"
-    fi
-    umount -lf -R $tmpdir 2>/dev/null
-done
 
-exit 0
+def get_part_label(block):
+    for device in os.listdir("/dev/disk/by-label/"):
+        if block == os.path.basename(os.readlink(f"/dev/disk/by-label/{device}")):
+            return device
+
+def detect_os(path):
+    if os.path.isfile(f"{path}/etc/os-release"):
+        with open(f"{path}/etc/os-release", "r") as f:
+            for line in f.readlines():
+                if line.startswith("NAME="):
+                    distro = line.split("=")[1].strip()
+                    if distro[0] == '"' and distro[-1] == '"':
+                        distro = distro[1:-1]
+                    return distro
+    elif os.path.isfile(f"{path}/Windows/System32/ntoskrnl.exe"):
+        return "Windows"
+    elif os.path.isfile(f"{path}/EFI/pardus/grubx64.efi"):
+        return "Pardus (EFI)"
+    elif os.path.isfile(f"{path}/EFI/Microsoft/Boot/bootmgfw.efi"):
+        return "Windows (EFI)"
+    elif os.path.isfile(f"{path}/EFI"):
+        return "EFI"
+    return None
+
+def search_operating_system():
+    # check live
+    with open("/proc/cmdline", "r") as f:
+        if not "boot=live" in f.read():
+            return []
+    # list parts
+    parts = []
+    for block in os.listdir("/sys/block/"):
+        if not block[-1].isnumeric():
+            continue
+        if "loop" in block:
+            continue
+        if "zram" in block:
+            continue
+        if "fd" in block:
+            continue
+        if "sr" in block:
+            continue
+        parts.append(block)
+    # scan
+    ret = []
+    for part in parts:
+        tmpdir = "/tmp/{}".format(uuid.uuid4())
+        os.mkdir(tmpdir)
+        subprocess.run(
+            ["mount", "-t", "auto", "-o", "defaults,ro", f"/dev/{part}", tmpdir],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        found_label = get_part_label(f"/dev/{part}")
+        found_os = detect_os(tmpdir)
+        info = {"os":found_os, "label":found_label, "part": f"/dev/{part}"}
+        ret.append(info)
+        subprocess.run(
+            ["umount", "-lf", tmpdir],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        os.rmdir(tmpdir)
+    return ret
+
+if __name__ == "__main__":
+    oses = search_operating_system()
+    for info in oses:
+        if info["os"]:
+            print("{}: {}".format(info["os"], info["part"]))
+        elif info["label"]:
+            print("{}: {}".format(info["label"], info["part"]))
+        else:
+            print("Unknown: {}".format(info["part"]))
