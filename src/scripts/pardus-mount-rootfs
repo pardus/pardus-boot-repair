@@ -58,10 +58,13 @@ while IFS= read -r line; do
     MOUNTPOINT=$(echo "$line" | awk '{print $2}')
     FSTYPE=$(echo "$line" | awk '{print $3}')
     OPTIONS=$(echo "$line" | awk '{print $4}')
+    if [[ ${DEVICE:0:5} == "UUID=" ]]; then
+        DEVICE=/dev/disk/by-uuid/${DEVICE:5}
+    fi
     [[ -z $OPTIONS || -z $MOUNTPOINT || -z $FSTYPE || -z $DEVICE ]] && continue
     
-    if [[ $FSTYPE == 'btrfs' && $MOUNTPOINT != '/' ]]; then
-        mount -t "$FSTYPE" -o "$OPTIONS" "$DEVICE" "$DESTDIR/$MOUNTPOINT"
+    if [[ $MOUNTPOINT != '/' ]]; then
+        mount -t "$FSTYPE" -o "$OPTIONS" "$DEVICE" "$DESTDIR/$MOUNTPOINT" || true
     fi
 done < "$DESTDIR/etc/fstab"
 
