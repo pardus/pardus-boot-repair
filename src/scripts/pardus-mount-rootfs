@@ -51,22 +51,28 @@ for path in dev dev/pts proc sys; do
 done
 
 # mount other btrfs subvolumes from fstab
-while IFS= read -r line; do
-    [[ "$line" =~ ^#.*$ ]] && continue
-    [[ -z "$line" ]] && continue
-    DEVICE=$(echo "$line" | awk '{print $1}')
-    MOUNTPOINT=$(echo "$line" | awk '{print $2}')
-    FSTYPE=$(echo "$line" | awk '{print $3}')
-    OPTIONS=$(echo "$line" | awk '{print $4}')
-    if [[ ${DEVICE:0:5} == "UUID=" ]]; then
-        DEVICE=/dev/disk/by-uuid/${DEVICE:5}
-    fi
-    [[ -z $OPTIONS || -z $MOUNTPOINT || -z $FSTYPE || -z $DEVICE ]] && continue
-    
-    if [[ $MOUNTPOINT != '/' ]]; then
-        mount -t "$FSTYPE" -o "$OPTIONS" "$DEVICE" "$DESTDIR/$MOUNTPOINT" || true
-    fi
-done < "$DESTDIR/etc/fstab"
+if [[ -f "$DESTDIR/etc/fstab" ]]; then
+    while IFS= read -r line; do
+        [[ "$line" =~ ^#.*$ ]] && continue
+        [[ -z "$line" ]] && continue
+        DEVICE=$(echo "$line" | awk '{print $1}')
+        MOUNTPOINT=$(echo "$line" | awk '{print $2}')
+        FSTYPE=$(echo "$line" | awk '{print $3}')
+        OPTIONS=$(echo "$line" | awk '{print $4}')
+        if [[ ${DEVICE:0:5} == "UUID=" ]]; then
+            DEVICE=/dev/disk/by-uuid/${DEVICE:5}
+        elif [[ ${DEVICE:0:6} == "LABEL=" ]]; then
+            DEVICE=/dev/disk/by-label/${DEVICE:6}
+        elif [[ ${DEVICE:0:9} == "PARTUUID=" ]]; then
+            DEVICE=/dev/disk/by-partuuid/${DEVICE:9}
+        fi
+        [[ -z $OPTIONS || -z $MOUNTPOINT || -z $FSTYPE || -z $DEVICE ]] && continue
+        
+        if [[ $MOUNTPOINT != '/' ]]; then
+            mount -t "$FSTYPE" -o "$OPTIONS" "$DEVICE" "$DESTDIR/$MOUNTPOINT" || true
+        fi
+    done < "$DESTDIR/etc/fstab"
+fi
 
 cp -L /etc/resolv.conf "$DESTDIR/etc/resolv.conf"
 

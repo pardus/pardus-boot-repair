@@ -7,12 +7,13 @@ import uuid
 def get_part_label(block):
     if not os.path.isdir("/dev/disk/by-label"):
         return None
+    block_name = os.path.basename(block)
     try:
         for device in os.listdir("/dev/disk/by-label/"):
             target_path = f"/dev/disk/by-label/{device}"
             if os.path.islink(target_path):
                 try:
-                    if block == os.path.basename(os.readlink(target_path)):
+                    if block_name == os.path.basename(os.readlink(target_path)):
                         return device
                 except OSError:
                     continue

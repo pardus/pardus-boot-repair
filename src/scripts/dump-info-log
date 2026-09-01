@@ -20,10 +20,16 @@ zip "$target/system-log" \
     "$DESTDIR"/etc/hosts \
     "$DESTDIR"/etc/apt/sources.list \
     "$DESTDIR"/etc/apt/sources.list.d/* \
-    "$DESTDIR"/var/log/auth.log \
     "$DESTDIR"/var/log/Xorg.0.log \
     "$DESTDIR"/var/lib/dpkg/status \
-    "$DESTDIR"/var/log/lightdm/lightdm.log \
     "$DESTDIR"/var/log/apt/*.log \
     "$DESTDIR"/var/log/lightdm/lightdm.log \
     "$DESTDIR"/boot/grub/grub.cfg
+
+sync
+for dir in dev/pts dev sys proc ; do
+    while umount -lf "$DESTDIR/$dir" 2>/dev/null; do : ;done
+done
+umount -lf "$DESTDIR" 2>/dev/null
+[ -d "$DESTDIR" ] && rmdir "$DESTDIR" 2>/dev/null || true
+

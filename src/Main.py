@@ -10,8 +10,23 @@ gi.require_version("Handy", "1")
 gi.require_version("Vte", "2.91")
 from gi.repository import Gtk, Handy, Gdk, Gio, GLib, Vte
 
-from importlib.machinery import SourceFileLoader
-search_operating_system = SourceFileLoader("search_operating_systems", "/usr/bin/search-operating-system").load_module()
+import importlib.util
+
+def _load_search_os_module():
+    search_os_path = "/usr/bin/search-operating-system"
+    if not os.path.isfile(search_os_path):
+        local_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "scripts", "search-operating-system")
+        if os.path.isfile(local_path):
+            search_os_path = local_path
+    if os.path.isfile(search_os_path):
+        spec = importlib.util.spec_from_file_location("search_operating_systems", search_os_path)
+        if spec and spec.loader:
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod
+    return None
+
+search_operating_system = _load_search_os_module()
 
 gettext.install("pardus-boot-repair", "/usr/share/locale/")
 Handy.init()
@@ -614,7 +629,7 @@ class Application(Gtk.Application):
         return response == Gtk.ResponseType.YES
 
     def get_operating_system(self, partitions):
-        found_oses=search_operating_system.search_operating_system()
+        found_oses = search_operating_system.search_operating_system() if search_operating_system else []
         for part in partitions:
             for found_os in found_oses:
                 if found_os["part"] == f"/dev/{part.name}":
