@@ -16,8 +16,16 @@ search_operating_system = SourceFileLoader("search_operating_systems", "/usr/bin
 gettext.install("pardus-boot-repair", "/usr/share/locale/")
 Handy.init()
 
-APPVERSION = "1.0.1"
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
+
+APPVERSION = "unknown"
+try:
+    with open(
+        os.path.join(APP_DIR, "__version__"), encoding="utf-8"
+    ) as version_file:
+        APPVERSION = version_file.readline().strip() or APPVERSION
+except OSError:
+    pass
 
 resource = Gio.resource_load(
     APP_DIR + "/data/tr.org.pardus.boot-repair.gresource")
