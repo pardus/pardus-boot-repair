@@ -62,7 +62,8 @@ while IFS= read -r line; do
         DEVICE=/dev/disk/by-uuid/${DEVICE:5}
     fi
     [[ -z $OPTIONS || -z $MOUNTPOINT || -z $FSTYPE || -z $DEVICE ]] && continue
-    
+
+    MOUNTPOINT=$(realpath "$MOUNTPOINT")
     if [[ $MOUNTPOINT != '/' ]]; then
         mount -t "$FSTYPE" -o "$OPTIONS" "$DEVICE" "$DESTDIR/$MOUNTPOINT" || true
     fi
