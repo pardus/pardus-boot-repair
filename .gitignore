@@ -136,3 +136,4 @@ cython_debug/
 
 src/data/*.gresource
 src/data/ui/*.ui~
+src/__version__

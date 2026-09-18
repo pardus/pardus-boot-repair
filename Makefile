@@ -8,11 +8,11 @@ POLKIT_DIR := $(DESTDIR)$(PREFIX)/share/polkit-1/actions
 LOCALE_DIR := $(DESTDIR)$(PREFIX)/share/locale
 DESKTOP_DIR := $(DESTDIR)$(PREFIX)/share/applications
 
-.PHONY: all build install buildmo pot gresource clean run
+.PHONY: all build install buildmo pot gresource version clean run
 
 all: build
 
-install: gresource
+install: gresource version
 	install -d $(BIN_DIR)
 	install pardus-boot-repair $(BIN_DIR)
 	install src/scripts/* $(BIN_DIR)
@@ -31,7 +31,7 @@ install: gresource
 		install mo/$$lang.mo $(LOCALE_DIR)/$$lang/LC_MESSAGES/pardus-boot-repair.mo; \
 	done
 
-build: gresource buildmo
+build: gresource buildmo version
 
 gresource:
 	(cd src/data && glib-compile-resources tr.org.pardus.boot-repair.gresource.xml)
@@ -44,6 +44,9 @@ buildmo:
 		msgfmt -o mo/$$lang.mo $$file; \
 	done
 
+version:
+	sed -n '1s/^[^(]*(\([^)]*\)).*/\1/p' debian/changelog > src/__version__
+
 pot:
 	xgettext -o po/pardus-boot-repair.pot --from-code=utf-8 src/data/ui/*.ui src/*.py
 	@for file in $(wildcard po/*.po); do \
@@ -53,8 +56,8 @@ pot:
 	done
 
 clean:
-	rm -f src/data/tr.org.pardus.boot-repair.gresource
+	rm -f src/data/tr.org.pardus.boot-repair.gresource src/__version__
 	rm -rf mo
 
-run: gresource
+run: gresource version
 	python3 src/Main.py
