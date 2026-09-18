@@ -1,3 +1,16 @@
+pardus-boot-repair (1.0.9) unstable; urgency=medium
+
+  [ jankesec ]
+  * Fix partition discovery on NVMe/eMMC drives and script bugs
+
+  [ Ali Riza KESKIN ]
+  * fix: check mountpoint for overflowing from destdir.
+
+  [ Özcan ]
+  * fix: report correct application version in About dialog
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Fri, 18 Sep 2026 11:43:31 +0300
+
 pardus-boot-repair (1.0.8) unstable; urgency=medium
 
   [ Ali Riza KESKIN ]
