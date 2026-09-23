@@ -8,7 +8,8 @@ while [[ ! -b /dev/$mbr ]] ; do
     read mbr
 done
 export DESTDIR=/target
-source /usr/bin/pardus-mount-rootfs
+
+/usr/bin/pardus-mount-rootfs
 
 old="/target/pardus.old"
 new="/target"

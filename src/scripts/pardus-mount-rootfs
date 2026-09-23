@@ -20,13 +20,13 @@ def check_block_devices():
         sys.exit(1)
 
 def get_destdir():
-    destdir = os.environ.get('DESTDIR', '')
+    destdir = os.environ.get('DESTDIR', None)
     if not destdir or not os.path.isdir(destdir):
         destdir = tempfile.mkdtemp()
     return destdir
 
 def get_rootfs_partition():
-    disk = ""
+    disk = os.environ.get("disk", None)
     while True:
         device_path = f"/dev/{disk}" if disk else ""
         if disk and os.path.exists(device_path):

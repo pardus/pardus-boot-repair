@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set +e
-DESTDIR=$(mktemp -d)
+export DESTDIR=$(mktemp -d)
 while [[ ! -b /dev/$mbr ]] ; do
     echo $(ls /sys/block/ | grep -v "loop")
     echo -n "Grub disk >>> "
     read mbr
 done
-source /usr/bin/pardus-mount-rootfs
+/usr/bin/pardus-mount-rootfs
 
 if [[ -d /sys/firmware/efi/ ]]
 then

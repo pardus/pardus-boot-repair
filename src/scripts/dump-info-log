@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 target="$1"
-DESTDIR=$(mktemp -d)
+export DESTDIR=$(mktemp -d)
 if [[ "$1" == "" ]] ; then
     echo -n "Enter the target directory to save the logs to: "
     read target
 fi
-source /usr/bin/pardus-mount-rootfs
+/usr/bin/pardus-mount-rootfs
 
 zip "$target/system-log" \
     "$DESTDIR"/var/log/auth.log \
