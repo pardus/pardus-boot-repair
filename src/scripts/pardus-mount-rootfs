@@ -1,76 +1,146 @@
-#!/usr/bin/env bash
-set +e
+#!/usr/bin/env python3
+import os
+import sys
+import glob
+import re
+import stat
+import shutil
+import subprocess
+import tempfile
 
-if [[ $EUID -ne 0 ]]; then
-    echo "This script must be run as root"
-    exit 1
-fi
+def check_root():
+    if os.geteuid() != 0:
+        print("This script must be run as root")
+        sys.exit(1)
 
-if [[ $(ls /sys/block/* | grep "[0-9]$" | wc -l) -eq 0 ]]; then
-    echo "No block devices found"
-    exit 1
-fi
+def check_block_devices():
+    devices = [d for d in glob.glob('/sys/block/*') if re.search(r'[0-9]$', d)]
+    if len(devices) == 0:
+        print("No block devices found")
+        sys.exit(1)
 
-# check if $DESTDIR is a valid directory
-if [[ ! -d $DESTDIR ]]; then
-    DESTDIR=$(mktemp -d)
-fi
+def get_destdir():
+    destdir = os.environ.get('DESTDIR', '')
+    if not destdir or not os.path.isdir(destdir):
+        destdir = tempfile.mkdtemp()
+    return destdir
 
-while [[ ! -b /dev/$disk ]]; do
-    echo $(ls /sys/block/* | grep "[0-9]$")
-    echo -n "Rootfs partition >>> "
-    read disk
-done
+def get_rootfs_partition():
+    disk = ""
+    while True:
+        device_path = f"/dev/{disk}" if disk else ""
+        if disk and os.path.exists(device_path):
+            try:
+                mode = os.stat(device_path).st_mode
+                if stat.S_ISBLK(mode):
+                    break
+            except OSError:
+                pass
+        
+        devices = [os.path.basename(d) for d in glob.glob('/sys/block/*') if re.search(r'[0-9]$', d)]
+        print(" ".join(devices))
+        disk = input("Rootfs partition >>> ").strip()
+    return disk
 
-umount -lf /dev/$disk 2>/dev/null  || true
-fs="$(lsblk -no FSTYPE /dev/$disk | tr -d '\n')"
+def unmount_and_get_fs(disk):
+    device_path = f"/dev/{disk}"
+    subprocess.run(["umount", "-lf", device_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    proc = subprocess.run(["lsblk", "-no", "FSTYPE", device_path], capture_output=True, text=True)
+    return proc.stdout.replace('\n', '').strip()
 
-source /usr/bin/pardus-open-luks-lvm
-set -e
-mount /dev/$disk "$DESTDIR"
+def load_luks_lvm():
+    script_path = "/usr/bin/pardus-open-luks-lvm"
+    if os.path.exists(script_path):
+        subprocess.run(["bash", script_path])
 
-# btrfs subvolumes
-if [[ $fs == 'btrfs' ]]; then
-    if [[ $(btrfs subvolume list "$DESTDIR" | wc -l) -eq 0 ]]; then
-        echo "No subvolumes found"
-    else
-        if [ -z ${subvolume+x} ]; then
-            while [[ -z ${subvolume+x} ]]; do
-                echo $(btrfs subvolume list "$DESTDIR" | awk '{print $9}')
-                echo -n "Rootfs Subvolume >>> "
-                read subvolume
-            done
-        fi
-        umount "$DESTDIR" -f -l
-        mount -o subvol="$subvolume" /dev/$disk "$DESTDIR"
-    fi
-fi
+def mount_rootfs(disk, destdir):
+    subprocess.run(["mount", f"/dev/{disk}", destdir], check=True)
 
-for path in dev dev/pts proc sys; do
-    mount --bind "/$path" "$DESTDIR/$path"
-done
+def handle_btrfs(disk, destdir, fs):
+    if fs != 'btrfs':
+        return
+        
+    proc = subprocess.run(["btrfs", "subvolume", "list", destdir], capture_output=True, text=True)
+    lines = [line for line in proc.stdout.splitlines() if line.strip()]
+    
+    if len(lines) == 0:
+        print("No subvolumes found")
+        return
+        
+    subvolume = os.environ.get('subvolume')
+    if subvolume is None:
+        while subvolume is None or subvolume == "":
+            subvols = []
+            for line in lines:
+                parts = line.split()
+                if len(parts) >= 9:
+                    subvols.append(parts[8])
+            print(" ".join(subvols))
+            subvolume = input("Rootfs Subvolume >>> ").strip()
+            
+        subprocess.run(["umount", "-f", "-l", destdir])
+        subprocess.run(["mount", "-o", f"subvol={subvolume}", f"/dev/{disk}", destdir], check=True)
 
-# mount other btrfs subvolumes from fstab
-while IFS= read -r line; do
-    [[ "$line" =~ ^#.*$ ]] && continue
-    [[ -z "$line" ]] && continue
-    DEVICE=$(echo "$line" | awk '{print $1}')
-    MOUNTPOINT=$(echo "$line" | awk '{print $2}')
-    FSTYPE=$(echo "$line" | awk '{print $3}')
-    OPTIONS=$(echo "$line" | awk '{print $4}')
-    if [[ ${DEVICE:0:5} == "UUID=" ]]; then
-        DEVICE=/dev/disk/by-uuid/${DEVICE:5}
-    fi
-    [[ -z $OPTIONS || -z $MOUNTPOINT || -z $FSTYPE || -z $DEVICE ]] && continue
+def mount_bind_api(destdir):
+    for path in ["dev", "dev/pts", "proc", "sys"]:
+        target = os.path.join(destdir, path)
+        os.makedirs(target, exist_ok=True)
+        subprocess.run(["mount", "--bind", f"/{path}", target], check=True)
 
-    MOUNTPOINT=$(realpath "$MOUNTPOINT")
-    if [[ $MOUNTPOINT != '/' ]]; then
-        mount -t "$FSTYPE" -o "$OPTIONS" "$DEVICE" "$DESTDIR/$MOUNTPOINT" || true
-    fi
-done < "$DESTDIR/etc/fstab"
+def mount_fstab_entries(destdir):
+    fstab_path = os.path.join(destdir, "etc/fstab")
+    if not os.path.exists(fstab_path):
+        return
+        
+    with open(fstab_path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+                
+            parts = line.split()
+            if len(parts) < 4:
+                continue
+                
+            device, mountpoint, fstype, options = parts[0], parts[1], parts[2], parts[3]
+            
+            if device.startswith("UUID="):
+                device = f"/dev/disk/by-uuid/{device[5:]}"
+                
+            real_mountpoint = os.path.realpath(mountpoint)
+            if real_mountpoint != "/":
+                target_path = os.path.join(destdir, real_mountpoint.lstrip("/"))
+                os.makedirs(target_path, exist_ok=True)
+                subprocess.run(["mount", "-t", fstype, "-o", options, device, target_path], stderr=subprocess.DEVNULL)
 
-cp -L /etc/resolv.conf "$DESTDIR/etc/resolv.conf"
+def copy_resolv_conf(destdir):
+    target = os.path.join(destdir, "etc/resolv.conf")
+    if os.path.exists("/etc/resolv.conf"):
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        real_src = os.path.realpath("/etc/resolv.conf")
+        if os.path.exists(real_src):
+            shutil.copy2(real_src, target)
 
-if [ -d "/sys/firmware/efi" ]; then
-    mount --bind /sys/firmware/efi/efivars "$DESTDIR/sys/firmware/efi/efivars"
-fi
+def mount_efi_vars(destdir):
+    if os.path.isdir("/sys/firmware/efi"):
+        target = os.path.join(destdir, "sys/firmware/efi/efivars")
+        os.makedirs(target, exist_ok=True)
+        subprocess.run(["mount", "--bind", "/sys/firmware/efi/efivars", target], check=True)
+
+def main():
+    check_root()
+    check_block_devices()
+    destdir = get_destdir()
+    disk = get_rootfs_partition()
+    fs = unmount_and_get_fs(disk)
+    load_luks_lvm()
+    mount_rootfs(disk, destdir)
+    handle_btrfs(disk, destdir, fs)
+    mount_bind_api(destdir)
+    mount_fstab_entries(destdir)
+    copy_resolv_conf(destdir)
+    mount_efi_vars(destdir)
+
+if __name__ == "__main__":
+    main()
