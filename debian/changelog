@@ -1,3 +1,14 @@
+pardus-boot-repair (1.1.0) unstable; urgency=medium
+
+  [ Ali Riza KESKIN ]
+  * pardus-mount-rootfs move to python
+  * fix call pardus-mount-rootfs methods.
+  * minor fix
+  * run_command first argument is array of command instead of string
+  * fix btrfs sub list
+
+ -- Fatih Altun <fatih.altun@pardus.org.tr>  Thu, 24 Sep 2026 18:28:51 +0300
+
 pardus-boot-repair (1.0.9) unstable; urgency=medium
 
   [ jankesec ]
