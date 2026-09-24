@@ -685,8 +685,9 @@ class Application(Gtk.Application):
     def detect_btrfs_rootfs_subvolume(self, mountdir):
         self.update_status_page(_("Searching for Btrfs Root Filesystem Subvolume"), "content-loading-symbolic", _(
             "We're searching for the Btrfs root filesystem subvolume on your system. This is essential for proper system operation. Please wait while we locate the Btrfs root filesystem subvolume. Thank you for your patience."), False, False)
-        output = self.run_command(["btrfs", "subvolume", "list", mountdir]).split(" ")[9]
+        output = self.run_command(["btrfs", "subvolume", "list", mountdir])
         for subvol in output.split("\n"):
+            subvol = subvol.split(" ")[-1]
             if os.path.exists("{}/{}/var/lib/dpkg/".format(mountdir, subvol)):
                 is_rootfs = True
                 return subvol, is_rootfs
