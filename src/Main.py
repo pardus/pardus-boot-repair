@@ -394,8 +394,7 @@ class Application(Gtk.Application):
             if self.get_rootfs(widget, pre) == None:
                 return
 
-            liveuser_home = self.run_command(
-                'grep "x:1000:" /etc/passwd | cut -f 6 -d ":"')
+            liveuser_home = self.run_command(["bash", "-c", 'grep "x:1000:" /etc/passwd | cut -f 6 -d ":"'])
             self.update_status_page(_("Extracting System Logs"), "content-loading-symbolic", _(
                 "We're collecting important system logs and placing them in the '{}' directory as you requested. These logs contain helpful information about your system's activity and any issues it may be experiencing. Depending on how much information there is, this might take a little time. Thanks for waiting while we gather this data.").format(liveuser_home), False, False)
 
@@ -496,10 +495,10 @@ class Application(Gtk.Application):
             return
         post_func()
 
-    def run_command(self, command: str, return_exitcode=False):
+    def run_command(self, command, return_exitcode=False):
         try:
             proc = subprocess.Popen(
-                ["/bin/bash", "-c", command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output, err = proc.communicate()
             output = output.decode("utf-8").strip()
             exit_code = proc.returncode
@@ -640,11 +639,11 @@ class Application(Gtk.Application):
                 continue
 
             if part.fstype == "crypto_LUKS":
-                prt_Types = self.run_command('lsblk -rno TYPE {}'.format(part.path)).strip().split()
+                prt_Types = self.run_command(["lsblk", "-rno", "TYPE", part.path]).strip().split()
                 if len(prt_Types) > 1 and prt_Types[1] == "crypt":
-                   part.name = self.run_command('lsblk -rno NAME {}'.format(part.path)).strip().split()[1]
+                   part.name = self.run_command(["lsblk", "-rno", NAME, part.path]).strip().split()[1]
                    part.path = "/dev/mapper/{}".format(part.name)
-                   part.fstype = self.run_command('lsblk -rno FSTYPE {}'.format(part.path)).strip().split()[0]
+                   part.fstype = self.run_command(["lsblk", "-rno", "FSTYPE", part.path]).strip().split()[0]
                 else:    
                     part.is_luks = True
                     rootfs.append(part)
@@ -662,13 +661,13 @@ class Application(Gtk.Application):
         return rootfs
 
     def check_if_rootfs(self, part):
-        TEMPDIR = self.run_command('mktemp -d')
+        TEMPDIR = self.run_command(["mktemp", "-d"])
         part.is_rootfs = False
 
         if part.mountpoint != "":
-            self.run_command("umount -lf {}".format(part.mountpoint))
+            self.run_command(["umount", "-lf", part.mountpoint])
 
-        self.run_command('mount {} {}'.format(part.path, TEMPDIR))
+        self.run_command(["mount", part.path, TEMPDIR])
         if os.path.exists(TEMPDIR + "/var/lib/dpkg/"):
             part.is_rootfs = True
 
@@ -678,16 +677,15 @@ class Application(Gtk.Application):
             if subvol != None:
                 part.root_subvol = subvol
 
-        self.run_command('umount -l ' + TEMPDIR)
-        self.run_command('rmdir ' + TEMPDIR)
+        self.run_command(["umount", "-l", TEMPDIR])
+        self.run_command(["rmdir", TEMPDIR])
 
         return part
 
     def detect_btrfs_rootfs_subvolume(self, mountdir):
         self.update_status_page(_("Searching for Btrfs Root Filesystem Subvolume"), "content-loading-symbolic", _(
             "We're searching for the Btrfs root filesystem subvolume on your system. This is essential for proper system operation. Please wait while we locate the Btrfs root filesystem subvolume. Thank you for your patience."), False, False)
-        output = self.run_command(
-            "btrfs subvolume list " + mountdir + " | awk '{print $9}'")
+        output = self.run_command(["btrfs", "subvolume", "list", mountdir]).split(" ")[9]
         for subvol in output.split("\n"):
             if os.path.exists("{}/{}/var/lib/dpkg/".format(mountdir, subvol)):
                 is_rootfs = True
@@ -726,7 +724,7 @@ class Application(Gtk.Application):
 
             part.path = "/dev/mapper/luks-{}".format(part.name)
             part.name = "/mapper/luks-{}".format(part.name)
-            part.fstype = self.run_command('lsblk -no FSTYPE {}'.format(part.path)).strip()
+            part.fstype = self.run_command(["lsblk", "-no", "FSTYPE", part.path]).strip()
             part.is_luks = False
             if part.fstype == "LVM2_member":
                 part.is_lvm = True
@@ -742,8 +740,7 @@ class Application(Gtk.Application):
 
     def mount_lvm(self, part, handler_func=None, pending_func=None):
         def pre():
-            vg_names = self.run_command(
-                "pvs -o vg_name --noheadings --select pv_name={}".format(part.path)).split("\n")
+            vg_names = self.run_command(["pvs", "-o", "vg_name", "--noheadings", "--select", "pv_name={}".format(part.path)]).split("\n")
             if len(vg_names) == 0:
                 self.update_status_page(_("No Volume Groups Detected"), "dialog-error-symbolic", _(
                     "We couldn't find any volume groups on your system. This could indicate an issue with your LVM configuration. Please ensure that your LVM setup is correct."), True, True)
@@ -760,10 +757,10 @@ class Application(Gtk.Application):
             part, handler_func, pending_func = userdata
             if vg_name == None:
                 vg_name = self.vg_page.listbox.get_selected_row().get_title()
-            self.run_command("vgchange -ay {}".format(vg_name))
+            self.run_command(["vgchange", "-ay", vg_name])
 
             LV_NAMES = []
-            for lv in self.run_command("lvs -o lv_name --noheadings --select vg_name={}".format(vg_name)).split("\n"):
+            for lv in self.run_command(["lvs", "-o", "lv_name", "--noheadings", "--select", "vg_name={}".format(vg_name)]).split("\n"):
                 lv = lv.strip()
                 if lv == "":
                     continue
@@ -815,8 +812,7 @@ class Application(Gtk.Application):
                 partition.name = part
                 partition.path = "/dev/" + part
                 for x in ["FSTYPE", "UUID", "SIZE", "LABEL", "MOUNTPOINT"]:
-                    output = self.run_command(
-                        'lsblk -rno {} {}'.format(x, partition.path)).split("\n")[0]
+                    output = self.run_command(["lsblk", "-rno", x, partition.path]).split("\n")[0]
                     if output == None:
                         continue
                     partition.__setattr__(x.lower(), output.strip())
@@ -830,18 +826,21 @@ class Application(Gtk.Application):
         return partitions
 
     def list_users(self, rootfs):
-        TEMPDIR = self.run_command('mktemp -d')
+        TEMPDIR = self.run_command(["mktemp", "-d"])
         if self.rootfs.root_subvol != None:
-            self.run_command(
-                "mount -o subvol={} /dev/{} {}".format(rootfs.root_subvol, rootfs.name, TEMPDIR))
+            self.run_command(["mount", "-o", "subvol={}".format(rootfs.root_subvol), "/dev/{}".format(rootfs.name), TEMPDIR])
         else:
-            self.run_command("mount /dev/{} {}".format(rootfs.name, TEMPDIR))
-        output = self.run_command(
-            'grep -e ":x:[0-9][0-9][0-9][0-9]:" {}/etc/passwd | cut -f 1 -d ":"'.format(TEMPDIR))
-        if output == "":
-            return []
-        self.run_command("umount -lf {}".format(TEMPDIR))
-        users = output.split()
+            self.run_command(["mount", "/dev/{}".format(rootfs.name) , TEMPDIR])
+        users = []
+        if os.path.isfile("{}/etc/passwd".format(TEMPDIR)):
+            with open("{}/etc/passwd".format(TEMPDIR)) as f:
+                for line in f.read().strip().split("\n"):
+                    name = line.split(":")[0]
+                    uid = int(line.split(":")[2])
+                    if uid >= 1000 and uid <= 9999:
+                        users.append(name)
+
+        self.run_command(["umount", "-lf", TEMPDIR])
         users.append("root")
         return users
 
@@ -862,7 +861,7 @@ class Application(Gtk.Application):
         return mbrs
 
     def reset_lvm_luks(self):
-        self.run_command("""
+        self.run_command(["bash", "-c", """
             umount -R -f /media/*/* 2>/dev/null || true
             lvchange -an $(lvs --noheadings -o lv_path) 2>/dev/null || true
             vgchange -an $(vgs --noheadings -o vg_name) 2>/dev/null || true
@@ -871,7 +870,7 @@ class Application(Gtk.Application):
             done
             vgchange -ay
             lvchange -ay $(lvs --noheadings -o lv_path) 2>/dev/null || true
-        """)
+        """])
 
     def new_page_listbox(self, label_text, row_titles, row_subtitles, btn_next_clicked_signal, btn_next_userdata=None):
         page = Questions_page_listbox()
