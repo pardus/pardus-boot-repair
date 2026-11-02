@@ -641,7 +641,7 @@ class Application(Gtk.Application):
             if part.fstype == "crypto_LUKS":
                 prt_Types = self.run_command(["lsblk", "-rno", "TYPE", part.path]).strip().split()
                 if len(prt_Types) > 1 and prt_Types[1] == "crypt":
-                   part.name = self.run_command(["lsblk", "-rno", NAME, part.path]).strip().split()[1]
+                   part.name = self.run_command(["lsblk", "-rno", "NAME", part.path]).strip().split()[1]
                    part.path = "/dev/mapper/{}".format(part.name)
                    part.fstype = self.run_command(["lsblk", "-rno", "FSTYPE", part.path]).strip().split()[0]
                 else:    
