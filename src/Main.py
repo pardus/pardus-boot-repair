@@ -667,7 +667,7 @@ class Application(Gtk.Application):
         if part.mountpoint != "":
             self.run_command(["umount", "-lf", part.mountpoint])
 
-        self.run_command(["mount", part.path, TEMPDIR])
+        self.run_command(["mount", "-o", "ro", part.path, TEMPDIR])
         if os.path.exists(TEMPDIR + "/var/lib/dpkg/"):
             part.is_rootfs = True
 
@@ -829,9 +829,9 @@ class Application(Gtk.Application):
     def list_users(self, rootfs):
         TEMPDIR = self.run_command(["mktemp", "-d"])
         if self.rootfs.root_subvol != None:
-            self.run_command(["mount", "-o", "subvol={}".format(rootfs.root_subvol), "/dev/{}".format(rootfs.name), TEMPDIR])
+            self.run_command(["mount", "-o", "ro,subvol={}".format(rootfs.root_subvol), "/dev/{}".format(rootfs.name), TEMPDIR])
         else:
-            self.run_command(["mount", "/dev/{}".format(rootfs.name) , TEMPDIR])
+            self.run_command(["mount", "-o", "ro", "/dev/{}".format(rootfs.name), TEMPDIR])
         users = []
         if os.path.isfile("{}/etc/passwd".format(TEMPDIR)):
             with open("{}/etc/passwd".format(TEMPDIR)) as f:
@@ -842,6 +842,7 @@ class Application(Gtk.Application):
                         users.append(name)
 
         self.run_command(["umount", "-lf", TEMPDIR])
+        self.run_command(["rmdir", TEMPDIR])
         users.append("root")
         return users
 
